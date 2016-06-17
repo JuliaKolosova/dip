@@ -1,0 +1,71 @@
+﻿<Window x:Class="SZI.EditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SZI"
+        mc:Ignorable="d"
+        Title="EditWindow"
+        Height="600" Width="1000" MinHeight="600" MinWidth="1000" MaxHeight="800" MaxWidth="1200"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <!-- columns -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="380" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="67*"/>
+            <ColumnDefinition Width="90" />
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- rows -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="405*"/>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+
+        <!-- menu -->
+
+        <!-- tree -->
+        <TreeView Name="Tree" Grid.Column="1" Grid.Row="2" Grid.RowSpan="4"/>
+
+        <!-- label -->
+        <Label Grid.Column="3" Grid.Row="2"
+               VerticalAlignment="Center"
+               FontSize="16" Margin="0,0,0,-4">Пункты выбранного этапа:</Label>
+
+        <!-- add button -->
+        <Button x:Name="AddBtn" Grid.Column="4" Grid.Row="2"
+                Height="30" Width="30"  HorizontalAlignment="right" VerticalAlignment="Bottom"
+                Click="AddBtn_Click" Background="White" BorderBrush="White">
+            <Image x:Name="addImg" Width="20"/>
+        </Button>
+
+        <ScrollViewer Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="4"
+                HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical" x:Name="DataPanel" Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="4">
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- label -->
+        <Label Grid.Column="3" Grid.Row="5"
+               VerticalAlignment="Center"
+               FontSize="16" Margin="0,0,0,-4">! Обязательно сохраняйте изменения !</Label>
+        
+        <!-- save button -->
+        <Button x:Name="SaveBtn" Grid.Column="3" Grid.Row="5"
+                Height="30" Width="80" HorizontalAlignment="right" VerticalAlignment="Bottom"
+                Click="SaveBtn_Click">Сохранить</Button>
+        
+        <!-- next button -->
+        <Button x:Name="NextBtn" Grid.Column="4" Grid.Row="5"
+                Height="30" Width="80" HorizontalAlignment="right" VerticalAlignment="Bottom"
+                Click="NextBtn_Click">Далее</Button>
+    </Grid>
+</Window>
