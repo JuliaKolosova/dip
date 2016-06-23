@@ -27,6 +27,8 @@ namespace SZI
         private bool first;
         private Grid grid1;
         int id;
+        int ind;
+
         public FormaA(string name, ForaWindow fw, int formNumber,int id)
         {
             this.name = name;
@@ -72,22 +74,35 @@ namespace SZI
 
                     case 1:
                         SQLite connection = new SQLite();
-                        SQLiteDataReader reader = connection.ReadData(string.Format("Select count(*) from ACTOR Where id_doc='{0}'", id));
-                        while (reader.Read())
+                        //SQLiteDataReader reader = connection.ReadData(string.Format("Select count(*) from ACTOR Where id_doc='{0}'", id));
+                        SQLiteDataReader reader_ist = connection.ReadData(string.Format("SELECT count(ID) FROM document"));
+                        while (reader_ist.Read())
+                            ind = reader_ist.GetInt16(0);
+                        reader_ist = connection.ReadData(string.Format("Select * from Actor Where id_doc ='{0}' and PLAINTIFF=1", id));
+                        first = false;
+                        if (ind > 0)
+                        {
+                            StackPanel_A_2_1.Visibility = Visibility.Visible;
+                            AddStPanelIstec(null);
+                            first = true;
+                        }
+                        else
+                        {
+                            while (reader_ist.Read())
                             {
-                            if (reader.GetInt32(0)==0)
-                                {
-                                first = false;
+                                /* if (reader.GetInt32(0)!=0)
+                                     {
+                                     reader = connection.ReadData(string.Format("Select * from ACTOR Where id_doc='{0}'", id));
+                                     while (reader.Read())
+                                     {
+
+
+                                     }
+                                 }*/
                                 StackPanel_A_2_1.Visibility = Visibility.Visible;
-                                AddBtn_Click(sender, e);
+                                AddStPanelIstec(reader_ist);
                                 first = true;
                             }
-                            else
-                            {
-                                reader = connection.ReadData(string.Format("Select * from ACTOR Where id_doc='{0}'", id));
-
-                            }
-                                                   
                         }
                         connection.Close();
                         break;
@@ -95,7 +110,9 @@ namespace SZI
             }
         }
 
-        private void AddBtn_Click(object sender, RoutedEventArgs e)
+
+        /* добавление истца на форму */
+        private void AddStPanelIstec(SQLiteDataReader reader_ist)
         {
             i++;
             SolidColorBrush colortext = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF378B1E"));
@@ -104,9 +121,8 @@ namespace SZI
             grid.ColumnDefinitions.Add(new ColumnDefinition());
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(30) });
             grid.Margin = new Thickness(0, 0, 0, 10);
-            //grid.VerticalAlignment = VerticalAlignment.Bottom;
 
-            Label label = new Label() { Content = string.Concat(i,"."), FontSize = 20, Margin = new Thickness(0, 0, 0, 0), Foreground= colortext};
+            Label label = new Label() { Content = string.Concat(i, "."), FontSize = 20, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
             TextBox textbox = new TextBox();
             textbox.Padding = new Thickness(5, 2, 5, 2);
@@ -115,7 +131,8 @@ namespace SZI
             textbox.AcceptsReturn = true;
             textbox.Foreground = colortext;
             textbox.Height = 30;
-            // textbox.Text = text;
+            if (reader_ist!=null)
+               textbox.Text = reader_ist.GetString(2);
 
             Image img = new Image();
             img.Source = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "\\images\\delete.png", UriKind.Absolute));
@@ -129,7 +146,7 @@ namespace SZI
                 btn.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 btn.BorderBrush = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 btn.Content = img;
-                //btn.Click += new RoutedEventHandler(deleteTextBox);
+                btn.Click += new RoutedEventHandler(deleteTextBox);
             }
             grid.Children.Add(label);
             Grid.SetColumn(label, 0);
@@ -138,9 +155,9 @@ namespace SZI
             if (first)
             {
                 grid.Children.Add(btn);
-                Grid.SetColumn(btn, 2);
+                Grid.SetColumn(btn, 3);
             }
-            StackPanel.Children.Add(grid);
+    //        StackPanel.Children.Add(grid);
 
             grid1 = new Grid();
             grid1.ColumnDefinitions.Add(new ColumnDefinition());
@@ -151,15 +168,15 @@ namespace SZI
             grid1.RowDefinitions.Add(new RowDefinition());
             TextBlock label1 = new TextBlock() { Text = "просивший рассмотреть дело в его отсутствие: заявление от", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
             TextBox textbox1 = new TextBox();
-            textbox1.Padding = new Thickness(1,1,1,1);
+            textbox1.Padding = new Thickness(1, 1, 1, 1);
             textbox1.TextWrapping = TextWrapping.Wrap;
             textbox1.FontSize = 16;
             textbox1.AcceptsReturn = true;
             textbox1.Foreground = colortext;
             //textbox1.Height = 25;
-            TextBlock label2 = new TextBlock() { Text = "извещенный надлежайшим образом: документ, подтверждающий извещение:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping= TextWrapping.Wrap };
+            TextBlock label2 = new TextBlock() { Text = "извещенный надлежайшим образом: документ, подтверждающий извещение:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
             TextBox textbox2 = new TextBox();
-            textbox2.Padding = new Thickness(1,1,1,1);
+            textbox2.Padding = new Thickness(1, 1, 1, 1);
             textbox2.TextWrapping = TextWrapping.Wrap;
             textbox2.FontSize = 16;
             textbox2.AcceptsReturn = true;
@@ -180,20 +197,60 @@ namespace SZI
             involvT.Content = "участвует в деле";
             involvT.Foreground = colortext;
             involvT.FontSize = 18;
-            involvT.IsChecked = true;
-            involvT.Checked+= new RoutedEventHandler(FunInvolv);
+            //involvT.IsChecked = true;
+            
 
             RadioButton involvF = new RadioButton();
             involvF.GroupName = GroupName;
             involvF.Content = "не участвует в деле";
             involvF.Foreground = colortext;
             involvF.FontSize = 18;
+
+            if (reader_ist != null)
+                if (!reader_ist.IsDBNull(3))
+                {
+                    involvF.IsChecked = true;
+                    string str = reader_ist.GetString(3);
+                    //char[] str1 = null;
+                    string[] arr = str.Split('~');
+                    //int index = str.IndexOf("///");
+                    if (arr[1]!="")
+                    {
+                        //str1 = str.Substring(0, index - 1);
+                        //str.CopyTo(0, str1, 0, index - 1);
+                        textbox1.Text = arr[1];
+                    }
+                    // str.CopyTo(0, str1, index + 2, str.Length - index + 2);
+                    textbox2.Text = arr[0];
+                }
+                else
+                {
+                    involvT.IsChecked = true;
+                }
+
+            involvT.Checked += new RoutedEventHandler(FunInvolv);
             involvF.Checked += new RoutedEventHandler(FunInvolv);
+
             StackPanel st = new StackPanel();
+           // st.Children.Add(grid);
             st.Children.Add(involvT);
             st.Children.Add(involvF);
             st.Children.Add(grid1);
-            StackPanel.Children.Add(st);
+            grid.Children.Add(st);
+            StackPanel.Children.Add(grid);
+        }
+
+        public void AddBtn_Click(object sender, RoutedEventArgs e)
+        {
+            AddStPanelIstec(null);
+        }
+        /* удаление текстбокса с формы */
+        private void deleteTextBox(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            Grid grid = (Grid)btn.Parent;
+            var grids = StackPanel.Children;
+            grids.Remove(grid);
         }
 
         private void FunInvolv(object sender, RoutedEventArgs e)

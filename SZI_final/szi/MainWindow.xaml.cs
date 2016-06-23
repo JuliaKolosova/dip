@@ -22,16 +22,21 @@ namespace SZI
     public partial class MainWindow : Window
     {
         private MainWindow startForm;
-        public int id;
+        public int[] id;
         public MainWindow()
         {
             InitializeComponent();
             startForm = this;
             SQLite connection = new SQLite();
-            SQLiteDataReader reader = connection.ReadData(string.Format("SELECT ID, NAME FROM document"));
+            SQLiteDataReader reader = connection.ReadData(string.Format("SELECT count(ID) FROM document"));
+            while (reader.Read())
+                id = new int[reader.GetInt64(0)];
+            reader = connection.ReadData(string.Format("SELECT ID, NAME FROM document"));
+            int i = -1;
             while (reader.Read())
             {
-                id = reader.GetInt32(0);
+                i++;
+                id[i] = reader.GetInt32(0);
                 FilesListBox.Items.Add(reader.GetString(1));
                 //clientsList.Items.Add(new Client(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3)));
             }
@@ -52,7 +57,7 @@ namespace SZI
         {
             if (FilesListBox.SelectedItem != null)
             {
-                ForaWindow eForm = new ForaWindow(FilesListBox.SelectedItem.ToString(), startForm,id);
+                ForaWindow eForm = new ForaWindow(FilesListBox.SelectedItem.ToString(), startForm,id[FilesListBox.SelectedIndex]);
                 eForm.Owner = this;
                 eForm.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 eForm.ShowDialog();
@@ -68,7 +73,7 @@ namespace SZI
         {
             if (FilesListBox.SelectedItem != null)
             {
-                ForaWindow eForm = new ForaWindow(FilesListBox.SelectedItem.ToString(), startForm,id);
+                ForaWindow eForm = new ForaWindow(FilesListBox.SelectedItem.ToString(), startForm,id[FilesListBox.SelectedIndex]);
                 eForm.Owner = this;
                 eForm.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 eForm.ShowDialog();
