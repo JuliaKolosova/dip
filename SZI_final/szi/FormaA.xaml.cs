@@ -75,15 +75,17 @@ namespace SZI
                     case 1:
                         SQLite connection = new SQLite();
                         //SQLiteDataReader reader = connection.ReadData(string.Format("Select count(*) from ACTOR Where id_doc='{0}'", id));
-                        SQLiteDataReader reader_ist = connection.ReadData(string.Format("SELECT count(ID) FROM document"));
+                        SQLiteDataReader reader_ist = connection.ReadData(string.Format("Select count(*) from ACTOR Where id_doc='{0}'  and PLAINTIFF=1", id));
                         while (reader_ist.Read())
                             ind = reader_ist.GetInt16(0);
                         reader_ist = connection.ReadData(string.Format("Select * from Actor Where id_doc ='{0}' and PLAINTIFF=1", id));
                         first = false;
-                        if (ind > 0)
+                        if (ind == 0)
                         {
                             StackPanel_A_2_1.Visibility = Visibility.Visible;
-                            AddStPanelIstec(null);
+                            Scroll.Visibility = Visibility.Visible;
+                            StackPanel_A_2_2.Visibility = Visibility.Visible;
+                            AddStPanelIstec1(null);
                             first = true;
                         }
                         else
@@ -100,7 +102,8 @@ namespace SZI
                                      }
                                  }*/
                                 StackPanel_A_2_1.Visibility = Visibility.Visible;
-                                AddStPanelIstec(reader_ist);
+                                StackPanel_A_2_2.Visibility = Visibility.Visible;
+                                AddStPanelIstec1(reader_ist);
                                 first = true;
                             }
                         }
@@ -239,17 +242,179 @@ namespace SZI
             grid.Children.Add(st);
             StackPanel.Children.Add(grid);
         }
+        //пробное
+        private void AddStPanelIstec1(SQLiteDataReader reader_ist)
+        {
+            //i++;
+            SolidColorBrush colortext = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF378B1E"));
+            Grid grid = new Grid();
+            grid.ColumnDefinitions.Add(new ColumnDefinition());
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(30) });
+            grid.Margin = new Thickness(0, 0, 0, 10);
 
+            Label label_ist = new Label() { Content = string.Concat("•"), FontSize = 20, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
+
+            TextBox textbox_ist_name = new TextBox();
+            textbox_ist_name.Padding = new Thickness(5, 2, 5, 2);
+            textbox_ist_name.TextWrapping = TextWrapping.Wrap;
+            textbox_ist_name.FontSize = 16;
+            textbox_ist_name.AcceptsReturn = true;
+            textbox_ist_name.Foreground = colortext;
+            textbox_ist_name.Height = 30;
+            if (reader_ist != null)
+                textbox_ist_name.Text = reader_ist.GetString(2);
+
+            Image img_del = new Image();
+            img_del.Source = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "\\images\\delete.png", UriKind.Absolute));
+            img_del.Width = 20;
+            img_del.Height = 20;
+
+            Button btn = new Button();
+            if (first)
+            {
+                //Button btn = new Button();
+                btn.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                btn.BorderBrush = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                btn.Content = img_del;
+                btn.Click += new RoutedEventHandler(deleteTextBox);
+            }
+
+
+            //        StackPanel.Children.Add(grid);
+            TextBlock label_ist_name = new TextBlock() { Text = "ФИО:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
+
+            TextBlock label_ist1 = new TextBlock() { Text = "просивший рассмотреть дело в его отсутствие: заявление от", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext , TextWrapping = TextWrapping.Wrap };
+            TextBox tex_box_ist_doc1 = new TextBox();
+            tex_box_ist_doc1.Padding = new Thickness(1, 1, 1, 1);
+            tex_box_ist_doc1.TextWrapping = TextWrapping.Wrap;
+            tex_box_ist_doc1.FontSize = 16;
+            tex_box_ist_doc1.AcceptsReturn = true;
+            tex_box_ist_doc1.Foreground = colortext;
+            //tex_box_ist_doc1.Height = 25;
+            TextBlock label_ist2 = new TextBlock() { Text = "извещенный надлежайшим образом: документ, подтверждающий извещение:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
+            TextBox tex_box_ist_doc2 = new TextBox();
+            tex_box_ist_doc2.Padding = new Thickness(1, 1, 1, 1);
+            tex_box_ist_doc2.TextWrapping = TextWrapping.Wrap;
+            tex_box_ist_doc2.FontSize = 16;
+            tex_box_ist_doc2.AcceptsReturn = true;
+            tex_box_ist_doc2.Foreground = colortext;
+            //textbox2.Height = 25;
+            
+
+            if (reader_ist != null)
+                if (!reader_ist.IsDBNull(3))
+                {
+                    string str = reader_ist.GetString(3);
+                    //char[] str1 = null;
+                    string[] arr = str.Split('~');
+                    //int index = str.IndexOf("///");
+                    if (arr[1] != "")
+                    {
+                        //str1 = str.Substring(0, index - 1);
+                        //str.CopyTo(0, str1, 0, index - 1);
+                        tex_box_ist_doc1.Text = arr[1];
+                    }
+                    // str.CopyTo(0, str1, index + 2, str.Length - index + 2);
+                    tex_box_ist_doc2.Text = arr[0];
+                }
+            Grid grid1 = new Grid();
+            grid1.ColumnDefinitions.Add(new ColumnDefinition());
+            //grid1.
+           /* grid1.RowDefinitions.Add(new RowDefinition());
+            grid1.Children.Add(label_ist);
+            Grid.SetRow(label, 0);
+            grid1.Children.Add(textbox_ist_name);
+            Grid.SetRow(textbox_ist_name, 1);
+            grid1.Children.Add(label_ist1);
+            Grid.SetRow(label_ist1, 2);
+            grid1.Children.Add(tex_box_ist_doc1);
+            Grid.SetRow(tex_box_ist_doc1, 3);
+            grid1.Children.Add(label_ist2);
+            Grid.SetRow(label_ist2, 4);
+            grid1.Children.Add(tex_box_ist_doc2);
+            Grid.SetRow(tex_box_ist_doc2, 5);
+
+            grid.Children.Add(grid1);
+            Grid.SetColumn(grid1, 0);
+            if (first)
+            {
+                grid.Children.Add(btn);
+                Grid.SetColumn(btn, 1);
+            }
+            */
+            Grid DynamicGrid = new Grid();
+            DynamicGrid.Width = 430;
+            DynamicGrid.HorizontalAlignment = HorizontalAlignment.Left;
+            DynamicGrid.VerticalAlignment = VerticalAlignment.Top;
+            ColumnDefinition gridCol1 = new ColumnDefinition();
+            ColumnDefinition gridCol2 = new ColumnDefinition();
+            ColumnDefinition gridCol3 = new ColumnDefinition();
+            gridCol1.Width = new GridLength(30);
+            gridCol3.Width = new GridLength(30);
+            DynamicGrid.ColumnDefinitions.Add(gridCol1);
+            DynamicGrid.ColumnDefinitions.Add(gridCol2);
+            DynamicGrid.ColumnDefinitions.Add(gridCol3);
+            RowDefinition gridRow1 = new RowDefinition();
+            RowDefinition gridRow2 = new RowDefinition();
+            RowDefinition gridRow3 = new RowDefinition();
+            RowDefinition gridRow4 = new RowDefinition();
+            RowDefinition gridRow5 = new RowDefinition();
+            RowDefinition gridRow6 = new RowDefinition();
+            RowDefinition gridRow7 = new RowDefinition();
+            gridRow7.Height = new GridLength(2);
+            Rectangle rec = new Rectangle() { Fill= colortext };
+            
+            DynamicGrid.RowDefinitions.Add(gridRow1);
+            DynamicGrid.RowDefinitions.Add(gridRow2);
+            DynamicGrid.RowDefinitions.Add(gridRow3);
+            DynamicGrid.RowDefinitions.Add(gridRow4);
+            DynamicGrid.RowDefinitions.Add(gridRow5);
+            DynamicGrid.RowDefinitions.Add(gridRow6);
+            DynamicGrid.RowDefinitions.Add(gridRow7);
+            //StackPanel_A_2_2.Children.Add(grid);
+            // StackPanel_A_2_2.Children.Add(grid);
+
+            Grid.SetRow(label_ist_name, 0);
+            Grid.SetColumn(label_ist_name, 1);
+            DynamicGrid.Children.Add(label_ist_name);
+            Grid.SetRow(label_ist, 1);
+            Grid.SetColumn(label_ist, 0);
+            DynamicGrid.Children.Add(label_ist);
+            Grid.SetRow(textbox_ist_name, 1);
+            Grid.SetColumn(textbox_ist_name, 1);
+            DynamicGrid.Children.Add(textbox_ist_name);
+            if (first)
+            {
+                Grid.SetRow(btn, 1);
+                Grid.SetColumn(btn, 2);
+                DynamicGrid.Children.Add(btn);
+            }
+
+            Grid.SetRow(label_ist1, 2);
+            Grid.SetColumn(label_ist1, 1);
+            DynamicGrid.Children.Add(label_ist1);
+            Grid.SetRow(tex_box_ist_doc1, 3);
+            Grid.SetColumn(tex_box_ist_doc1, 1);
+            DynamicGrid.Children.Add(tex_box_ist_doc1);
+            Grid.SetRow(label_ist2, 4);
+            Grid.SetColumn(label_ist2, 1);
+            DynamicGrid.Children.Add(label_ist2);
+            Grid.SetRow(tex_box_ist_doc2, 5);
+            Grid.SetColumn(tex_box_ist_doc2, 1);
+            DynamicGrid.Children.Add(tex_box_ist_doc2);
+            StackPanel_A_2_2.Children.Add(DynamicGrid);
+            //StackPanel.Children.Add(DynamicGrid);
+        }
         public void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            AddStPanelIstec(null);
+            AddStPanelIstec1(null);
         }
         /* удаление текстбокса с формы */
         private void deleteTextBox(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
             Grid grid = (Grid)btn.Parent;
-            var grids = StackPanel.Children;
+            var grids = StackPanel_A_2_2.Children;
             grids.Remove(grid);
         }
 
