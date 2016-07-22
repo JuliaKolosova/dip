@@ -22,7 +22,7 @@
         </TreeView>
 
         <Button x:Name="Save"
-        	Width="110" Height="30" HorizontalAlignment="right" VerticalAlignment="Bottom" Margin="0,0,164,7" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Сохранить" Grid.Column="1" FontSize="18.667"/>
+        	Width="110" Height="30" HorizontalAlignment="right" VerticalAlignment="Bottom" Margin="0,0,164,7" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Сохранить" Grid.Column="1" FontSize="18.667" Click="Save_Click"/>
         <Button x:Name="Save_Copy"
         	Width="110" Height="30" HorizontalAlignment="right" VerticalAlignment="Bottom" Margin="0,0,29,7" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Далее" Grid.Column="1" FontSize="18.667"/>
 

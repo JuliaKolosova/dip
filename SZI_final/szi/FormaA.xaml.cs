@@ -102,6 +102,7 @@ namespace SZI
                                      }
                                  }*/
                                 StackPanel_A_2_1.Visibility = Visibility.Visible;
+                                Scroll.Visibility = Visibility.Visible;
                                 StackPanel_A_2_2.Visibility = Visibility.Visible;
                                 AddStPanelIstec1(reader_ist);
                                 first = true;
@@ -242,7 +243,7 @@ namespace SZI
             grid.Children.Add(st);
             StackPanel.Children.Add(grid);
         }
-        //пробное
+        //пробное РАБОТАЕТ
         private void AddStPanelIstec1(SQLiteDataReader reader_ist)
         {
             //i++;
@@ -255,12 +256,12 @@ namespace SZI
             Label label_ist = new Label() { Content = string.Concat("•"), FontSize = 20, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
             TextBox textbox_ist_name = new TextBox();
-            textbox_ist_name.Padding = new Thickness(5, 2, 5, 2);
+            textbox_ist_name.Padding = new Thickness(1,1,1,1);
             textbox_ist_name.TextWrapping = TextWrapping.Wrap;
             textbox_ist_name.FontSize = 16;
             textbox_ist_name.AcceptsReturn = true;
             textbox_ist_name.Foreground = colortext;
-            textbox_ist_name.Height = 30;
+           // textbox_ist_name.Height = 30;
             if (reader_ist != null)
                 textbox_ist_name.Text = reader_ist.GetString(2);
 
@@ -361,9 +362,10 @@ namespace SZI
             RowDefinition gridRow5 = new RowDefinition();
             RowDefinition gridRow6 = new RowDefinition();
             RowDefinition gridRow7 = new RowDefinition();
-            gridRow7.Height = new GridLength(2);
-            Rectangle rec = new Rectangle() { Fill= colortext };
-            
+            gridRow7.Height = new GridLength(15);
+            Rectangle rec = new Rectangle() { Fill = colortext, Height =1 };
+            rec.Margin =  new Thickness(0, 7, 0, 7);
+            Grid.SetColumnSpan(rec, 3);
             DynamicGrid.RowDefinitions.Add(gridRow1);
             DynamicGrid.RowDefinitions.Add(gridRow2);
             DynamicGrid.RowDefinitions.Add(gridRow3);
@@ -402,9 +404,13 @@ namespace SZI
             Grid.SetRow(tex_box_ist_doc2, 5);
             Grid.SetColumn(tex_box_ist_doc2, 1);
             DynamicGrid.Children.Add(tex_box_ist_doc2);
+            Grid.SetRow(rec, 6);
+            Grid.SetColumn(rec, 0);
+            DynamicGrid.Children.Add(rec);
             StackPanel_A_2_2.Children.Add(DynamicGrid);
             //StackPanel.Children.Add(DynamicGrid);
         }
+
         public void AddBtn_Click(object sender, RoutedEventArgs e)
         {
             AddStPanelIstec1(null);
@@ -447,7 +453,7 @@ namespace SZI
             while (reader.Read())
             {
                 if (!reader.IsDBNull(2)) TBNumber_Copy.Text = reader.GetString(2);
-                if (!reader.IsDBNull(3)) { Date_Copy.DisplayDate = reader.GetDateTime(3); }
+                if (!reader.IsDBNull(3) && reader.GetString(3)!="") { Date_Copy.SelectedDate = DateTime.Parse(reader.GetString(3)); }
                 if (!reader.IsDBNull(4)) TBPlace_Copy.Text = reader.GetString(4);
                 if (!reader.IsDBNull(5)) TBName_Copy.Text = reader.GetString(5);
                 if (!reader.IsDBNull(6)) TBSostav_Copy.Text = reader.GetString(6);
@@ -456,6 +462,13 @@ namespace SZI
             connection.Close();
 
         }
+        
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            SaveData();
+        }
+
         /* заполнение листбокса */
         private void toFillTreeView(int formNumber)
         {
@@ -470,6 +483,60 @@ namespace SZI
                 listBox.Items.Add("Информация о заседании");
                 listBox.SelectedIndex = 0;
             }
+        }
+
+        /* сохранение данных */
+        private void SaveData()
+        {
+            bool isFull = false;
+            SQLite connection = new SQLite();
+            SQLiteDataReader reader;
+            if (formNumber == 0)
+            {
+                switch (listBox.SelectedIndex)
+                {
+                    case 0:
+                        connection.WriteData(string.Format("Update Document set number='{0}', date='{1}', locate='{2}', NAME_COURT='{3}', CONTENT_COURT='{4}', SECRETARY='{5}'  Where id='{6}'", TBNumber_Copy.Text, Date_Copy.SelectedDate, TBPlace_Copy.Text, TBName_Copy.Text,TBSostav_Copy.Text,TBSecretary_Copy.Text, id));
+                        break;
+                    case 1:
+                        connection.WriteData(string.Format("delete from actor  Where id_doc='{0}'", id));
+                        foreach (Grid grid in StackPanel_A_2_2.Children)
+                        {
+                            var textbox_name = grid.Children[2] as TextBox;
+                            var textbox_doc1 = grid.Children[4] as TextBox;
+                            var textbox_doc2 = grid.Children[6] as TextBox;
+                            var str = textbox_doc1.Text + "//" + textbox_doc2;
+                            connection.WriteData(string.Format("INSERT INTO actor (id_doc,name_actor,actor_doc,plaintiff) VALUES ('{0}','{1}','{2}','{3}')", id, textbox_name.Text,str,1));
+                        }
+                            break;
+                }
+            }
+
+            connection.Close();
+            /*
+                        // удаляем старые поля
+                        foreach (XElement point in Stage.Elements().ToList())
+                point.Remove();
+
+            // добавляем новые поля
+            foreach (Grid grid in DataPanel.Children)
+            {
+                var textbox = grid.Children[1] as TextBox;
+                if (textbox.Text != "")
+                {
+                    XElement point = new XElement("Point", textbox.Text);
+                    Stage.Add(point);
+                    isFull = true;
+                }
+            }
+
+            // сохраняем файл
+            doc.Save("files\\" + name + ".xml");
+
+            // обновляем matrixForm
+
+            updateMForm(isFull);
+            */
         }
     }
 }
