@@ -309,14 +309,14 @@ namespace SZI
                     //char[] str1 = null;
                     string[] arr = str.Split('~');
                     //int index = str.IndexOf("///");
-                    if (arr[1] != "")
+                    if (arr[0] != "")
                     {
                         //str1 = str.Substring(0, index - 1);
                         //str.CopyTo(0, str1, 0, index - 1);
-                        tex_box_ist_doc1.Text = arr[1];
+                        tex_box_ist_doc1.Text = arr[0];
                     }
                     // str.CopyTo(0, str1, index + 2, str.Length - index + 2);
-                    tex_box_ist_doc2.Text = arr[0];
+                    tex_box_ist_doc2.Text = arr[1];
                 }
             Grid grid1 = new Grid();
             grid1.ColumnDefinitions.Add(new ColumnDefinition());
@@ -505,7 +505,7 @@ namespace SZI
                             var textbox_name = grid.Children[2] as TextBox;
                             var textbox_doc1 = grid.Children[4] as TextBox;
                             var textbox_doc2 = grid.Children[6] as TextBox;
-                            var str = textbox_doc1.Text + "//" + textbox_doc2;
+                            var str = textbox_doc1.Text + "~" + textbox_doc2.Text;
                             connection.WriteData(string.Format("INSERT INTO actor (id_doc,name_actor,actor_doc,plaintiff) VALUES ('{0}','{1}','{2}','{3}')", id, textbox_name.Text,str,1));
                         }
                             break;

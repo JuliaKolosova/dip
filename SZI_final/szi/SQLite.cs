@@ -16,7 +16,7 @@ namespace SZI
             //КОНСТРУКТОР
             public SQLite()
             {
-                database = Environment.CurrentDirectory + "\\database.sqlite";
+                database = Environment.CurrentDirectory + "\\DataB.sqlite";
                 connection = new SQLiteConnection(string.Format("Data Source={0}", database));
                 connection.Open();
 
