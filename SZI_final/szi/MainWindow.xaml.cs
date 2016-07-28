@@ -31,7 +31,7 @@ namespace SZI
             SQLiteDataReader reader = connection.ReadData(string.Format("SELECT count(ID) FROM document"));
             while (reader.Read())
                 id = new int[reader.GetInt64(0)];
-            reader = connection.ReadData(string.Format("SELECT ID, NAME FROM document"));
+            reader = connection.ReadData(string.Format("SELECT ID, NAME FROM document order by name"));
             int i = -1;
             while (reader.Read())
             {
@@ -50,6 +50,22 @@ namespace SZI
             cForm.Owner = this;
             cForm.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             cForm.ShowDialog();
+            SQLite connection = new SQLite();
+            SQLiteDataReader reader = connection.ReadData(string.Format("SELECT count(ID) FROM document"));
+            while (reader.Read())
+                id = new int[reader.GetInt64(0)];
+            reader = connection.ReadData(string.Format("SELECT ID, NAME FROM document order by name"));
+            int i = -1;
+            FilesListBox.Items.Clear();
+            while (reader.Read())
+            {
+                i++;
+                id[i] = reader.GetInt32(0);
+                FilesListBox.Items.Add(reader.GetString(1));
+                //clientsList.Items.Add(new Client(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3)));
+            }
+            connection.Close();
+
         }
 
         /* Открытие файла xml (кнопка) */
@@ -73,8 +89,7 @@ namespace SZI
         {
             if (FilesListBox.SelectedItem != null)
             {
-                ForaWindow eForm = new ForaWindow(FilesListBox.SelectedItem.ToString(), startForm,id[FilesListBox.SelectedIndex]);
-                eForm.Owner = this;
+                ForaWindow eForm = new ForaWindow(FilesListBox.SelectedItem.ToString(), startForm, id[FilesListBox.SelectedIndex]);                eForm.Owner = this;
                 eForm.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 eForm.ShowDialog();
             }

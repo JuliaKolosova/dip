@@ -75,10 +75,10 @@ namespace SZI
                     case 1:
                         SQLite connection = new SQLite();
                         //SQLiteDataReader reader = connection.ReadData(string.Format("Select count(*) from ACTOR Where id_doc='{0}'", id));
-                        SQLiteDataReader reader_ist = connection.ReadData(string.Format("Select count(*) from ACTOR Where id_doc='{0}'  and PLAINTIFF=1", id));
+                        SQLiteDataReader reader_ist = connection.ReadData(string.Format("Select count(*) from ACTORs Where id_doc='{0}'  and PLAINTIFF=1", id));
                         while (reader_ist.Read())
                             ind = reader_ist.GetInt16(0);
-                        reader_ist = connection.ReadData(string.Format("Select * from Actor Where id_doc ='{0}' and PLAINTIFF=1", id));
+                        reader_ist = connection.ReadData(string.Format("Select * from Actors Where id_doc ='{0}' and PLAINTIFF=1", id));
                         first = false;
                         if (ind == 0)
                         {
@@ -263,7 +263,11 @@ namespace SZI
             textbox_ist_name.Foreground = colortext;
            // textbox_ist_name.Height = 30;
             if (reader_ist != null)
+            {
                 textbox_ist_name.Text = reader_ist.GetString(2);
+                textbox_ist_name.Tag= reader_ist.GetInt16(0).ToString();
+            }
+                
 
             Image img_del = new Image();
             img_del.Source = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "\\images\\delete.png", UriKind.Absolute));
@@ -271,12 +275,14 @@ namespace SZI
             img_del.Height = 20;
 
             Button btn = new Button();
+            btn.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            btn.BorderBrush = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            btn.Content = img_del;
+            btn.Visibility = Visibility.Collapsed;
             if (first)
             {
                 //Button btn = new Button();
-                btn.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                btn.BorderBrush = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                btn.Content = img_del;
+                btn.Visibility = Visibility.Visible;
                 btn.Click += new RoutedEventHandler(deleteTextBox);
             }
 
@@ -385,12 +391,10 @@ namespace SZI
             Grid.SetRow(textbox_ist_name, 1);
             Grid.SetColumn(textbox_ist_name, 1);
             DynamicGrid.Children.Add(textbox_ist_name);
-            if (first)
-            {
                 Grid.SetRow(btn, 1);
                 Grid.SetColumn(btn, 2);
                 DynamicGrid.Children.Add(btn);
-            }
+            
 
             Grid.SetRow(label_ist1, 2);
             Grid.SetColumn(label_ist1, 1);
@@ -422,6 +426,9 @@ namespace SZI
             Grid grid = (Grid)btn.Parent;
             var grids = StackPanel_A_2_2.Children;
             grids.Remove(grid);
+            var textbox_name = grid.Children[2] as TextBox;
+            SQLite connection = new SQLite();
+            connection.WriteData(string.Format("delete from Actors Where id='{0}'", textbox_name.Tag));
         }
 
         private void FunInvolv(object sender, RoutedEventArgs e)
@@ -490,7 +497,7 @@ namespace SZI
         {
             bool isFull = false;
             SQLite connection = new SQLite();
-            SQLiteDataReader reader;
+            SQLiteDataReader reader_ist;
             if (formNumber == 0)
             {
                 switch (listBox.SelectedIndex)
@@ -499,16 +506,21 @@ namespace SZI
                         connection.WriteData(string.Format("Update Document set number='{0}', date='{1}', locate='{2}', NAME_COURT='{3}', CONTENT_COURT='{4}', SECRETARY='{5}'  Where id='{6}'", TBNumber_Copy.Text, Date_Copy.SelectedDate, TBPlace_Copy.Text, TBName_Copy.Text,TBSostav_Copy.Text,TBSecretary_Copy.Text, id));
                         break;
                     case 1:
-                        connection.WriteData(string.Format("delete from actor  Where id_doc='{0}'", id));
+                        
                         foreach (Grid grid in StackPanel_A_2_2.Children)
                         {
                             var textbox_name = grid.Children[2] as TextBox;
-                            var textbox_doc1 = grid.Children[4] as TextBox;
-                            var textbox_doc2 = grid.Children[6] as TextBox;
+                            var textbox_doc1 = grid.Children[5] as TextBox;
+                            var textbox_doc2 = grid.Children[7] as TextBox;
                             var str = textbox_doc1.Text + "~" + textbox_doc2.Text;
-                            connection.WriteData(string.Format("INSERT INTO actor (id_doc,name_actor,actor_doc,plaintiff) VALUES ('{0}','{1}','{2}','{3}')", id, textbox_name.Text,str,1));
-                        }
-                            break;
+                           // reader_ist = connection.ReadData(string.Format("Select count(*) from ACTOR Where id='{0}'", textbox_name.Tag));
+                            //while (reader_ist.Read())
+                             //   ind = reader_ist.GetInt16(0);
+                            if (textbox_name.Tag==null)
+                                connection.WriteData(string.Format("INSERT INTO actors (id_doc,name_actor,actor_doc,plaintiff) VALUES ('{0}','{1}','{2}','{3}')", id, textbox_name.Text,str,1));
+                            else
+                                connection.WriteData(string.Format("Update actors set id_doc='{0}', name_actor='{1}', actor_doc='{2}' Where id='{3}'", id, textbox_name.Text, str, textbox_name.Tag));                        }
+                        break;
                 }
             }
 
