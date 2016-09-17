@@ -23,8 +23,8 @@
 
         <Button x:Name="Save"
         	Width="110" Height="30" HorizontalAlignment="right" VerticalAlignment="Bottom" Margin="0,0,164,7" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Сохранить" Grid.Column="1" FontSize="18.667" Click="Save_Click"/>
-        <Button x:Name="Save_Copy"
-        	Width="110" Height="30" HorizontalAlignment="right" VerticalAlignment="Bottom" Margin="0,0,29,7" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Далее" Grid.Column="1" FontSize="18.667"/>
+        <Button x:Name="Button_Next"
+        	Width="110" Height="30" HorizontalAlignment="right" VerticalAlignment="Bottom" Margin="0,0,29,7" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Далее" Grid.Column="1" FontSize="18.667" Click="Button_Next_Click" IsEnabled="False"/>
 
         <GroupBox x:Name="groupBox" Header="Форма A" HorizontalAlignment="Right" VerticalAlignment="Top" Height="449" Width="219" Foreground="#FF378B1E" FontSize="18.667" BorderThickness="1" BorderBrush="#FF70D452" HorizontalContentAlignment="Center" Margin="0,0,10,0">
             <GroupBox.Background>
@@ -42,68 +42,13 @@
             </ListBox>
         </GroupBox>
 
-        <TabControl x:Name="tabControl" HorizontalAlignment="Center" Height="464" VerticalAlignment="Center" Width="692" Grid.ColumnSpan="2" Foreground="#FF378B1E" BorderBrush="{x:Null}" Background="{x:Null}" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed" Margin="0,2,0,3">
-            <TabControl.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </TabControl.RenderTransform>
-            <TabItem Header="Общая информация о деле" Foreground="#FF378B1E">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="23*"/>
-                        <ColumnDefinition Width="663*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox x:Name="TBNumber" HorizontalAlignment="Left" Height="30" Margin="318,17,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="145" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667" Grid.Column="1"/>
-                    <Label x:Name="label" Content="№ дела:" HorizontalAlignment="Left" Margin="237,17,0,0" VerticalAlignment="Top" Foreground="#FF378B1E" Height="44" Width="81" FontSize="18.667" Grid.Column="1"/>
-                    <TextBox x:Name="TBPlace" HorizontalAlignment="Left" Height="30" Margin="462,109,-2,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="203" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667" Grid.Column="1"/>
-                    <Label x:Name="label_Copy" Content="Место принятия решения:" HorizontalAlignment="Left" Margin="237,109,0,0" VerticalAlignment="Top" Foreground="#FF378B1E" Height="44" Width="228" FontSize="18.667" Grid.Column="1"/>
-                    <Label x:Name="label_Copy1" Content="Дата принятия решения:" HorizontalAlignment="Left" Margin="236,61,0,0" VerticalAlignment="Top" Foreground="#FF378B1E" Height="44" Width="215" FontSize="18.667" Grid.Column="1"/>
-                    <DatePicker x:Name="Date" HorizontalAlignment="Left" Margin="451,62,0,0" VerticalAlignment="Top" Width="155" Background="#FFDBFFD0" Foreground="#FF378B1E" Height="33" FontSize="18.667" Grid.Column="1">
-                        <DatePicker.BorderBrush>
-                            <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1">
-                                <GradientStop Color="#FFA3AEB9" Offset="0"/>
-                                <GradientStop Color="#FF8399A9" Offset="0.375"/>
-                                <GradientStop Color="#FF718597" Offset="0.375"/>
-                                <GradientStop Color="White" Offset="1"/>
-                            </LinearGradientBrush>
-                        </DatePicker.BorderBrush>
-                    </DatePicker>
-                    <Label x:Name="label_Copy2" Content="Наименование суда, приневшего решение:" HorizontalAlignment="Left" Margin="237,149,0,0" VerticalAlignment="Top" Foreground="#FF378B1E" Height="33" Width="370" FontSize="18.667" Grid.Column="1"/>
-                    <TextBox x:Name="TBName" HorizontalAlignment="Left" Height="30" Margin="237,182,-2,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="428" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667" Grid.Column="1"/>
-                    <Label x:Name="label_Copy3" Content="Состав суда:" HorizontalAlignment="Left" Margin="237,227,0,0" VerticalAlignment="Top" Foreground="#FF378B1E" Height="44" Width="113" FontSize="18.667" Grid.Column="1"/>
-                    <TextBox x:Name="TBSostav" HorizontalAlignment="Left" Height="101" Margin="350,234,-2,0" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" Width="315" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontSize="18.667" Grid.Column="1"/>
-
-                    <Label x:Name="label_Copy4" Content="Секретарь судебного заседания:" HorizontalAlignment="Left" Margin="237,335,0,0" VerticalAlignment="Top" Foreground="#FF378B1E" Height="39" Width="274" FontSize="18.667" Grid.Column="1"/>
-                    <TextBox x:Name="TBSecretary" HorizontalAlignment="Left" Height="30" Margin="237,365,-2,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="428" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667" Grid.Column="1"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Информация об истцах" Foreground="#FF378B1E">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
-            <TabItem Header="Информация о представителях истцов" Foreground="#FF378B1E">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
-            <TabItem Header="Информация об ответчиках" Foreground="#FF378B1E">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
-            <TabItem Header="Информация о представителях ответчиков" Foreground="#FF378B1E">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
-            <TabItem Header="Информация о заседании" Foreground="#FF378B1E">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
-        </TabControl>
-
-        <StackPanel x:Name="StackPanel" Grid.Column="1" HorizontalAlignment="Left" Height="400" VerticalAlignment="Top" Width="465" Margin="0,5,0,0">
+        <StackPanel x:Name="StackPanel" Grid.Column="1" HorizontalAlignment="Left" Height="422" VerticalAlignment="Top" Width="465" Margin="0,5,0,0">
 
             <StackPanel x:Name="StackPanel_A_1_1" Orientation="Horizontal" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="251" Visibility="Collapsed">
                 <Label x:Name="label_Copy5" Content="№ дела:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="44" Width="81" FontSize="18.667" Margin="0,0,0,-4"/>
                 <TextBox x:Name="TBNumber_Copy" HorizontalAlignment="Left" Height="30"  TextWrapping="Wrap" VerticalAlignment="Top" Width="145" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
             </StackPanel>
+
 
             <StackPanel x:Name="StackPanel_A_1_2" Orientation="Horizontal" HorizontalAlignment="Left" Height="43" VerticalAlignment="Top" Width="391" Visibility="Collapsed">
                 <Label x:Name="label_Copy7" Content="Дата принятия решения:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="44" Width="215" FontSize="18.667"/>
@@ -133,7 +78,7 @@
                 <TextBox x:Name="TBSecretary_Copy" HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" VerticalAlignment="Top" Width="428" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
             </StackPanel>
 
-            <StackPanel Height="31" x:Name="StackPanel_A_2_1" Orientation="Horizontal" Margin="0,0,-17,0" >
+            <StackPanel Height="31" x:Name="StackPanel_A_2_1" Orientation="Horizontal" Margin="0,0,-17,0"  Visibility="Collapsed">
                 <Label x:Name="label_Copy11" Content="Информация об истцах:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="403" FontSize="18.667"/>
                 <Button x:Name="AddBtn" Grid.Column="4" Grid.Row="2"
                             Height="30" Width="30"  HorizontalAlignment="right" VerticalAlignment="Bottom"
@@ -142,20 +87,37 @@
                 </Button>
             </StackPanel>
 
-            <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Height="361" Margin="9,0,0,0" >
+            <ScrollViewer x:Name="Scroll_A_2_2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Height="358" Margin="9,0,0,0"  Visibility="Collapsed">
                 <StackPanel x:Name="StackPanel_A_2_2" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Auto" >
                 </StackPanel>
             </ScrollViewer>
-            <!--   <Grid Height="100" Width="433">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="19*"/>
-                        <ColumnDefinition Width="128*"/>
-                        <ColumnDefinition Width="19*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="0,2,0,0" VerticalAlignment="Top" Width="40" Height="28"  Grid.Column="2"/>
-                    <Label x:Name="label1" Content="ФИО" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                </Grid>
-                -->
+
+            <StackPanel x:Name="StackPanel_A_3_1" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Auto" >
+                <Label x:Name="label_pred_ist" Content="Информация о представителях истцов:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="403" FontSize="18.667"/>
+            </StackPanel>
+
+            <StackPanel x:Name="StackPanel_A_3_2" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Auto" >
+                <TabControl x:Name="Tab_Presd_ist" Height="374" Width="459" Visibility="Collapsed" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" RenderTransformOrigin="0.5,0.5">
+                    <TabControl.LayoutTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </TabControl.LayoutTransform>
+                    <TabControl.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </TabControl.RenderTransform>
+
+                </TabControl>
+                <Label x:Name="label_pred_ist2" Content="Введите информацию об истцах!" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#FFEA2727" Height="31" Width="459" FontSize="18.667" Visibility="Collapsed"/>
+            </StackPanel>
 
         </StackPanel>
     </Grid>

@@ -35,7 +35,7 @@ namespace SZI
             {
                 this.query = new SQLiteCommand(query, connection);
                 this.query.ExecuteNonQuery();
-                Close();
+               // Close();
             }
             //закрытие подключения
             public void Close()
