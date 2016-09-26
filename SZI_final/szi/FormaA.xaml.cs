@@ -81,7 +81,6 @@ namespace SZI
                     case 2:
                         Button_Next.IsEnabled = true;
                         StackPanel_A_3_1.Visibility = Visibility.Visible;
-                        //Scroll_A_3_2.Visibility = Visibility.Visible;
                         StackPanel_A_3_2.Visibility = Visibility.Visible;
                         TabControlPredIst();
 
@@ -125,7 +124,7 @@ namespace SZI
                     firstpred = true;
                     ist_id = reader_pred_ist.GetInt16(0);
                     StackPanel pred_ist_panel = new StackPanel(); ;
-                    pred_ist_panel.Children.Clear();
+                    //pred_ist_panel.Children.Clear();
                     SQLiteDataReader count_reader_ist = connection.ReadData(string.Format("Select count(*) from AGENT_PLAINTIFF Where id_actor='{0}'", ist_id));
                     while (count_reader_ist.Read())
                          count_reader_ist_i = count_reader_ist.GetInt16(0);
@@ -146,16 +145,19 @@ namespace SZI
                     else
                     {                        
                         SQLiteDataReader reader_pred_ist2 = connection.ReadData(string.Format("Select * from AGENT_PLAINTIFF Where id_actor ='{0}'", ist_id));
+                        pred_ist_panel.Children.Add(AddStPanelPredIstec(reader_pred_ist2, firstpred));
+                        firstpred = false;
                         while (reader_pred_ist2.Read())
                         {
                             pred_ist_panel.Children.Add(AddStPanelPredIstec(reader_pred_ist2, firstpred));
-                            firstpred = false;
                             // тут нужно как-то динамично считывть информацию. может быть несколько представителей у одного. возможность добавления/удаления :(
                         }
                         Tab_Presd_ist.Items.Add(new TabItem
                         {
                             Header = new TextBlock { Text = reader_pred_ist.GetString(1) },
-                            Tag = new TextBlock { Text = ist_id.ToString() }
+                            Tag = new TextBlock { Text = ist_id.ToString() },
+                            Content = pred_ist_panel
+                            
                         });
                        
                     }
@@ -169,7 +171,7 @@ namespace SZI
         public Grid CreateHeaderPredIst(SQLiteDataReader reader_pred_ist)
         {
             Grid DynamicGrid = new Grid();
-            DynamicGrid.Width = 430;
+            DynamicGrid.Width = 550;
             DynamicGrid.HorizontalAlignment = HorizontalAlignment.Left;
             DynamicGrid.VerticalAlignment = VerticalAlignment.Top;
             ColumnDefinition gridCol1 = new ColumnDefinition();
@@ -213,7 +215,6 @@ namespace SZI
 
         private Grid AddStPanelPredIstec(SQLiteDataReader reader_pred_ist, bool firstpred)
         {
-
             Grid grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition());
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(30) });
@@ -227,11 +228,6 @@ namespace SZI
             textbox_predist_name.AcceptsReturn = false;
             textbox_predist_name.Foreground = colortext;
             // textbox_ist_name.Height = 30;
-            if (reader_pred_ist != null)
-            {
-                textbox_predist_name.Text = reader_pred_ist.GetString(2);
-                textbox_predist_name.Tag = reader_pred_ist.GetInt16(0).ToString();
-            }
 
 
             Image img_del = new Image();
@@ -251,33 +247,24 @@ namespace SZI
                 btn.Click += new RoutedEventHandler(deletePredIst);
             }
 
-
             //        StackPanel.Children.Add(grid);
-            TextBlock label_predist_name = new TextBlock() { Text = "ФИО представителя:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
+            Label label_predist_name = new Label() { Content = "ФИО представителя:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
-            TextBlock label_doc_predist = new TextBlock() { Text = "Действующего на основании:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
+            Label label_doc_predist = new Label() { Content = "Действующего на основании:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
-            TextBlock label_doc1_predist = new TextBlock() { Text = "доверенности от ", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
+            Label label_doc1_predist = new Label() { Content = "  - доверенности от ", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
             DatePicker date_dover_ot = new DatePicker();
 
-            TextBlock label_doc1_2_predist = new TextBlock() { Text = "со сроком действия до", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
+            Label label_doc1_2_predist = new Label() { Content = " со сроком действия до ", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
             DatePicker date_dover_ot_2 = new DatePicker();
 
-            StackPanel stp_doc1_predist = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Left, Width = 300 };
-            stp_doc1_predist.Children.Add(label_doc1_predist);
-            stp_doc1_predist.Children.Add(date_dover_ot);
-            stp_doc1_predist.Children.Add(label_doc1_2_predist);
-            stp_doc1_predist.Children.Add(date_dover_ot_2);
+            Label label_doc2_predist = new Label() { Content = "  - ордера адвоката от ", FontSize = 16, Margin = new Thickness(0, 10, 0, 10), Foreground = colortext };
 
-            TextBlock label_doc2_predist = new TextBlock() { Text = "ордера адвоката от", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
+            DatePicker date_order_ot = new DatePicker() { Margin = new Thickness(0, 10, 0, 10) };
 
-            DatePicker date_order_ot = new DatePicker();
-
-            StackPanel stp_doc2_predist = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Left };
-            stp_doc1_predist.Children.Add(label_doc2_predist);
-            stp_doc1_predist.Children.Add(date_order_ot);
+            Label label_doc3_predist = new Label() { Content = "  - наименование документа, ", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
             TextBox tex_box_predist_doc1 = new TextBox();
             tex_box_predist_doc1.Padding = new Thickness(1, 1, 1, 1);
@@ -285,7 +272,86 @@ namespace SZI
             tex_box_predist_doc1.FontSize = 16;
             tex_box_predist_doc1.AcceptsReturn = true;
             tex_box_predist_doc1.Foreground = colortext;
-            tex_box_predist_doc1.Width = 25;
+            tex_box_predist_doc1.Width = 280;
+            tex_box_predist_doc1.Height = 25;
+
+            Label label_doc3_2_predist = new Label() { Content = "удостоверяющего служебное положение их представителей от ", FontSize = 16, Margin = new Thickness(0, 1, 1, 0), Foreground = colortext };
+
+            DatePicker date_dover_ot_3 = new DatePicker();
+
+            Label label_doc4_predist = new Label() { Content = "  - наименование документа, ", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
+
+            TextBox tex_box_predist_doc4 = new TextBox();
+            tex_box_predist_doc4.Padding = new Thickness(1, 1, 1, 1);
+            tex_box_predist_doc4.TextWrapping = TextWrapping.Wrap;
+            tex_box_predist_doc4.FontSize = 16;
+            tex_box_predist_doc4.AcceptsReturn = true;
+            tex_box_predist_doc4.Foreground = colortext;
+            tex_box_predist_doc4.Width = 280;
+            tex_box_predist_doc4.Height = 25;           
+
+            Label label_doc4_2_predist = new Label() { Content = ", удостоверяющего статус и полномочия законного представителя в силу ст.", FontSize = 16, Margin = new Thickness(0, 1, 1, 0), Foreground = colortext };
+
+            TextBox tex_box_predist_doc4_2 = new TextBox();
+            tex_box_predist_doc4_2.Padding = new Thickness(1, 1, 1, 1);
+            tex_box_predist_doc4_2.TextWrapping = TextWrapping.Wrap;
+            tex_box_predist_doc4_2.FontSize = 16;
+            tex_box_predist_doc4_2.AcceptsReturn = true;
+            tex_box_predist_doc4_2.Foreground = colortext;
+            tex_box_predist_doc4_2.Width = 280;
+            tex_box_predist_doc4_2.Height = 25;
+            if (reader_pred_ist != null)
+            {
+                textbox_predist_name.Text = reader_pred_ist.GetString(2);
+                textbox_predist_name.Tag = reader_pred_ist.GetInt16(0).ToString();
+
+                if (reader_pred_ist.GetString(3) != null)
+                {
+                    var str = reader_pred_ist.GetString(3).Split('~');
+                    if ((str[0].Length != 0) && (str[1].Length != 0))
+                    {
+                        date_dover_ot.SelectedDate = DateTime.Parse(str[0]);
+                        date_dover_ot_2.SelectedDate = DateTime.Parse(str[1]);
+                    }
+                    if (str[2].Length != 0)
+                    {
+                        date_order_ot.SelectedDate = DateTime.Parse(str[2]);
+                    }
+
+                    if ((str[3].Length != 0) && (str[4].Length != 0))
+                    {
+                        tex_box_predist_doc1.Text = str[3];
+                        date_dover_ot_3.SelectedDate = DateTime.Parse(str[4]);
+                    }
+                    tex_box_predist_doc4.Text = str[5];
+                    tex_box_predist_doc4_2.Text = str[6];
+                }
+            }
+            StackPanel stp_doc1_predist = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Left, Width = 560 };
+            stp_doc1_predist.Children.Add(label_doc1_predist);
+            stp_doc1_predist.Children.Add(date_dover_ot);
+            stp_doc1_predist.Children.Add(label_doc1_2_predist);
+            stp_doc1_predist.Children.Add(date_dover_ot_2);
+
+            StackPanel stp_doc2_predist = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Left, Width = 560 };
+            stp_doc2_predist.Children.Add(label_doc2_predist);
+            stp_doc2_predist.Children.Add(date_order_ot);
+
+            StackPanel stp_doc3_predist = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Left, Width = 560 };
+            stp_doc3_predist.Children.Add(label_doc3_predist);
+            stp_doc3_predist.Children.Add(tex_box_predist_doc1);
+
+            StackPanel stp_doc3_2_predist = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Left, Width = 560 };
+            stp_doc3_2_predist.Children.Add(label_doc3_2_predist);
+            stp_doc3_2_predist.Children.Add(date_dover_ot_3);
+
+            StackPanel stp_doc4_predist = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Left, Width = 560 };
+            stp_doc4_predist.Children.Add(label_doc4_predist);
+            stp_doc4_predist.Children.Add(tex_box_predist_doc4);
+
+            StackPanel stp_doc4_2_predist = new StackPanel() { Orientation = Orientation.Vertical, HorizontalAlignment = HorizontalAlignment.Left, Width = 560 };
+            stp_doc4_2_predist.Children.Add(label_doc4_2_predist);
+            stp_doc4_2_predist.Children.Add(tex_box_predist_doc4_2);
 
             //tex_box_ist_doc1.Height = 25;
             TextBlock label_ist2 = new TextBlock() { Text = "извещенный надлежайшим образом: документ, подтверждающий извещение:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
@@ -312,7 +378,7 @@ namespace SZI
                     tex_box_ist_doc2.Text = arr[1];
                 }
             Grid DynamicGrid = new Grid();
-            DynamicGrid.Width = 430;
+            DynamicGrid.Width = 570;
             DynamicGrid.HorizontalAlignment = HorizontalAlignment.Left;
             DynamicGrid.VerticalAlignment = VerticalAlignment.Top;
             ColumnDefinition gridCol1 = new ColumnDefinition();
@@ -330,7 +396,10 @@ namespace SZI
             RowDefinition gridRow5 = new RowDefinition();
             RowDefinition gridRow6 = new RowDefinition();
             RowDefinition gridRow7 = new RowDefinition();
-            gridRow7.Height = new GridLength(15);
+            RowDefinition gridRow8 = new RowDefinition();
+            RowDefinition gridRow9 = new RowDefinition();
+            RowDefinition gridRow10 = new RowDefinition();
+            gridRow10.Height = new GridLength(15);
             Rectangle rec = new Rectangle() { Fill = colortext, Height = 1 };
             rec.Margin = new Thickness(0, 7, 0, 7);
             Grid.SetColumnSpan(rec, 3);
@@ -339,8 +408,11 @@ namespace SZI
             DynamicGrid.RowDefinitions.Add(gridRow3);
             DynamicGrid.RowDefinitions.Add(gridRow4);
             DynamicGrid.RowDefinitions.Add(gridRow5);
-
+            DynamicGrid.RowDefinitions.Add(gridRow6);
             DynamicGrid.RowDefinitions.Add(gridRow7);
+            DynamicGrid.RowDefinitions.Add(gridRow8);
+            DynamicGrid.RowDefinitions.Add(gridRow9);
+            DynamicGrid.RowDefinitions.Add(gridRow10);
             //StackPanel_A_2_2.Children.Add(grid);
             // StackPanel_A_2_2.Children.Add(grid);
 
@@ -357,84 +429,44 @@ namespace SZI
             Grid.SetColumn(btn, 2);
             DynamicGrid.Children.Add(btn);
 
-
             Grid.SetRow(label_doc_predist, 2);
             Grid.SetColumn(label_doc_predist, 1);
             DynamicGrid.Children.Add(label_doc_predist);
-           // Grid.SetColumnSpan(stp_doc1_predist,2);
+
+            Grid.SetColumnSpan(stp_doc1_predist, 3);
             Grid.SetRow(stp_doc1_predist, 3);
-            Grid.SetColumn(stp_doc1_predist, 1);
+            Grid.SetColumn(stp_doc1_predist, 0);
             DynamicGrid.Children.Add(stp_doc1_predist);
 
+            Grid.SetColumnSpan(stp_doc2_predist, 3);
             Grid.SetRow(stp_doc2_predist, 4);
-            Grid.SetColumn(stp_doc2_predist, 1);
+            Grid.SetColumn(stp_doc2_predist, 0);
             DynamicGrid.Children.Add(stp_doc2_predist);
 
-            Grid.SetRow(rec, 5);
+            
+            Grid.SetColumnSpan(stp_doc3_predist, 3);
+            Grid.SetRow(stp_doc3_predist, 5);
+            Grid.SetColumn(stp_doc3_predist, 0);
+            DynamicGrid.Children.Add(stp_doc3_predist);
+
+            Grid.SetColumnSpan(stp_doc3_2_predist, 3);
+            Grid.SetRow(stp_doc3_2_predist, 6);
+            Grid.SetColumn(stp_doc3_2_predist, 0);
+            DynamicGrid.Children.Add(stp_doc3_2_predist);
+
+            Grid.SetColumnSpan(stp_doc4_predist, 3);
+            Grid.SetRow(stp_doc4_predist, 7);
+            Grid.SetColumn(stp_doc4_predist, 0);
+            DynamicGrid.Children.Add(stp_doc4_predist);
+
+            Grid.SetColumnSpan(stp_doc4_2_predist, 3);
+            Grid.SetRow(stp_doc4_2_predist, 8);
+            Grid.SetColumn(stp_doc4_2_predist, 0);
+            DynamicGrid.Children.Add(stp_doc4_2_predist);
+
+            Grid.SetRow(rec, 9);
             Grid.SetColumn(rec, 0);
             DynamicGrid.Children.Add(rec);
-            //Grid DynamicGrid = new Grid();
-            //DynamicGrid.Width = 430;
-            //DynamicGrid.HorizontalAlignment = HorizontalAlignment.Left;
-            //DynamicGrid.VerticalAlignment = VerticalAlignment.Top;
-            //ColumnDefinition gridCol1 = new ColumnDefinition();
-            //ColumnDefinition gridCol2 = new ColumnDefinition();
-            //ColumnDefinition gridCol3 = new ColumnDefinition();
-            //gridCol1.Width = new GridLength(30);
-            //gridCol3.Width = new GridLength(30);
-            //DynamicGrid.ColumnDefinitions.Add(gridCol1);
-            //DynamicGrid.ColumnDefinitions.Add(gridCol2);
-            //DynamicGrid.ColumnDefinitions.Add(gridCol3);
-            //RowDefinition gridRow1 = new RowDefinition();
-            //RowDefinition gridRow2 = new RowDefinition();
-            //RowDefinition gridRow3 = new RowDefinition();
-            //RowDefinition gridRow4 = new RowDefinition();
-            //RowDefinition gridRow5 = new RowDefinition();
-            //RowDefinition gridRow6 = new RowDefinition();
-            //RowDefinition gridRow7 = new RowDefinition();
-            //gridRow7.Height = new GridLength(15);
-            //Rectangle rec = new Rectangle() { Fill = colortext, Height = 1 };
-            //rec.Margin = new Thickness(0, 7, 0, 7);
-            //Grid.SetColumnSpan(rec, 3);
-            //DynamicGrid.RowDefinitions.Add(gridRow1);
-            //DynamicGrid.RowDefinitions.Add(gridRow2);
-            //DynamicGrid.RowDefinitions.Add(gridRow3);
-            //DynamicGrid.RowDefinitions.Add(gridRow4);
-            //DynamicGrid.RowDefinitions.Add(gridRow5);
-            //DynamicGrid.RowDefinitions.Add(gridRow6);
-            //DynamicGrid.RowDefinitions.Add(gridRow7);
-            ////StackPanel_A_2_2.Children.Add(grid);
-            //// StackPanel_A_2_2.Children.Add(grid);
-
-            //Grid.SetRow(label_predist_name, 0);
-            //Grid.SetColumn(label_predist_name, 1);
-            //DynamicGrid.Children.Add(label_predist_name);
-            //Grid.SetRow(label_ist, 1);
-            //Grid.SetColumn(label_ist, 0);
-            //DynamicGrid.Children.Add(label_ist);
-            //Grid.SetRow(textbox_ist_name, 1);
-            //Grid.SetColumn(textbox_ist_name, 1);
-            //DynamicGrid.Children.Add(textbox_ist_name);
-            //Grid.SetRow(btn, 1);
-            //Grid.SetColumn(btn, 2);
-            //DynamicGrid.Children.Add(btn);
-
-
-            //Grid.SetRow(label_doc_predist, 2);
-            //Grid.SetColumn(label_doc_predist, 1);
-            //DynamicGrid.Children.Add(label_doc_predist);
-            //Grid.SetRow(tex_box_predist_doc1, 3);
-            //Grid.SetColumn(tex_box_predist_doc1, 1);
-            //DynamicGrid.Children.Add(tex_box_predist_doc1);
-            //Grid.SetRow(label_ist2, 4);
-            //Grid.SetColumn(label_ist2, 1);
-            //DynamicGrid.Children.Add(label_ist2);
-            //Grid.SetRow(tex_box_ist_doc2, 5);
-            //Grid.SetColumn(tex_box_ist_doc2, 1);
-            //DynamicGrid.Children.Add(tex_box_ist_doc2);
-            //Grid.SetRow(rec, 6);
-            //Grid.SetColumn(rec, 0);
-            //DynamicGrid.Children.Add(rec);
             return DynamicGrid;
         }
 
@@ -452,6 +484,36 @@ namespace SZI
 
         //обновляем/заполняем таблицу с истцами
         private void UpdateA_2()
+        {
+            SQLite connection = new SQLite();
+            //SQLiteDataReader reader = connection.ReadData(string.Format("Select count(*) from ACTOR Where id_doc='{0}'", id));
+            SQLiteDataReader reader_ist = connection.ReadData(string.Format("Select count(*) from ACTORs Where id_doc='{0}'  and PLAINTIFF=1", id));
+            while (reader_ist.Read())
+                ind = reader_ist.GetInt16(0);
+            reader_ist = connection.ReadData(string.Format("Select * from Actors Where id_doc ='{0}' and PLAINTIFF=1", id));
+            first = false;
+            StackPanel_A_2_1.Visibility = Visibility.Visible;
+            Scroll_A_2_2.Visibility = Visibility.Visible;
+            StackPanel_A_2_2.Visibility = Visibility.Visible;
+            StackPanel_A_2_2.Children.Clear();
+            if (ind == 0)
+            {
+                AddStPanelIstec1(null);
+                first = true;
+            }
+            else
+            {
+                while (reader_ist.Read())
+                {
+                    AddStPanelIstec1(reader_ist);
+                    first = true;
+                }
+            }
+            connection.Close();
+        }
+
+        //обновляем/заполняем таблицу с представителями истцов
+        private void UpdateA_3()
         {
             SQLite connection = new SQLite();
             //SQLiteDataReader reader = connection.ReadData(string.Format("Select count(*) from ACTOR Where id_doc='{0}'", id));
@@ -685,12 +747,14 @@ namespace SZI
                     //int index = str.IndexOf("///");
                     if (arr[0] != "")
                     {
-                        //str1 = str.Substring(0, index - 1);
-                        //str.CopyTo(0, str1, 0, index - 1);
                         tex_box_ist_doc1.Text = arr[0];
                     }
+                    if (arr[1] != "")
+                    {
+                        tex_box_ist_doc1.Text = arr[1];
+                    }
                     // str.CopyTo(0, str1, index + 2, str.Length - index + 2);
-                    tex_box_ist_doc2.Text = arr[1];
+                    
                 }
             Grid grid1 = new Grid();
             grid1.ColumnDefinitions.Add(new ColumnDefinition());
@@ -881,6 +945,7 @@ namespace SZI
             bool isFull = false;
             SQLite connection = new SQLite();
             SQLiteDataReader reader_ist;
+            string str;
             if (formNumber == 0)
             {
                 switch (listBox.SelectedIndex)
@@ -893,9 +958,10 @@ namespace SZI
                         foreach (Grid grid in StackPanel_A_2_2.Children)
                         {
                             var textbox_name = grid.Children[2] as TextBox;
-                            var textbox_doc1 = grid.Children[5] as TextBox;
-                            var textbox_doc2 = grid.Children[7] as TextBox;
-                            var str = textbox_doc1.Text + "~" + textbox_doc2.Text;
+                            var textbox_doc1 = grid.Children[6] as TextBox;
+                            var textbox_doc2 = grid.Children[8] as TextBox;
+
+                            str = textbox_doc1.Text + "~" + textbox_doc2.Text;
                             // reader_ist = connection.ReadData(string.Format("Select count(*) from ACTOR Where id='{0}'", textbox_name.Tag));
                             //while (reader_ist.Read())
                             //   ind = reader_ist.GetInt16(0);
@@ -909,6 +975,44 @@ namespace SZI
                             }
                         }
                         UpdateA_2();
+                        break;
+
+                    case 2:
+                        foreach (TabItem tbItem in Tab_Presd_ist.Items )
+                        {
+                            var id_ag = (TextBlock)tbItem.Tag;
+                            StackPanel st = (StackPanel)tbItem.Content;
+                            Grid grid_2 = (Grid)st.Children[1];
+                            var textbox_name = grid_2.Children[2] as TextBox;
+                            var actor_name = textbox_name.Text;
+                            if (actor_name.Length != 0)
+                            {
+                                var stp_doc1 = grid_2.Children[5] as StackPanel;
+                                var str_doc = stp_doc1.Children[1].ToString() + "~" + stp_doc1.Children[3].ToString();
+                                var stp_doc2 = grid_2.Children[6] as StackPanel;
+                                str_doc = str_doc + "~" + stp_doc2.Children[1].ToString();
+                                var stp_doc3 = grid_2.Children[7] as StackPanel;
+                                var tb_doc3 = stp_doc3.Children[1] as TextBox;
+                                str_doc = str_doc + "~" + tb_doc3.Text.ToString();
+                                var stp_doc3_2 = grid_2.Children[8] as StackPanel;
+                                str_doc = str_doc + "~" + stp_doc3_2.Children[1].ToString();
+                                var stp_doc4 = grid_2.Children[9] as StackPanel;
+                                var tb_doc4 = stp_doc4.Children[1] as TextBox;
+                                str_doc = str_doc + "~" + tb_doc4.Text.ToString();
+                                var stp_doc4_2 = grid_2.Children[10] as StackPanel;
+                                var tb_doc4_2 = stp_doc4_2.Children[1] as TextBox;
+                                str_doc = str_doc + "~" + tb_doc4_2.Text.ToString();
+                                if (textbox_name.Tag == null)
+                                    connection.WriteData(string.Format("INSERT INTO AGENT_PLAINTIFF (ID_ACTOR,NAME_AGENT , AGENT_DOC) VALUES ('{0}','{1}','{2}')", id_ag.Text, actor_name, str_doc));
+                                else
+                                {
+                                    SQLite connection1 = new SQLite();
+                                    connection1.WriteData(string.Format("Update AGENT_PLAINTIFF set NAME_AGENT='{0}',  AGENT_DOC='{1}' Where ID_PLAINTIFF='{2}'", actor_name, str_doc, textbox_name.Tag));
+                                    connection1.Close();
+                                }
+                            }
+                        }
+                        TabControlPredIst();
                         break;
                 }
             }

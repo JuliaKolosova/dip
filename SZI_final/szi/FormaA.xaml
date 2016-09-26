@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SZI"
         mc:Ignorable="d"
-        Title="Дело " Height="500" Width="728" FontFamily="Calibri" FontSize="16" Loaded="FormaA2_Loaded">
+        Title="Дело " Height="674" Width="894.5" FontFamily="Calibri" FontSize="16" Loaded="FormaA2_Loaded">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FFCCF9C5" Offset="1"/>
@@ -14,36 +14,37 @@
     </Window.Background>
     <Grid x:Name="FormaA1">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="235*"/>
-            <ColumnDefinition Width="457*"/>
+            <ColumnDefinition Width="142*"/>
+            <ColumnDefinition Width="301*"/>
         </Grid.ColumnDefinitions>
 
-        <TreeView x:Name="Tree" HorizontalAlignment="Left" Height="449" VerticalAlignment="Top" Width="268" Margin="10,10,0,0" Foreground="#FF378B1E" TextOptions.TextFormattingMode="Display" Visibility="Collapsed" IsEnabled="False" Grid.ColumnSpan="2" >
-        </TreeView>
+        <TreeView x:Name="Tree" HorizontalAlignment="Left" Height="449" VerticalAlignment="Top" Width="268" Margin="10,10,0,0" Foreground="#FF378B1E" TextOptions.TextFormattingMode="Display" Visibility="Collapsed" IsEnabled="False" />
 
         <Button x:Name="Save"
-        	Width="110" Height="30" HorizontalAlignment="right" VerticalAlignment="Bottom" Margin="0,0,164,7" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Сохранить" Grid.Column="1" FontSize="18.667" Click="Save_Click"/>
+        	Width="110" Height="30" HorizontalAlignment="right" VerticalAlignment="Top" Margin="0,606,164,0" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Сохранить" Grid.Column="1" FontSize="18.667" Click="Save_Click"/>
         <Button x:Name="Button_Next"
         	Width="110" Height="30" HorizontalAlignment="right" VerticalAlignment="Bottom" Margin="0,0,29,7" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Далее" Grid.Column="1" FontSize="18.667" Click="Button_Next_Click" IsEnabled="False"/>
 
-        <GroupBox x:Name="groupBox" Header="Форма A" HorizontalAlignment="Right" VerticalAlignment="Top" Height="449" Width="219" Foreground="#FF378B1E" FontSize="18.667" BorderThickness="1" BorderBrush="#FF70D452" HorizontalContentAlignment="Center" Margin="0,0,10,0">
+        <GroupBox x:Name="groupBox" Header="Форма A" Foreground="#FF378B1E" FontSize="18.667" BorderThickness="1" BorderBrush="#FF70D452" HorizontalContentAlignment="Center" Margin="16,0,10,20">
             <GroupBox.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFDDFBD8" Offset="1"/>
                     <GradientStop Color="White"/>
                 </LinearGradientBrush>
             </GroupBox.Background>
-            <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="415" VerticalAlignment="Top" Width="190" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF378B1E" Margin="10,0,0,0" FontSize="16" SelectionChanged="listBox_SelectionChanged">
+            <ListBox x:Name="listBox" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF378B1E" Margin="0,0,0,0" FontSize="18" SelectionChanged="listBox_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" TextWrapping="WrapWithOverflow" Width="175"/>
+                        <TextBlock Text="{Binding}" TextWrapping="WrapWithOverflow" Width="220"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </GroupBox>
 
-        <StackPanel x:Name="StackPanel" Grid.Column="1" HorizontalAlignment="Left" Height="422" VerticalAlignment="Top" Width="465" Margin="0,5,0,0">
-
+        <StackPanel x:Name="StackPanel" Grid.Column="1" Margin="0,10,10,42">
+            <StackPanel x:Name="StackPanel_A_1_0" Orientation="Horizontal" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="251" Visibility="Collapsed">
+                <Label x:Name="label_Copy0" Content="Общая информация о деле" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="44" Width="81" FontSize="18.667" Margin="0,0,0,-4"/>
+            </StackPanel>
             <StackPanel x:Name="StackPanel_A_1_1" Orientation="Horizontal" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="251" Visibility="Collapsed">
                 <Label x:Name="label_Copy5" Content="№ дела:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="44" Width="81" FontSize="18.667" Margin="0,0,0,-4"/>
                 <TextBox x:Name="TBNumber_Copy" HorizontalAlignment="Left" Height="30"  TextWrapping="Wrap" VerticalAlignment="Top" Width="145" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
@@ -78,17 +79,17 @@
                 <TextBox x:Name="TBSecretary_Copy" HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" VerticalAlignment="Top" Width="428" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
             </StackPanel>
 
-            <StackPanel Height="31" x:Name="StackPanel_A_2_1" Orientation="Horizontal" Margin="0,0,-17,0"  Visibility="Collapsed">
-                <Label x:Name="label_Copy11" Content="Информация об истцах:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="403" FontSize="18.667"/>
-                <Button x:Name="AddBtn" Grid.Column="4" Grid.Row="2"
+            <StackPanel Height="31" x:Name="StackPanel_A_2_1" Orientation="Horizontal"  Visibility="Collapsed">
+                <Label x:Name="label_Copy11" Content="Информация об истцах:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="552" FontSize="18.667"/>
+                <Button x:Name="AddBtn"
                             Height="30" Width="30"  HorizontalAlignment="right" VerticalAlignment="Bottom"
                             Click="AddBtn_Click" Background="White" BorderBrush="White">
                     <Image x:Name="addImg" Width="20"/>
                 </Button>
             </StackPanel>
 
-            <ScrollViewer x:Name="Scroll_A_2_2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Height="358" Margin="9,0,0,0"  Visibility="Collapsed">
-                <StackPanel x:Name="StackPanel_A_2_2" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Auto" >
+            <ScrollViewer x:Name="Scroll_A_2_2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Height="590" Margin="9,0,0,0"  Visibility="Collapsed">
+                <StackPanel x:Name="StackPanel_A_2_2" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 </StackPanel>
             </ScrollViewer>
 
@@ -97,7 +98,7 @@
             </StackPanel>
 
             <StackPanel x:Name="StackPanel_A_3_2" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Auto" >
-                <TabControl x:Name="Tab_Presd_ist" Height="374" Width="459" Visibility="Collapsed" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" RenderTransformOrigin="0.5,0.5">
+                <TabControl x:Name="Tab_Presd_ist" Height="552" Width="580" Visibility="Collapsed" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" RenderTransformOrigin="0.5,0.5">
                     <TabControl.LayoutTransform>
                         <TransformGroup>
                             <ScaleTransform/>
