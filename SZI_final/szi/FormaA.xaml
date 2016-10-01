@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SZI"
         mc:Ignorable="d"
-        Title="Дело " Height="674" Width="894.5" FontFamily="Calibri" FontSize="16" Loaded="FormaA2_Loaded">
+        Title="Дело " Height="690.5" Width="894.5" FontFamily="Calibri" FontSize="16" Loaded="FormaA2_Loaded">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FFCCF9C5" Offset="1"/>
@@ -20,8 +20,7 @@
 
         <TreeView x:Name="Tree" HorizontalAlignment="Left" Height="449" VerticalAlignment="Top" Width="268" Margin="10,10,0,0" Foreground="#FF378B1E" TextOptions.TextFormattingMode="Display" Visibility="Collapsed" IsEnabled="False" />
 
-        <Button x:Name="Save"
-        	Width="110" Height="30" HorizontalAlignment="right" VerticalAlignment="Top" Margin="0,606,164,0" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Сохранить" Grid.Column="1" FontSize="18.667" Click="Save_Click"/>
+        <Button x:Name="Save" Margin="0,0,162,7" Width="110" Height="30" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Сохранить" Grid.Column="1" FontSize="18.667" Click="Save_Click" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
         <Button x:Name="Button_Next"
         	Width="110" Height="30" HorizontalAlignment="right" VerticalAlignment="Bottom" Margin="0,0,29,7" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Далее" Grid.Column="1" FontSize="18.667" Click="Button_Next_Click" IsEnabled="False"/>
 
@@ -43,7 +42,7 @@
 
         <StackPanel x:Name="StackPanel" Grid.Column="1" Margin="0,10,10,42">
             <StackPanel x:Name="StackPanel_A_1_0" Orientation="Horizontal" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="251" Visibility="Collapsed">
-                <Label x:Name="label_Copy0" Content="Общая информация о деле" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="44" Width="81" FontSize="18.667" Margin="0,0,0,-4"/>
+                <Label x:Name="label_Copy0" Content="     Общая информация о деле:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="44" Width="81" FontSize="18.667" Margin="0,0,0,-4"/>
             </StackPanel>
             <StackPanel x:Name="StackPanel_A_1_1" Orientation="Horizontal" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="251" Visibility="Collapsed">
                 <Label x:Name="label_Copy5" Content="№ дела:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="44" Width="81" FontSize="18.667" Margin="0,0,0,-4"/>
@@ -119,7 +118,18 @@
                 </TabControl>
                 <Label x:Name="label_pred_ist2" Content="Введите информацию об истцах!" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#FFEA2727" Height="31" Width="459" FontSize="18.667" Visibility="Collapsed"/>
             </StackPanel>
-
+            <StackPanel x:Name="StackPanel_A_4" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical">
+                <Label x:Name="label_А_4" Content="     Информация о заседании:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="490" FontSize="18.667"/>
+                <Label x:Name="label_prokuror" Content="С участием прокурора (ФИО в именительном падеже):" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="490" FontSize="18.667"/>
+                <TextBox x:Name="tB_PROKUROR" HorizontalAlignment="Left" Height="30"  TextWrapping="Wrap" VerticalAlignment="Top" Width="500" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667" />
+                <Label x:Name="label_rassm" Content="Рассмотрев в" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="490" FontSize="18.667"/>
+                <RadioButton Foreground="#FF378B1E" Content="открытом" Width="440" FontSize="18.667" GroupName="zased" VerticalContentAlignment="Center" Margin="0,0,0,3"/>
+                <RadioButton Foreground="#FF378B1E" Content="закрытом" Width="440" FontSize="18.667" GroupName="zased" VerticalContentAlignment="Center"/>
+                <Label x:Name="label_zased" Content="судебном заседании гражданское дело по иску" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="490" FontSize="18.667"/>
+                <TextBlock x:Name="tblock_perech" Foreground="#FF378B1E" FontSize="18.667"/>
+                <Label x:Name="label_formulirovka" Content="о (формулировка искового(ых) требования(ий)" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="490" FontSize="18.667"/>
+                <TextBox x:Name="tB_formulirovka" HorizontalAlignment="Left" Height="100"  TextWrapping="Wrap" VerticalAlignment="Top" Width="500" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
+            </StackPanel >
         </StackPanel>
     </Grid>
 </Window>

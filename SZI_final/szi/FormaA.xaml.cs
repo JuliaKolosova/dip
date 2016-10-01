@@ -21,7 +21,7 @@ namespace SZI
     public partial class FormaA : Window
     {
         private int i = 0;
-        private string name, item_header,item;
+        private string name;
         private int formNumber; //какая форма А-0,Б-1,Б1-2 и т.д.
         private readonly ForaWindow fw;
         private bool first;
@@ -43,15 +43,6 @@ namespace SZI
             addImg.Source = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "\\images\\add.png", UriKind.Absolute));
         }
 
-        /* жмак мыши по листу дерева */
-        private void treeItem_Selected(object sender, RoutedEventArgs e)
-        {
-            var item = sender as TreeViewItem;
-            this.item = item.Header.ToString();
-            var item_header = item.Parent as TreeViewItem;
-            this.item_header = item_header.Header.ToString();
-            //toFillTextBoxes();
-        }
 
         private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -76,33 +67,97 @@ namespace SZI
 
                     case 1:
                         Button_Next.IsEnabled = true;
-                        UpdateA_2();
+                        UpdateA_2(1);
                         break;
                     case 2:
                         Button_Next.IsEnabled = true;
                         StackPanel_A_3_1.Visibility = Visibility.Visible;
                         StackPanel_A_3_2.Visibility = Visibility.Visible;
-                        TabControlPredIst();
-
+                        TabControlPredIst(-1,1);
                         break;
-
+                    case 3:
+                        Button_Next.IsEnabled = true;
+                        UpdateA_2(2);
+                        break;
+                    case 4:
+                        Button_Next.IsEnabled = true;
+                        StackPanel_A_3_1.Visibility = Visibility.Visible;
+                        StackPanel_A_3_2.Visibility = Visibility.Visible;
+                        TabControlPredIst(-1,2);
+                        break;
                     case 5:
+                        StackPanel_A_4.Visibility = Visibility.Visible;
+                        WriteIstecOtvet();
                         Button_Next.IsEnabled = false;
                         break;
                 }
             }
         }
 
+        //заполнить истцами и ответчиками текстблок
+        private void WriteIstecOtvet()
+        {
+            SQLite connection = new SQLite();
+            SQLiteDataReader reader = connection.ReadData(string.Format("Select count(*) from ACTORs Where id_doc='{0}' group by PLAINTIFF", id));
+            int[] count= new int[2];
+            //int count_otv = 0;
+            tblock_perech.Text = "";
+            int i = 0;
+            while (reader.Read())
+            {
+                count[i] = reader.GetInt16(0);
+                i++;
+            }
+            if (count[0] == 0 && count[1] == 0)
+            {
+                tblock_perech.Text = "Пожалуйста, введите информацию об истацах и ответчиках";
+            }
+            else if (count[1] == 0)
+            {
+                tblock_perech.Text = "Пожалуйста, введите информацию об ответчиках";
+            }
+            else if (count[0] == 0)
+            {
+                tblock_perech.Text = "Пожалуйста, введите информацию об истацах";
+            }
+            else
+            {
+                string str_ist="", str_otv="";
+                reader = connection.ReadData(string.Format("Select * from Actors Where id_doc ='{0}' order by PLAINTIFF", id));
+                while (reader.Read())
+                {
+                    if (reader.GetInt16(4)==1)
+                        str_ist += reader.GetString(2)+','+'\n';
+                    else
+                        str_otv += reader.GetString(2) + ',' + '\n';
+
+                    //count_otv = reader.GetInt16(1);
+                }
+                str_ist=str_ist.Remove(str_ist.Length - 2);
+                str_otv=str_otv.Remove(str_otv.Length - 2);
+                tblock_perech.Text = str_ist + '\n' + "к" + '\n' + str_otv;
+            }
+
+        }
         //заполняем tabcontrol  о представителях истцов
-        private void TabControlPredIst()
+        private void TabControlPredIst(int index, int plaintiff)
         {
             bool firstpred;
             SQLite connection = new SQLite();
             SQLiteDataReader reader_ist, reader_pred_ist;
             int count=0, count_reader_ist_i=0;
             int ist_id = 0;
-            
-            reader_ist = connection.ReadData(string.Format("Select count(*) from ACTORs Where id_doc='{0}'  and PLAINTIFF=1", id));
+            if (plaintiff==1)
+            {
+                label_pred_ist.Content = "     Информация о представителях истцов:";
+                label_pred_ist2.Content = "Введите информацию об истцах!";
+            }
+            else
+            {
+                label_pred_ist.Content = "     Информация о представителях ответчиков:";
+                label_pred_ist2.Content = "Введите информацию об ответчиках!";
+            }
+            reader_ist = connection.ReadData(string.Format("Select count(*) from ACTORs Where id_doc='{0}'  and PLAINTIFF={1}", id,plaintiff));
             while (reader_ist.Read())
                count = reader_ist.GetInt16(0);
             if (count == 0)
@@ -116,7 +171,7 @@ namespace SZI
                 Tab_Presd_ist.Visibility = Visibility.Visible;
                 label_pred_ist2.Visibility = Visibility.Collapsed;
                 Tab_Presd_ist.Items.Clear();
-                reader_pred_ist = connection.ReadData(string.Format("Select ID, NAME_ACTOR from Actors Where id_doc ='{0}' and PLAINTIFF=1", id));
+                reader_pred_ist = connection.ReadData(string.Format("Select ID, NAME_ACTOR from Actors Where id_doc ='{0}' and PLAINTIFF={1}", id, plaintiff));
 
 
                 while (reader_pred_ist.Read())
@@ -129,11 +184,11 @@ namespace SZI
                     while (count_reader_ist.Read())
                          count_reader_ist_i = count_reader_ist.GetInt16(0);
 
-                    pred_ist_panel.Children.Add(CreateHeaderPredIst(reader_pred_ist));
+                    pred_ist_panel.Children.Add(CreateHeaderPredIst(reader_pred_ist,plaintiff));
 
                     if (count_reader_ist_i == 0)
                     {
-                        pred_ist_panel.Children.Add(AddStPanelPredIstec(null, firstpred));
+                        pred_ist_panel.Children.Add(AddStPanelPredIstec(null, firstpred, plaintiff));
                         firstpred = false;
                         Tab_Presd_ist.Items.Add(new TabItem
                         {
@@ -145,11 +200,11 @@ namespace SZI
                     else
                     {                        
                         SQLiteDataReader reader_pred_ist2 = connection.ReadData(string.Format("Select * from AGENT_PLAINTIFF Where id_actor ='{0}'", ist_id));
-                        pred_ist_panel.Children.Add(AddStPanelPredIstec(reader_pred_ist2, firstpred));
+                        //pred_ist_panel.Children.Add(AddStPanelPredIstec(reader_pred_ist2, firstpred));
                         firstpred = false;
                         while (reader_pred_ist2.Read())
                         {
-                            pred_ist_panel.Children.Add(AddStPanelPredIstec(reader_pred_ist2, firstpred));
+                            pred_ist_panel.Children.Add(AddStPanelPredIstec(reader_pred_ist2, firstpred, plaintiff));
                             // тут нужно как-то динамично считывть информацию. может быть несколько представителей у одного. возможность добавления/удаления :(
                         }
                         Tab_Presd_ist.Items.Add(new TabItem
@@ -165,10 +220,14 @@ namespace SZI
             }
 
             connection.Close();
+            if (index != -1)
+                {
+                    Tab_Presd_ist.SelectedIndex = index;
+                }
         }
 
 
-        public Grid CreateHeaderPredIst(SQLiteDataReader reader_pred_ist)
+        public Grid CreateHeaderPredIst(SQLiteDataReader reader_pred_ist, int  plaintiff)
         {
             Grid DynamicGrid = new Grid();
             DynamicGrid.Width = 550;
@@ -183,8 +242,15 @@ namespace SZI
             DynamicGrid.RowDefinitions.Add(gridRow1);
 
 
-            Label label_info_pred_ist = new Label() { Content = string.Concat("Представители истца: ", reader_pred_ist.GetString(1)), FontSize = 18, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, Height = 31, Width = 403 };
-
+            Label label_info_pred_ist = new Label() {  FontSize = 18, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, Height = 31, Width = 403 };
+            if (plaintiff==1)
+            {
+                label_info_pred_ist.Content = string.Concat("Представители истца: ", reader_pred_ist.GetString(1));
+            }
+            else
+            {
+                label_info_pred_ist.Content = string.Concat("Представители ответчика: ", reader_pred_ist.GetString(1));
+            }
             Image img_add = new Image();
             img_add.Source = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "\\images\\add.png", UriKind.Absolute));
             img_add.Width = 20;
@@ -210,10 +276,14 @@ namespace SZI
             Button btn = sender as Button;
             Grid gridParent = (Grid)btn.Parent;
             StackPanel stackParent = (StackPanel)gridParent.Parent;
-            stackParent.Children.Add( AddStPanelPredIstec(null,false));
+            if (listBox.SelectedIndex == 1)
+                stackParent.Children.Add(AddStPanelPredIstec(null, false,1)); 
+            else
+                stackParent.Children.Add(AddStPanelPredIstec(null, false,2)); 
+            
         }
 
-        private Grid AddStPanelPredIstec(SQLiteDataReader reader_pred_ist, bool firstpred)
+        private Grid AddStPanelPredIstec(SQLiteDataReader reader_pred_ist, bool firstpred, int plaintiff)
         {
             Grid grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition());
@@ -254,15 +324,15 @@ namespace SZI
 
             Label label_doc1_predist = new Label() { Content = "  - доверенности от ", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
-            DatePicker date_dover_ot = new DatePicker();
+            DatePicker date_dover_ot = new DatePicker() { Width=120 };
 
             Label label_doc1_2_predist = new Label() { Content = " со сроком действия до ", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
-            DatePicker date_dover_ot_2 = new DatePicker();
+            DatePicker date_dover_ot_2 = new DatePicker() { Width = 120 };
 
             Label label_doc2_predist = new Label() { Content = "  - ордера адвоката от ", FontSize = 16, Margin = new Thickness(0, 10, 0, 10), Foreground = colortext };
 
-            DatePicker date_order_ot = new DatePicker() { Margin = new Thickness(0, 10, 0, 10) };
+            DatePicker date_order_ot = new DatePicker() { Margin = new Thickness(0, 10, 0, 10), Width = 120 };
 
             Label label_doc3_predist = new Label() { Content = "  - наименование документа, ", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
@@ -277,7 +347,7 @@ namespace SZI
 
             Label label_doc3_2_predist = new Label() { Content = "удостоверяющего служебное положение их представителей от ", FontSize = 16, Margin = new Thickness(0, 1, 1, 0), Foreground = colortext };
 
-            DatePicker date_dover_ot_3 = new DatePicker();
+            DatePicker date_dover_ot_3 = new DatePicker() { Width = 120 };
 
             Label label_doc4_predist = new Label() { Content = "  - наименование документа, ", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
@@ -353,30 +423,7 @@ namespace SZI
             stp_doc4_2_predist.Children.Add(label_doc4_2_predist);
             stp_doc4_2_predist.Children.Add(tex_box_predist_doc4_2);
 
-            //tex_box_ist_doc1.Height = 25;
-            TextBlock label_ist2 = new TextBlock() { Text = "извещенный надлежайшим образом: документ, подтверждающий извещение:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
-            TextBox tex_box_ist_doc2 = new TextBox();
-            tex_box_ist_doc2.Padding = new Thickness(1, 1, 1, 1);
-            tex_box_ist_doc2.TextWrapping = TextWrapping.Wrap;
-            tex_box_ist_doc2.FontSize = 16;
-            tex_box_ist_doc2.AcceptsReturn = true;
-            tex_box_ist_doc2.Foreground = colortext;
-            if (reader_pred_ist != null)
-                if (!reader_pred_ist.IsDBNull(3))
-                {
-                    string str = reader_pred_ist.GetString(3);
-                    //char[] str1 = null;
-                    string[] arr = str.Split('~');
-                    //int index = str.IndexOf("///");
-                    if (arr[0] != "")
-                    {
-                        //str1 = str.Substring(0, index - 1);
-                        //str.CopyTo(0, str1, 0, index - 1);
-                        tex_box_predist_doc1.Text = arr[0];
-                    }
-                    // str.CopyTo(0, str1, index + 2, str.Length - index + 2);
-                    tex_box_ist_doc2.Text = arr[1];
-                }
+            
             Grid DynamicGrid = new Grid();
             DynamicGrid.Width = 570;
             DynamicGrid.HorizontalAlignment = HorizontalAlignment.Left;
@@ -483,64 +530,43 @@ namespace SZI
         }
 
         //обновляем/заполняем таблицу с истцами
-        private void UpdateA_2()
+        private void UpdateA_2(int plaintiff)
         {
             SQLite connection = new SQLite();
             //SQLiteDataReader reader = connection.ReadData(string.Format("Select count(*) from ACTOR Where id_doc='{0}'", id));
-            SQLiteDataReader reader_ist = connection.ReadData(string.Format("Select count(*) from ACTORs Where id_doc='{0}'  and PLAINTIFF=1", id));
+            SQLiteDataReader reader_ist = connection.ReadData(string.Format("Select count(*) from ACTORs Where id_doc='{0}'  and PLAINTIFF={1}", id,plaintiff));
             while (reader_ist.Read())
                 ind = reader_ist.GetInt16(0);
-            reader_ist = connection.ReadData(string.Format("Select * from Actors Where id_doc ='{0}' and PLAINTIFF=1", id));
+            reader_ist = connection.ReadData(string.Format("Select * from Actors Where id_doc ='{0}' and PLAINTIFF={1}", id, plaintiff));
             first = false;
             StackPanel_A_2_1.Visibility = Visibility.Visible;
+            if (plaintiff==1)
+            {
+                label_Copy11.Content = "     Информация об истцах:";
+            }
+            else
+            {
+                label_Copy11.Content = "     Информация об ответчиках:";
+            }
             Scroll_A_2_2.Visibility = Visibility.Visible;
             StackPanel_A_2_2.Visibility = Visibility.Visible;
             StackPanel_A_2_2.Children.Clear();
             if (ind == 0)
             {
-                AddStPanelIstec1(null);
+                AddStPanelIstec1(null,plaintiff);
                 first = true;
             }
             else
             {
                 while (reader_ist.Read())
                 {
-                    AddStPanelIstec1(reader_ist);
+                    AddStPanelIstec1(reader_ist, plaintiff);
                     first = true;
                 }
             }
             connection.Close();
         }
-
-        //обновляем/заполняем таблицу с представителями истцов
-        private void UpdateA_3()
-        {
-            SQLite connection = new SQLite();
-            //SQLiteDataReader reader = connection.ReadData(string.Format("Select count(*) from ACTOR Where id_doc='{0}'", id));
-            SQLiteDataReader reader_ist = connection.ReadData(string.Format("Select count(*) from ACTORs Where id_doc='{0}'  and PLAINTIFF=1", id));
-            while (reader_ist.Read())
-                ind = reader_ist.GetInt16(0);
-            reader_ist = connection.ReadData(string.Format("Select * from Actors Where id_doc ='{0}' and PLAINTIFF=1", id));
-            first = false;
-            StackPanel_A_2_1.Visibility = Visibility.Visible;
-            Scroll_A_2_2.Visibility = Visibility.Visible;
-            StackPanel_A_2_2.Visibility = Visibility.Visible;
-            StackPanel_A_2_2.Children.Clear();
-            if (ind == 0)
-            {
-                AddStPanelIstec1(null);
-                first = true;
-            }
-            else
-            {
-                while (reader_ist.Read())
-                {
-                    AddStPanelIstec1(reader_ist);
-                    first = true;
-                }
-            }
-            connection.Close();
-        }
+        
         /* добавление истца на форму */
         private void AddStPanelIstec(SQLiteDataReader reader_ist)
         {
@@ -670,7 +696,7 @@ namespace SZI
             StackPanel.Children.Add(grid);
         }
         //пробное РАБОТАЕТ
-        private void AddStPanelIstec1(SQLiteDataReader reader_ist)
+        private void AddStPanelIstec1(SQLiteDataReader reader_ist, int plaintiff)
         {
             //i++;
             SolidColorBrush colortext = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF378B1E"));
@@ -718,8 +744,15 @@ namespace SZI
             //        StackPanel.Children.Add(grid);
             TextBlock label_ist_name = new TextBlock() { Text = "ФИО:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
 
-            TextBlock label_ist_document = new TextBlock() { Text = "Если истец участвует в деле документы НЕ ЗАПОЛНЯЮТСЯ", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext2, TextWrapping = TextWrapping.Wrap };
-
+            TextBlock label_ist_document = new TextBlock() {  FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext2, TextWrapping = TextWrapping.Wrap };
+            if (plaintiff==1)
+            {
+                label_ist_document.Text = "Если истец участвует в деле документы НЕ ЗАПОЛНЯЮТСЯ";
+            }
+            else
+            {
+                label_ist_document.Text = "Если ответчик участвует в деле документы НЕ ЗАПОЛНЯЮТСЯ";
+            }
             TextBlock label_ist1 = new TextBlock() { Text = "просивший рассмотреть дело в его отсутствие: заявление от", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext , TextWrapping = TextWrapping.Wrap };
             TextBox tex_box_ist_doc1 = new TextBox();
             tex_box_ist_doc1.Padding = new Thickness(1, 1, 1, 1);
@@ -758,29 +791,6 @@ namespace SZI
                 }
             Grid grid1 = new Grid();
             grid1.ColumnDefinitions.Add(new ColumnDefinition());
-            //grid1.
-           /* grid1.RowDefinitions.Add(new RowDefinition());
-            grid1.Children.Add(label_ist);
-            Grid.SetRow(label, 0);
-            grid1.Children.Add(textbox_ist_name);
-            Grid.SetRow(textbox_ist_name, 1);
-            grid1.Children.Add(label_ist1);
-            Grid.SetRow(label_ist1, 2);
-            grid1.Children.Add(tex_box_ist_doc1);
-            Grid.SetRow(tex_box_ist_doc1, 3);
-            grid1.Children.Add(label_ist2);
-            Grid.SetRow(label_ist2, 4);
-            grid1.Children.Add(tex_box_ist_doc2);
-            Grid.SetRow(tex_box_ist_doc2, 5);
-
-            grid.Children.Add(grid1);
-            Grid.SetColumn(grid1, 0);
-            if (first)
-            {
-                grid.Children.Add(btn);
-                Grid.SetColumn(btn, 1);
-            }
-            */
             Grid DynamicGrid = new Grid();
             DynamicGrid.Width = 430;
             DynamicGrid.HorizontalAlignment = HorizontalAlignment.Left;
@@ -855,7 +865,10 @@ namespace SZI
 
         public void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            AddStPanelIstec1(null);
+            if (listBox.SelectedIndex==1)
+                AddStPanelIstec1(null,1);
+            else
+                AddStPanelIstec1(null, 2);
         }
         /* удаление текстбокса с формы */
         private void deleteTextBox(object sender, RoutedEventArgs e)
@@ -954,7 +967,7 @@ namespace SZI
                         connection.WriteData(string.Format("Update Document set number='{0}', date='{1}', locate='{2}', NAME_COURT='{3}', CONTENT_COURT='{4}', SECRETARY='{5}'  Where id='{6}'", TBNumber_Copy.Text, Date_Copy.SelectedDate, TBPlace_Copy.Text, TBName_Copy.Text,TBSostav_Copy.Text,TBSecretary_Copy.Text, id));
                         break;
                     case 1:
-                        
+
                         foreach (Grid grid in StackPanel_A_2_2.Children)
                         {
                             var textbox_name = grid.Children[2] as TextBox;
@@ -965,19 +978,23 @@ namespace SZI
                             // reader_ist = connection.ReadData(string.Format("Select count(*) from ACTOR Where id='{0}'", textbox_name.Tag));
                             //while (reader_ist.Read())
                             //   ind = reader_ist.GetInt16(0);
-                            if (textbox_name.Tag == null)
-                                connection.WriteData(string.Format("INSERT INTO actors (id_doc,name_actor,actor_doc,plaintiff) VALUES ('{0}','{1}','{2}','{3}')", id, textbox_name.Text, str, 1));
-                            else
-                            {
-                                SQLite connection1 = new SQLite();
-                                connection1.WriteData(string.Format("Update actors set id_doc='{0}', name_actor='{1}', actor_doc='{2}' Where id='{3}'", id, textbox_name.Text, str, textbox_name.Tag));
-                                connection1.Close();
+                            if (textbox_name.Text.Length != 0)
+                            { 
+                                if (textbox_name.Tag == null)
+                                    connection.WriteData(string.Format("INSERT INTO actors (id_doc,name_actor,actor_doc,plaintiff) VALUES ('{0}','{1}','{2}','{3}')", id, textbox_name.Text, str, 1));
+                                else
+                                {
+                                    SQLite connection1 = new SQLite();
+                                    connection1.WriteData(string.Format("Update actors set id_doc='{0}', name_actor='{1}', actor_doc='{2}' Where id='{3}'", id, textbox_name.Text, str, textbox_name.Tag));
+                                    connection1.Close();
+                                }
                             }
                         }
-                        UpdateA_2();
+                        UpdateA_2(1);
                         break;
 
                     case 2:
+                        var ind_selected = Tab_Presd_ist.SelectedIndex;
                         foreach (TabItem tbItem in Tab_Presd_ist.Items )
                         {
                             var id_ag = (TextBlock)tbItem.Tag;
@@ -1012,7 +1029,71 @@ namespace SZI
                                 }
                             }
                         }
-                        TabControlPredIst();
+                        
+                        TabControlPredIst(ind_selected,1);
+                        break;
+
+                    case 3:
+
+                        foreach (Grid grid in StackPanel_A_2_2.Children)
+                        {
+                            var textbox_name = grid.Children[2] as TextBox;
+                            var textbox_doc1 = grid.Children[6] as TextBox;
+                            var textbox_doc2 = grid.Children[8] as TextBox;
+
+                            str = textbox_doc1.Text + "~" + textbox_doc2.Text;
+
+                            if (textbox_name.Text.Length != 0)
+                            {
+                                if (textbox_name.Tag == null)
+                                    connection.WriteData(string.Format("INSERT INTO actors (id_doc,name_actor,actor_doc,plaintiff) VALUES ('{0}','{1}','{2}','{3}')", id, textbox_name.Text, str, 2));
+                                else
+                                {
+                                    SQLite connection1 = new SQLite();
+                                    connection1.WriteData(string.Format("Update actors set id_doc='{0}', name_actor='{1}', actor_doc='{2}' Where id='{3}'", id, textbox_name.Text, str, textbox_name.Tag));
+                                    connection1.Close();
+                                }
+                            }
+                        }
+                        UpdateA_2(2);
+                        break;
+                    case 4:
+                        ind_selected = Tab_Presd_ist.SelectedIndex;
+                        foreach (TabItem tbItem in Tab_Presd_ist.Items)
+                        {
+                            var id_ag = (TextBlock)tbItem.Tag;
+                            StackPanel st = (StackPanel)tbItem.Content;
+                            Grid grid_2 = (Grid)st.Children[1];
+                            var textbox_name = grid_2.Children[2] as TextBox;
+                            var actor_name = textbox_name.Text;
+                            if (actor_name.Length != 0)
+                            {
+                                var stp_doc1 = grid_2.Children[5] as StackPanel;
+                                var str_doc = stp_doc1.Children[1].ToString() + "~" + stp_doc1.Children[3].ToString();
+                                var stp_doc2 = grid_2.Children[6] as StackPanel;
+                                str_doc = str_doc + "~" + stp_doc2.Children[1].ToString();
+                                var stp_doc3 = grid_2.Children[7] as StackPanel;
+                                var tb_doc3 = stp_doc3.Children[1] as TextBox;
+                                str_doc = str_doc + "~" + tb_doc3.Text.ToString();
+                                var stp_doc3_2 = grid_2.Children[8] as StackPanel;
+                                str_doc = str_doc + "~" + stp_doc3_2.Children[1].ToString();
+                                var stp_doc4 = grid_2.Children[9] as StackPanel;
+                                var tb_doc4 = stp_doc4.Children[1] as TextBox;
+                                str_doc = str_doc + "~" + tb_doc4.Text.ToString();
+                                var stp_doc4_2 = grid_2.Children[10] as StackPanel;
+                                var tb_doc4_2 = stp_doc4_2.Children[1] as TextBox;
+                                str_doc = str_doc + "~" + tb_doc4_2.Text.ToString();
+                                if (textbox_name.Tag == null)
+                                    connection.WriteData(string.Format("INSERT INTO AGENT_PLAINTIFF (ID_ACTOR,NAME_AGENT , AGENT_DOC) VALUES ('{0}','{1}','{2}')", id_ag.Text, actor_name, str_doc));
+                                else
+                                {
+                                    SQLite connection1 = new SQLite();
+                                    connection1.WriteData(string.Format("Update AGENT_PLAINTIFF set NAME_AGENT='{0}',  AGENT_DOC='{1}' Where ID_PLAINTIFF='{2}'", actor_name, str_doc, textbox_name.Tag));
+                                    connection1.Close();
+                                }
+                            }
+                        }
+                        TabControlPredIst(ind_selected, 2);
                         break;
                 }
             }
