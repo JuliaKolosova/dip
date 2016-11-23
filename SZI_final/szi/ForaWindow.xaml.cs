@@ -1,5 +1,6 @@
 ﻿//using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,26 +26,53 @@ namespace SZI
         public ForaWindow(string name, MainWindow startForm, int id)
         {
             InitializeComponent();
-            fw = this;
+            this.fw = this;
             this.startForm = startForm;
             this.name = name;
             this.id = id;
             ForaWindow1.Title += " «" + name+"»";
+            
         }
         string name;
 
         private void FormaA_Click(object sender, RoutedEventArgs e)
         {
-            FormaA AForm = new FormaA(name,fw,0,id);
+            fw.Visibility = Visibility.Hidden;
+            FormaA AForm = new FormaA(name,fw,id);
             AForm.Owner = this;
             AForm.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             AForm.ShowDialog();
+            
+        }
+        public void ForaWindow_Update()
+        {
+            SQLite connection = new SQLite();
+            SQLiteDataReader reader = connection.ReadData(string.Format("Select count(*) from REQUIREMENTS_tmp Where id_doc='{0}' and iteration=0", id));
+            int index = 0;
+            while (reader.Read())
+                index = reader.GetInt16(0);
+            connection.Close();
+            if (index == 0)
+            {
+                FormaB.IsEnabled = false;
+            }
+            else
+            {
+                FormaB.IsEnabled = true;
+            }
         }
 
         private void ForaWindow1_Load(object sender, RoutedEventArgs e)
         {
+            ForaWindow_Update();
+        }
 
-            //startForm.Close();
+        private void FormaB_Click(object sender, RoutedEventArgs e)
+        {
+            FormaB BForm = new FormaB(name, id);
+            BForm.Owner = this;
+            BForm.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            BForm.ShowDialog();
         }
     }
 }

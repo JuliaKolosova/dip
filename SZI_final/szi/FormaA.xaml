@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SZI"
         mc:Ignorable="d"
-        Title="Дело " Height="690.5" Width="894.5" FontFamily="Calibri" FontSize="16" Loaded="FormaA2_Loaded">
+        Title="Дело " Height="690.5" Width="894.5" FontFamily="Calibri" FontSize="16" Loaded="FormaA2_Loaded" ResizeMode="NoResize" Closing="FormaA2_Closing">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FFCCF9C5" Offset="1"/>
@@ -14,24 +14,24 @@
     </Window.Background>
     <Grid x:Name="FormaA1">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="142*"/>
-            <ColumnDefinition Width="301*"/>
+            <ColumnDefinition Width="133*"/>
+            <ColumnDefinition Width="311*"/>
         </Grid.ColumnDefinitions>
 
-        <TreeView x:Name="Tree" HorizontalAlignment="Left" Height="449" VerticalAlignment="Top" Width="268" Margin="10,10,0,0" Foreground="#FF378B1E" TextOptions.TextFormattingMode="Display" Visibility="Collapsed" IsEnabled="False" />
+        <TreeView x:Name="Tree" HorizontalAlignment="Left" Height="449" VerticalAlignment="Top" Width="268" Margin="10,10,0,0" Foreground="#FF378B1E" TextOptions.TextFormattingMode="Display" Visibility="Collapsed" IsEnabled="False" Grid.ColumnSpan="2" />
 
-        <Button x:Name="Save" Margin="0,0,162,7" Width="110" Height="30" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Сохранить" Grid.Column="1" FontSize="18.667" Click="Save_Click" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        <Button x:Name="Save" Margin="0,0,162,7" Width="110" Height="30" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF378B1E" Content="Сохранить" Grid.Column="1" FontSize="18.667" Click="Save_Click" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
         <Button x:Name="Button_Next"
-        	Width="110" Height="30" HorizontalAlignment="right" VerticalAlignment="Bottom" Margin="0,0,29,7" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Далее" Grid.Column="1" FontSize="18.667" Click="Button_Next_Click" IsEnabled="False"/>
+        	Width="110" Height="30" HorizontalAlignment="right" VerticalAlignment="Bottom" Margin="0,0,29,7" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF378B1E" Content="Далее" Grid.Column="1" FontSize="18.667" Click="Button_Next_Click" IsEnabled="False"/>
 
-        <GroupBox x:Name="groupBox" Header="Форма A" Foreground="#FF378B1E" FontSize="18.667" BorderThickness="1" BorderBrush="#FF70D452" HorizontalContentAlignment="Center" Margin="16,0,10,20">
+        <GroupBox x:Name="groupBox" Header="Форма A" Foreground="#FF378B1E" FontSize="18.667" BorderThickness="1" BorderBrush="#FF70D452" HorizontalContentAlignment="Center" Margin="10,0,10,10">
             <GroupBox.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFDDFBD8" Offset="1"/>
                     <GradientStop Color="White"/>
                 </LinearGradientBrush>
             </GroupBox.Background>
-            <ListBox x:Name="listBox" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF378B1E" Margin="0,0,0,0" FontSize="18" SelectionChanged="listBox_SelectionChanged">
+            <ListBox x:Name="listBox" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF378B1E" Margin="0,0,0,-6" FontSize="18" SelectionChanged="listBox_SelectionChanged" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" TextWrapping="WrapWithOverflow" Width="220"/>
@@ -46,7 +46,7 @@
             </StackPanel>
             <StackPanel x:Name="StackPanel_A_1_1" Orientation="Horizontal" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="251" Visibility="Collapsed">
                 <Label x:Name="label_Copy5" Content="№ дела:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="44" Width="81" FontSize="18.667" Margin="0,0,0,-4"/>
-                <TextBox x:Name="TBNumber_Copy" HorizontalAlignment="Left" Height="30"  TextWrapping="Wrap" VerticalAlignment="Top" Width="145" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
+                <TextBox x:Name="TBNumber_Copy" HorizontalAlignment="Left" Height="30"  TextWrapping="Wrap" VerticalAlignment="Top" Width="145" Foreground="#FF378B1E" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
             </StackPanel>
 
 
@@ -66,19 +66,19 @@
 
             <StackPanel x:Name="StackPanel_A_1_3" Orientation="Horizontal"  Height="42" Visibility="Collapsed">
                 <Label x:Name="label_Copy6" Content="Место принятия решения:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="44" Width="228" FontSize="18.667" Margin="0,0,0,-2"/>
-                <TextBox x:Name="TBPlace_Copy" HorizontalAlignment="Left" Height="30"  TextWrapping="Wrap" VerticalAlignment="Top" Width="198" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
+                <TextBox x:Name="TBPlace_Copy" HorizontalAlignment="Left" Height="30"  TextWrapping="Wrap" VerticalAlignment="Top" Width="198" Foreground="#FF378B1E" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
             </StackPanel>
 
             <StackPanel x:Name="StackPanel_A_1_4" Height="279" Visibility="Collapsed">
                 <Label x:Name="label_Copy8" Content="Наименование суда, приневшего решение:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="33" Width="370" FontSize="18.667"/>
-                <TextBox x:Name="TBName_Copy" HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" VerticalAlignment="Top" Width="428" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
+                <TextBox x:Name="TBName_Copy" HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" VerticalAlignment="Top" Width="428" Foreground="#FF378B1E" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
                 <Label x:Name="label_Copy9" Content="Состав суда:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="30" Width="113" FontSize="18.667"/>
-                <TextBox x:Name="TBSostav_Copy" HorizontalAlignment="Left" Height="113" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" Width="428" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontSize="18.667"/>
+                <TextBox x:Name="TBSostav_Copy" HorizontalAlignment="Left" Height="113" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" Width="428" Foreground="#FF378B1E" BorderBrush="#FFDBFFD0" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontSize="18.667"/>
                 <Label x:Name="label_Copy10" Content="Секретарь судебного заседания:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="274" FontSize="18.667"/>
-                <TextBox x:Name="TBSecretary_Copy" HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" VerticalAlignment="Top" Width="428" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
+                <TextBox x:Name="TBSecretary_Copy" HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" VerticalAlignment="Top" Width="428" Foreground="#FF378B1E" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
             </StackPanel>
 
-            <StackPanel Height="31" x:Name="StackPanel_A_2_1" Orientation="Horizontal"  Visibility="Collapsed">
+            <StackPanel Height="31" x:Name="StackPanel_A_2_1" Orientation="Horizontal"  Visibility="Visible">
                 <Label x:Name="label_Copy11" Content="Информация об истцах:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="552" FontSize="18.667"/>
                 <Button x:Name="AddBtn"
                             Height="30" Width="30"  HorizontalAlignment="right" VerticalAlignment="Bottom"
@@ -97,7 +97,7 @@
             </StackPanel>
 
             <StackPanel x:Name="StackPanel_A_3_2" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Auto" >
-                <TabControl x:Name="Tab_Presd_ist" Height="552" Width="580" Visibility="Collapsed" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" RenderTransformOrigin="0.5,0.5">
+                <TabControl x:Name="Tab_Presd_ist" Height="552" Width="610" Visibility="Collapsed" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" RenderTransformOrigin="0.5,0.5">
                     <TabControl.LayoutTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -118,17 +118,29 @@
                 </TabControl>
                 <Label x:Name="label_pred_ist2" Content="Введите информацию об истцах!" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#FFEA2727" Height="31" Width="459" FontSize="18.667" Visibility="Collapsed"/>
             </StackPanel>
-            <StackPanel x:Name="StackPanel_A_4" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical">
+            <StackPanel x:Name="StackPanel_A_4" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical" Height="548" Width="545">
                 <Label x:Name="label_А_4" Content="     Информация о заседании:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="490" FontSize="18.667"/>
                 <Label x:Name="label_prokuror" Content="С участием прокурора (ФИО в именительном падеже):" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="490" FontSize="18.667"/>
-                <TextBox x:Name="tB_PROKUROR" HorizontalAlignment="Left" Height="30"  TextWrapping="Wrap" VerticalAlignment="Top" Width="500" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667" />
+                <TextBox x:Name="tB_PROKUROR" HorizontalAlignment="Left" Height="30"  TextWrapping="Wrap" VerticalAlignment="Top" Width="500" Foreground="#FF378B1E" BorderBrush="#FFDBFFD0" FontSize="18.667" />
                 <Label x:Name="label_rassm" Content="Рассмотрев в" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="490" FontSize="18.667"/>
-                <RadioButton Foreground="#FF378B1E" Content="открытом" Width="440" FontSize="18.667" GroupName="zased" VerticalContentAlignment="Center" Margin="0,0,0,3"/>
-                <RadioButton Foreground="#FF378B1E" Content="закрытом" Width="440" FontSize="18.667" GroupName="zased" VerticalContentAlignment="Center"/>
+                <RadioButton x:Name="rb_otcr" Foreground="#FF378B1E" Content="открытом" Width="440" FontSize="18.667" GroupName="zased" VerticalContentAlignment="Center" Margin="0,0,0,3" IsChecked="True"/>
+                <RadioButton x:Name="rb_zacr" Foreground="#FF378B1E" Content="закрытом" Width="440" FontSize="18.667" GroupName="zased" VerticalContentAlignment="Center"/>
                 <Label x:Name="label_zased" Content="судебном заседании гражданское дело по иску" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="490" FontSize="18.667"/>
                 <TextBlock x:Name="tblock_perech" Foreground="#FF378B1E" FontSize="18.667"/>
                 <Label x:Name="label_formulirovka" Content="о (формулировка искового(ых) требования(ий)" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="490" FontSize="18.667"/>
-                <TextBox x:Name="tB_formulirovka" HorizontalAlignment="Left" Height="100"  TextWrapping="Wrap" VerticalAlignment="Top" Width="500" Foreground="#FF26AC19" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
+                <!--<TextBox x:Name="tB_formulirovka" HorizontalAlignment="Left" Height="100"  TextWrapping="WrapWithOverflow" VerticalAlignment="Top" Width="500" Foreground="#FF378B1E" BorderBrush="#FFDBFFD0" FontSize="18.667"/>-->
+
+                <Grid Width="492" x:Name="Grid_formulirovka">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="461*"/>
+                        <ColumnDefinition Width="31*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="tB_formulirovka" Height="30" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" Foreground="#FF378B1E" BorderBrush="#FFDBFFD0" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontSize="16" HorizontalAlignment="Left" Width="451" Margin="0,0,1,0"/>
+                    <Button x:Name="AddBtn_FM" Width="30"  HorizontalAlignment="right"
+                                Click="AddBtn_Click_FM" Background="White" BorderBrush="White" RenderTransformOrigin="1.8,0.183" Grid.Column="1" />
+                </Grid>
+                <StackPanel x:Name="StackPanel_A_4_2" VerticalAlignment="Top" Orientation="Vertical" Height="263" Width="492"/>
+                
             </StackPanel >
         </StackPanel>
     </Grid>

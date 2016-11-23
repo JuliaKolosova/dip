@@ -16,6 +16,9 @@
         <Button x:Name="FormaA"
         	Width="163" Height="34" HorizontalAlignment="right" VerticalAlignment="Bottom"
         	Click="FormaA_Click" Margin="0,0,216,86" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Форма А"/>
+        <Button x:Name="FormaB"
+            Width="163" Height="34" HorizontalAlignment="right" VerticalAlignment="Bottom"
+            Margin="0,0,30,86" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Форма Б" Click="FormaB_Click"/>
 
     </Grid>
 </Window>

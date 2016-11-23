@@ -28,16 +28,14 @@ namespace SZI
             InitializeComponent();
             startForm = this;
             SQLite connection = new SQLite();
-            SQLiteDataReader reader = connection.ReadData(string.Format("SELECT count(ID) FROM document"));
-            while (reader.Read())
-                id = new int[reader.GetInt64(0)];
+            SQLiteDataReader reader;
             reader = connection.ReadData(string.Format("SELECT ID, NAME FROM document order by name"));
-            int i = -1;
             while (reader.Read())
             {
-                i++;
-                id[i] = reader.GetInt32(0);
-                FilesListBox.Items.Add(reader.GetString(1));
+                ListBoxItem list = new ListBoxItem();
+                list.Tag = reader.GetInt16(0).ToString();
+                list.Content = reader.GetString(1);
+                FilesListBox.Items.Add(list);
                 //clientsList.Items.Add(new Client(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3)));
             }
             connection.Close();
@@ -51,17 +49,15 @@ namespace SZI
             cForm.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             cForm.ShowDialog();
             SQLite connection = new SQLite();
-            SQLiteDataReader reader = connection.ReadData(string.Format("SELECT count(ID) FROM document"));
-            while (reader.Read())
-                id = new int[reader.GetInt64(0)];
+            SQLiteDataReader reader;
             reader = connection.ReadData(string.Format("SELECT ID, NAME FROM document order by name"));
-            int i = -1;
             FilesListBox.Items.Clear();
             while (reader.Read())
             {
-                i++;
-                id[i] = reader.GetInt32(0);
-                FilesListBox.Items.Add(reader.GetString(1));
+                ListBoxItem list = new ListBoxItem();
+                list.Tag = reader.GetInt16(0).ToString();
+                list.Content = reader.GetString(1);
+                FilesListBox.Items.Add(list);
                 //clientsList.Items.Add(new Client(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3)));
             }
             connection.Close();
@@ -71,9 +67,11 @@ namespace SZI
         /* Открытие файла xml (кнопка) */
         private void SelectBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (FilesListBox.SelectedItem != null)
+            if (FilesListBox.SelectedIndex != -1)
             {
-                ForaWindow eForm = new ForaWindow(FilesListBox.SelectedItem.ToString(), startForm,id[FilesListBox.SelectedIndex]);
+                ListBoxItem list_isk = FilesListBox.SelectedItem as ListBoxItem;
+                int id_doc = Int16.Parse(list_isk.Tag.ToString());
+                ForaWindow eForm = new ForaWindow(list_isk.Content.ToString(), startForm, id_doc);
                 eForm.Owner = this;
                 eForm.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 eForm.ShowDialog();
@@ -87,9 +85,12 @@ namespace SZI
         /* Открытие файла xml (двойной клик на название файла) */
         private void FilesListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (FilesListBox.SelectedItem != null)
+            if (FilesListBox.SelectedIndex != -1)
             {
-                ForaWindow eForm = new ForaWindow(FilesListBox.SelectedItem.ToString(), startForm, id[FilesListBox.SelectedIndex]);                eForm.Owner = this;
+                ListBoxItem list_isk = FilesListBox.SelectedItem as ListBoxItem;
+                int id_doc = Int16.Parse(list_isk.Tag.ToString());
+                ForaWindow eForm = new ForaWindow(list_isk.Content.ToString(), startForm, id_doc);
+                eForm.Owner = this;
                 eForm.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 eForm.ShowDialog();
             }
@@ -112,6 +113,31 @@ namespace SZI
         public void AddItemInList(string name)
         {
             FilesListBox.Items.Add(name);
+        }
+
+        private void DeleteBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if(FilesListBox.SelectedIndex != -1)
+            {
+                ListBoxItem list_isk = FilesListBox.SelectedItem as ListBoxItem;
+                int id_doc = Int16.Parse(list_isk.Tag.ToString());
+                MessageBoxResult res = MessageBox.Show("Вы уверены что хотите удалить дело "+ list_isk.Content.ToString() + "?", "Внимание", MessageBoxButton.YesNo);
+                if (res == MessageBoxResult.Yes)
+                {
+
+                    SQLite connection = new SQLite();
+                    connection.WriteData(string.Format("delete from AGENT_PLAINTIFF where id_actor in (select ID from Actors Where id_doc ='{0}')", id_doc));
+                    connection.WriteData(string.Format("delete from Actors Where id_doc ='{0}'", id_doc));
+                    connection.WriteData(string.Format("delete from document Where id ='{0}'", id_doc));
+                    FilesListBox.Items.Remove(FilesListBox.SelectedItem);
+                    MessageBox.Show("Удалено!");
+                }
+                
+            }
+            else
+            {
+                MessageBox.Show("Ошибка! Не выбрано дело!");
+            }
         }
     }
 }
