@@ -52,11 +52,15 @@ namespace SZI
         private void ErrorNorma1_Loaded(object sender, RoutedEventArgs e)
         {
             SQLite connection = new SQLite();
-            SQLiteDataReader reader = connection.ReadData(string.Format("Select choice from REQUIREMENTS_tmp where id_req='{0}' and iteration='{1}' and id_doc='{2}'", id_req, iteration, id_doc));
-            int choise = 0;
+            SQLiteDataReader reader = connection.ReadData(string.Format("Select choice,izmena from REQUIREMENTS_tmp where id_req='{0}' and iteration='{1}' and id_doc='{2}'", id_req, iteration, id_doc));
+            int choise = 0, izm=0;
             while (reader.Read())
+            {
                 if (!reader.IsDBNull(0))
                     choise = reader.GetInt16(0);
+                if (!reader.IsDBNull(1))
+                    izm = reader.GetInt16(1);
+            }
             switch (choise)
             {
                 case 1:
@@ -69,12 +73,13 @@ namespace SZI
                     var_3.IsChecked = true;
                     break;
             }
-            if (iteration > 0)
+            if (izm == 0)
             {
-                reader = connection.ReadData(string.Format("Select choice from REQUIREMENTS_tmp where id_req='{0}' and iteration=0 and id_doc='{1}'", id_req, id_doc));
+                reader = connection.ReadData(string.Format("Select choice from REQUIREMENTS_tmp where iteration=0 and id_doc='{0}'", id_doc));
                 while (reader.Read())
                     if (!reader.IsDBNull(0))
-                        choise = reader.GetInt16(0);
+                        if (reader.GetInt16(0) != 1)
+                            choise = reader.GetInt16(0);
                 switch (choise)
                 {
                     case 2:
@@ -84,6 +89,10 @@ namespace SZI
                         var_2.IsEnabled = false;
                         break;
                 }
+            }
+            else
+            {
+                var_2.IsEnabled = false;
             }
             connection.Close();
         }

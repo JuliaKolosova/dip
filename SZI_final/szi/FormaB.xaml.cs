@@ -31,21 +31,42 @@ namespace SZI
             this.id = id;
             Forma_B.Title += " «" + name + "»";
             FullListBox(id);
-
         }
-
-        private void FullListBox(int id)
+        
+        public void InsertReq(string name)
         {
             SQLite connection = new SQLite();
-            SQLiteDataReader reader = connection.ReadData(string.Format("Select id_req, text from REQUIREMENTS_TMP Where id_doc='{0}' and iteration=0", id));
+            SQLiteDataReader reader = connection.ReadData(string.Format("select max(id_req) from REQUIREMENTS_TMP where id_doc='{0}'", id));
+            int id_req = 0;
+            while (reader.Read())
+                id_req = reader.GetInt16(0) + 1;
+            connection.Close();
+            ListBoxItem list = new ListBoxItem();
+            list.Tag = id_req.ToString();
+            list.Content = "(изм.) " + name;
+            listBox_isk.Items.Add(list);
+            //SQLite connection2 = new SQLite();
+            //connection2.WriteData(string.Format("INSERT INTO REQUIREMENTS_TMP (id_req,id_doc,iteration,text,izmena) VALUES ('{0}','{1}',0,'{2}',1)", id_req, id, name));
+            //connection2.Close();
+            //FullListBox(id);
+        }
+
+        public void FullListBox(int id)
+        {
+            SQLite connection = new SQLite();
+            SQLiteDataReader reader = connection.ReadData(string.Format("Select id_req, text, izmena from REQUIREMENTS_TMP Where id_doc='{0}' and iteration=0 order by izmena", id));
             
             listBox_isk.Items.Clear();
 
             while (reader.Read())
             {
+
                 ListBoxItem list = new ListBoxItem();
                 list.Tag = reader.GetInt16(0).ToString();
-                list.Content = reader.GetString(1);
+                if (reader.GetInt16(2)==0)
+                    list.Content = reader.GetString(1);
+                else
+                    list.Content = "(изм.) "+reader.GetString(1);
                 listBox_isk.Items.Add(list);
             }
             connection.Close();
@@ -74,11 +95,64 @@ namespace SZI
 
         private void OpenFormaB_2(int id_req)
         {
+            //SQLite connection = new SQLite();
+            //SQLiteDataReader reader = connection.ReadData(string.Format("select count(*) from REQUIREMENTS_TMP where id_req='{0}'", id_req));
+            //int count = 0;
+            //while (reader.Read())
+            //    count = reader.GetInt16(0);
+
+            //if (count == 0)
+            //{
+            //    ListBoxItem list_isk = listBox_isk.SelectedItem as ListBoxItem;
+            //    string text = list_isk.Content.ToString();
+            //    connection.WriteData(string.Format("", id_req, id,text));
+            //}
+            //connection.Close();
             fw_B.Visibility = Visibility.Hidden;
             FormaB_2 eForm = new FormaB_2(fw_B, id_req,id);
             eForm.Owner = this;
             eForm.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             eForm.ShowDialog();
+        }
+
+        private void edit_isk_Click(object sender, RoutedEventArgs e)
+        {
+            SQLite connection = new SQLite();
+            bool visible = true;
+            SQLiteDataReader reader = connection.ReadData(string.Format("select case when ((defendant_choise is null) or (prizn_isk is null)) then 0 else 1 end from REQUIREMENTS_TMP where id_doc='{0}'", id));
+            while (reader.Read() && visible)
+            {
+                if (reader.GetInt16(0) == 0)
+                    visible = false;
+            }
+
+            if (!visible)
+            {
+                MessageBox.Show("С начала заполните всю информацию по формулировкам!");
+            }
+            else
+            {
+                reader = connection.ReadData(string.Format("select count(*) from REQUIREMENTS_TMP where id_doc='{0}' and choice=2", id));
+                int cnt = 0;
+                while (reader.Read())
+                {
+                    cnt = reader.GetInt16(0);
+                }
+                if (cnt == 0)
+                {
+                    //CreateRequestWindow FW_CreateReq = new CreateRequestWindow();
+                    CreateReqWindow fw_createReq = new CreateReqWindow(id, fw_B);
+                    fw_createReq.Owner = this;
+                    fw_createReq.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    fw_createReq.ShowDialog();
+
+                }
+                else
+                {
+                    MessageBox.Show("Было изменение основания иска, изменение предмета недопустимо!");
+                }
+            }
+            connection.Close();
         }
     }
 }

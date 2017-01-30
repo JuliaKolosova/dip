@@ -12,7 +12,7 @@
             <GradientStop Color="White"/>
         </LinearGradientBrush>
     </Window.Background>
-    <Grid>
+    <Grid x:Name="Glavnaya" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="31*"/>
             <ColumnDefinition Width="2*"/>
@@ -25,16 +25,9 @@
             <RowDefinition Height="73*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <StackPanel x:Name="STP_radioButton"  Grid.Row="3" Visibility="Visible" Grid.ColumnSpan="2">
-            <RadioButton x:Name="radioButton_v1" Content="право истца без возложения обязанности на индивидуально определенного субъекта права&#xD;&#xA;(прекращение права ответчика на объект права);" Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Height="48" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant" IsChecked="True" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
-            <RadioButton x:Name="radioButton_v2" Content="возникновение новой обязанности ответчика (возникновение права истца возложением&#xD;&#xA;обязанности на индивидуально определенного субъекта права);" Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Height="48" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center"/>
-            <RadioButton x:Name="radioButton_v3" Content="восстановление права истца, нарушенного неисполнением ответчиком обязанностей&#xD;&#xA;(возложение на ответчика обязанности по восстановлению права);" Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Height="48" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center"/>
-            <RadioButton x:Name="radioButton_v4" Content="восстановление права истца, нарушенного несоблюдением ответчиком запретов&#xD;&#xA;(возложение на ответчика обязанности по восстановлению права); " Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Height="48" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center"/>
-            <RadioButton x:Name="radioButton_v5" Content="прекращение обязанности истца;" Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Height="24" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center"/>
-            <RadioButton x:Name="radioButton_v6" Content="запрет действий для ответчика." Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Height="23" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center"/>
-        </StackPanel>
 
-        <Rectangle Fill="#FF378B1E" Margin="0,0,0,0" Height="1" VerticalAlignment="Top" Grid.Row="1" Grid.ColumnSpan="2">
+
+        <Rectangle x:Name="rect1" Fill="#FF378B1E" Margin="0,0,0,0" Height="1" VerticalAlignment="Top" Grid.Row="1" Grid.ColumnSpan="2">
             <Rectangle.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleY="-1"/>
@@ -44,7 +37,7 @@
                 </TransformGroup>
             </Rectangle.RenderTransform>
         </Rectangle>
-        <Rectangle Fill="#FF378B1E" Margin="0,0,0,0" Height="1" VerticalAlignment="Top" Grid.Row="2" Grid.ColumnSpan="2">
+        <Rectangle x:Name="rect2" Fill="#FF378B1E" Margin="0,0,0,0" Height="1" VerticalAlignment="Top" Grid.Row="2" Grid.ColumnSpan="2">
             <Rectangle.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleY="-1"/>
@@ -54,7 +47,7 @@
                 </TransformGroup>
             </Rectangle.RenderTransform>
         </Rectangle>
-        <Rectangle x:Name="rext3" Fill="#FF378B1E" Margin="0,0,0,0" Height="1" VerticalAlignment="Top" Grid.Row="4" Visibility="Collapsed" Grid.ColumnSpan="2">
+        <Rectangle x:Name="rect3" Fill="#FF378B1E" Margin="0,0,0,0" Height="1" VerticalAlignment="Top" Grid.Row="4" Visibility="Collapsed" Grid.ColumnSpan="2">
             <Rectangle.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleY="-1"/>
@@ -66,11 +59,19 @@
         </Rectangle>
         <Label x:Name="label_title" Content="Предмет и основание иска" Margin="0,0,0,0" HorizontalContentAlignment="Center" Foreground="#FF378B1E" FontSize="18.667" Grid.Row="0" Grid.ColumnSpan="2"/>
         <TextBlock x:Name="textBlock_isk" Margin="10,5,10,1" Grid.Row="1" TextWrapping="Wrap" Foreground="#FF378B1E" FontSize="18.667" Grid.ColumnSpan="2" />
-        <Label x:Name="label_RB" Visibility="Visible" Content="Выберите один из вариантов:" HorizontalContentAlignment="Center" Foreground="#FF378B1E" FontSize="16.667" Grid.Row="2" Margin="10,0,184,0" Padding="0" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+        <Label x:Name="label_RB" Visibility="Collapsed" Content="Выберите один из вариантов:" HorizontalContentAlignment="Center" Foreground="#FF378B1E" FontSize="16.667" Grid.Row="2" Margin="10,0,184,0" Padding="0" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
 
+        <StackPanel x:Name="STP_radioButton"  Grid.Row="3" Visibility="Collapsed" Grid.ColumnSpan="2">
+            <RadioButton x:Name="radioButton_v1" Content="право истца без возложения обязанности на индивидуально определенного субъекта права&#xD;&#xA;(прекращение права ответчика на объект права);" Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Height="48" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant" IsChecked="True" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+            <RadioButton x:Name="radioButton_v2" Content="возникновение новой обязанности ответчика (возникновение права истца возложением&#xD;&#xA;обязанности на индивидуально определенного субъекта права);" Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Height="48" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center"/>
+            <RadioButton x:Name="radioButton_v3" Content="восстановление права истца, нарушенного неисполнением ответчиком обязанностей&#xD;&#xA;(возложение на ответчика обязанности по восстановлению права);" Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Height="48" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center"/>
+            <RadioButton x:Name="radioButton_v4" Content="восстановление права истца, нарушенного несоблюдением ответчиком запретов&#xD;&#xA;(возложение на ответчика обязанности по восстановлению права); " Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Height="48" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center"/>
+            <RadioButton x:Name="radioButton_v5" Content="прекращение обязанности истца;" Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Height="24" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center"/>
+            <RadioButton x:Name="radioButton_v6" Content="запрет действий для ответчика." Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Height="23" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center"/>
+        </StackPanel>
         <Label x:Name="label_N_rb" Content="Норма права или пункты договора, которыми обосновано требование:" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="16.667" Grid.Row="4" Margin="10,0,10,31" Padding="3,2,3,0" TextOptions.TextFormattingMode="Display" Visibility="Collapsed" Grid.ColumnSpan="2"/>
 
-        <StackPanel x:Name="STP_radioButton2"  Grid.Row="4" VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Height="42" Margin="288,25,262,6" Visibility="Visible" Width="256">
+        <StackPanel x:Name="STP_radioButton2"  Grid.Row="4" VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Height="42" Margin="288,25,262,6" Visibility="Collapsed" Width="256">
             <RadioButton x:Name="radioButton_N_v1" Content="есть" Margin="10,0,0,0" Grid.Row="3" VerticalAlignment="Center" Height="23" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant_N" IsChecked="True" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Left" VerticalContentAlignment="Center" Width="115"/>
             <RadioButton x:Name="radioButton_N_v2" Content="без ссылки" Margin="10,0" Grid.Row="3" VerticalAlignment="Center" Height="20" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant_N" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center" IsChecked="True"/>
         </StackPanel>
@@ -78,12 +79,18 @@
           Background="#FFA6EC9B" Foreground="#FF26AC19" BorderBrush="White" Margin="0,0,10,8" Grid.Row="5" FontFamily="Calibri" FontSize="16" Content="Далее" Click="Next_b_2_Click" Grid.ColumnSpan="2"/>
         <Button x:Name="Save" Height="25" Width="93" HorizontalAlignment="right" VerticalAlignment="Bottom"
             Background="#FFA6EC9B" Foreground="#FF26AC19" BorderBrush="White" Margin="0,0,47,8" Grid.Row="5" FontFamily="Calibri" FontSize="16" Content="Сохранить" Click="Save_Click" />
+        <Button x:Name="Close" Height="25" Width="182" HorizontalAlignment="right" VerticalAlignment="Bottom"
+            Background="#FFA6EC9B" Foreground="#FF26AC19" BorderBrush="White" Margin="0,0,10,8" Grid.Row="5" FontFamily="Calibri" FontSize="16" Content="Закрыть" Grid.ColumnSpan="2" Click="Close_Click" Visibility="Collapsed" />
         <Button x:Name="back_b_2" Height="25" Width="80" HorizontalAlignment="right" VerticalAlignment="Bottom"
             Background="#FFA6EC9B" Foreground="#FF26AC19" BorderBrush="White" Margin="0,0,150,8" Grid.Row="5" FontFamily="Calibri" FontSize="16" Content="Назад" Click="back_b_2_Click" />
         <Label x:Name="title_norma" Visibility="Collapsed" Content="Норма права или пункты договора, которыми обосновано требование:" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="17" Grid.Row="2" Margin="10,0" Padding="3,2,3,0"  Grid.ColumnSpan="2" VerticalAlignment="Top" VerticalContentAlignment="Center" TextOptions.TextFormattingMode="Display"/>
         <Button x:Name="btn" Margin="0,0,10,0" Grid.Row="2" Grid.Column="1" Visibility="Collapsed" Click="addGridNorma"/>
         <ScrollViewer x:Name="Scroll_st_norma" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="9,0,0,0" Grid.ColumnSpan="2" Grid.RowSpan="2" Grid.Row="3" Visibility="Collapsed" >
             <StackPanel x:Name="ST_norma"  Grid.Row="2" VerticalAlignment="Top" Grid.RowSpan="3" ScrollViewer.CanContentScroll="True" Orientation="Vertical" Grid.ColumnSpan="2"  ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="820" HorizontalAlignment="Left"/>
+        </ScrollViewer>
+        <Label x:Name="title_norma_izm" Visibility="Collapsed" Content="Выберите нормы права:" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="17" Grid.Row="2" Margin="10,0,10,1" Padding="3,2,3,0"  Grid.ColumnSpan="2" VerticalAlignment="Top" VerticalContentAlignment="Center" TextOptions.TextFormattingMode="Display"/>
+        <ScrollViewer x:Name="Scroll_st_norma_izm" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="9,0,0,0" Grid.ColumnSpan="2" Grid.RowSpan="2" Grid.Row="3" Visibility="Collapsed" >
+            <StackPanel x:Name="ST_norma_izm"  Grid.Row="2" VerticalAlignment="Top" Grid.RowSpan="3" ScrollViewer.CanContentScroll="True" Orientation="Vertical" Grid.ColumnSpan="2"  ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="820" HorizontalAlignment="Left"/>
         </ScrollViewer>
         <StackPanel  x:Name="ST_adres" Margin="15,0,0,0" Grid.Row="2" Grid.RowSpan="3" Grid.ColumnSpan="2" Visibility="Collapsed">
             <Label x:Name="label_adres" Content="Адресат нормы соответствует:" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="17" Margin="10,0"   VerticalContentAlignment="Center" TextOptions.TextFormattingMode="Display"/>
@@ -107,6 +114,27 @@
             <Label x:Name="label_edit" Content="   Предмет (исковое требование) в формулировке уточненного искового заявления" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="17" Margin="10,10,0,0"   VerticalContentAlignment="Center" TextOptions.TextFormattingMode="Display"/>
             <Label x:Name="label_edit_ist" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="17" Margin="10,0,0,0"   VerticalContentAlignment="Center" TextOptions.TextFormattingMode="Display"/>
             <TextBox x:Name="textBox_edit" Height="112" TextWrapping="Wrap" Margin="32,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="17"  TextOptions.TextFormattingMode="Display" Width="784"/>
+        </StackPanel>
+
+        <StackPanel x:Name="ST_fact"  Grid.Row="1" VerticalAlignment="Top" Orientation="Vertical" Grid.ColumnSpan="2" Margin="28,0,10,0" Height="470" Grid.RowSpan="4" Visibility="Collapsed" >
+            <TextBlock x:Name="textBlock_header_fact" HorizontalAlignment="Left"  Grid.Row="1" TextWrapping="Wrap" Foreground="#FF378B1E" FontSize="16.667" VerticalAlignment="Top" RenderTransformOrigin="-0.72,-1.094" Width="810">
+
+            </TextBlock>
+            <!--<ScrollViewer x:Name="Scroll_st_fact" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Height="448" >-->
+            <StackPanel x:Name="ST_fact_list"   />
+            <!--</ScrollViewer>-->
+        </StackPanel>
+
+        <StackPanel x:Name="ST_defendant_choise" Grid.ColumnSpan="2" Margin="15,0,10,68" Grid.Row="1" Grid.RowSpan="3" Visibility="Collapsed" >
+            <Label x:Name="label_defendant_choise" Content="Ответчик иск:" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="17" Margin="10,10,0,0"   VerticalContentAlignment="Center" TextOptions.TextFormattingMode="Display"/>
+            <RadioButton  x:Name="def_ch_1" Content="признал;" Margin="50,0" VerticalAlignment="Center" Height="23" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="d_ch" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center" IsChecked="True"/>
+            <RadioButton  x:Name="def_ch_2" Content="признал частично;" Margin="50,0" VerticalAlignment="Center" Height="23" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="d_ch" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center"/>
+            <RadioButton  x:Name="def_ch_3" Content="не признал;" Margin="50,0" VerticalAlignment="Center" Height="23" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="d_ch" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center" />
+            <Label x:Name="label_priz_isk" Content="Соответствие признания иска закону:" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="17" Margin="10,40,0,0"   VerticalContentAlignment="Center" TextOptions.TextFormattingMode="Display"/>
+            <RadioButton  x:Name="priz_isk_1" Content="признание иска не противоречит закону и не нарушает права и законные&#xD;&#xA;интересы других лиц и принимается судом;" Margin="50,0" VerticalAlignment="Center"  Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="priz_isk" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center" IsChecked="True"/>
+            <RadioButton  x:Name="priz_isk_2" Content="признание иска противоречит закону;" Margin="50,0" VerticalAlignment="Center" Height="23" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="priz_isk" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center"/>
+            <RadioButton  x:Name="priz_isk_3" Content="признание иска нарушает права и законные интересы других лиц;" Margin="50,0" VerticalAlignment="Center" Height="23" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="priz_isk" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center" />
+
         </StackPanel>
     </Grid>
 </Window>

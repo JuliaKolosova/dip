@@ -19,6 +19,7 @@
         <Button x:Name="FormaB"
             Width="163" Height="34" HorizontalAlignment="right" VerticalAlignment="Bottom"
             Margin="0,0,30,86" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Форма Б" Click="FormaB_Click"/>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="157,68,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
 
     </Grid>
 </Window>

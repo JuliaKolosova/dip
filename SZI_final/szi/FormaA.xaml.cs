@@ -103,11 +103,11 @@ namespace SZI
             img_add.Width = 20;
             img_add.Height = 20;
             AddBtn_FM.Content = img_add;
+            //AddBtn_FM_izm.Content = img_add;
 
             SQLite connection = new SQLite();
             SQLiteDataReader reader = connection.ReadData(string.Format("Select count(*) from ACTORs Where id_doc='{0}' group by PLAINTIFF", id));
             int[] count= new int[2];
-            //int count_otv = 0;
             tblock_perech.Text = "";
             int i = 0;
             while (reader.Read())
@@ -129,20 +129,14 @@ namespace SZI
             }
             else
             {
-                string str_ist="", str_otv="";
-                reader = connection.ReadData(string.Format("Select * from Actors Where id_doc ='{0}' order by PLAINTIFF", id));
+                string str_ist= "судебном заседании гражданское дело по иску ";
+                reader = connection.ReadData(string.Format("Select PLAINTIFF,NAME_ACTOR_RP from Actors Where id_doc ='{0}' and PLAINTIFF=1", id));
                 while (reader.Read())
                 {
-                    if (reader.GetInt16(4)==1)
-                        str_ist += reader.GetString(2)+','+'\n';
-                    else
-                        str_otv += reader.GetString(2) + ',' + '\n';
-
-                    //count_otv = reader.GetInt16(1);
+                        str_ist += reader.GetString(1)+',';
                 }
                 str_ist=str_ist.Remove(str_ist.Length - 2);
-                str_otv=str_otv.Remove(str_otv.Length - 2);
-                tblock_perech.Text = str_ist + '\n' + "к" + '\n' + str_otv;
+                tblock_perech.Text = str_ist;
             }
             reader = connection.ReadData(string.Format("Select PROSECUTOR,PUBLIC_MEETING from document Where id ='{0}'", id));
             while (reader.Read())
@@ -158,7 +152,7 @@ namespace SZI
             }
 
             FillReq();
-
+          //  FillReqIzm();
             connection.Close();
         }
 
@@ -166,7 +160,7 @@ namespace SZI
         {
             StackPanel_A_4_2.Children.Clear();
             SQLite connection = new SQLite();
-            SQLiteDataReader reader = connection.ReadData(string.Format("Select count(*) from REQUIREMENTS_TMP Where id_doc ='{0}' and iteration=0", id));
+            SQLiteDataReader reader = connection.ReadData(string.Format("Select count(*) from REQUIREMENTS_TMP Where id_doc ='{0}' and iteration=0 and izmena=0", id));
             int count_req = 0;
             while (reader.Read())
             {
@@ -175,7 +169,7 @@ namespace SZI
             }
             if (count_req != 0)
             {
-                reader = connection.ReadData(string.Format("Select id_req,text from REQUIREMENTS_TMP Where id_doc ='{0}' and iteration=0", id));
+                reader = connection.ReadData(string.Format("Select id_req,text from REQUIREMENTS_TMP Where id_doc ='{0}' and iteration=0 and izmena=0", id));
                 var first_req = true;
                 while (reader.Read())
                 {
@@ -187,13 +181,46 @@ namespace SZI
                     }
                     else
                     {
-                        Update_formul(reader);
+                        Update_formul(reader,0);
                     }
 
                 }
             }
             connection.Close();
         }
+
+        //private void FillReqIzm()
+        //{
+        //    StackPanel_A_4_3.Children.Clear();
+        //    SQLite connection = new SQLite();
+        //    SQLiteDataReader reader = connection.ReadData(string.Format("Select count(*) from REQUIREMENTS_TMP Where id_doc ='{0}' and iteration=0  and izmena=1", id));
+        //    int count_req = 0;
+        //    while (reader.Read())
+        //    {
+        //        count_req = reader.GetInt16(0);
+
+        //    }
+        //    if (count_req != 0)
+        //    {
+        //        reader = connection.ReadData(string.Format("Select id_req,text from REQUIREMENTS_TMP Where id_doc ='{0}' and iteration=0  and izmena=1", id));
+        //        var first_req = true;
+        //        while (reader.Read())
+        //        {
+        //            if (first_req)
+        //            {
+        //                tB_formulirovka_izm.Tag = reader.GetInt16(0).ToString();
+        //                tB_formulirovka_izm.Text = reader.GetString(1);
+        //                first_req = false;
+        //            }
+        //            else
+        //            {
+        //                Update_formul(reader,1);
+        //            }
+
+        //        }
+        //    }
+        //    connection.Close();
+        //}
 
         //заполняем tabcontrol  о представителях истцов
         private void TabControlPredIst(int index, int plaintiff)
@@ -235,6 +262,7 @@ namespace SZI
                 {
                     firstpred = true;
                     ist_id = reader_pred_ist.GetInt16(0);
+                    var str_familia = reader_pred_ist.GetString(1).Split(' ')[0];
                     StackPanel pred_ist_panel = new StackPanel(); ;
                     //pred_ist_panel.Children.Clear();
                     SQLiteDataReader count_reader_ist = connection.ReadData(string.Format("Select count(*) from AGENT_PLAINTIFF Where id_actor='{0}'", ist_id));
@@ -251,7 +279,7 @@ namespace SZI
                         skroll.Content = pred_ist_panel;
                         Tab_Presd_ist.Items.Add(new TabItem
                         {
-                            Header = new TextBlock { Text = reader_pred_ist.GetString(1).Split(' ')[0] },
+                            Header = new TextBlock { Text = str_familia },
                             Tag = new TextBlock { Text = ist_id.ToString() },
                             Content = skroll
                         });
@@ -260,16 +288,17 @@ namespace SZI
                     {                        
                         SQLiteDataReader reader_pred_ist2 = connection.ReadData(string.Format("Select ID_PLAINTIFF, ID_ACTOR, NAME_AGENT, AGENT_DOC, NAME_AGENT_RP from AGENT_PLAINTIFF Where id_actor ='{0}'", ist_id));
                         //pred_ist_panel.Children.Add(AddStPanelPredIstec(reader_pred_ist2, firstpred));
-                        firstpred = false;
+                        
                         while (reader_pred_ist2.Read())
                         {
                             pred_ist_panel.Children.Add(AddStPanelPredIstec(reader_pred_ist2, firstpred, plaintiff));
+                            firstpred = false;
                             // тут нужно как-то динамично считывть информацию. может быть несколько представителей у одного. возможность добавления/удаления :(
                         }
                         skroll.Content = pred_ist_panel;
                         Tab_Presd_ist.Items.Add(new TabItem
                         {
-                            Header = new TextBlock { Text = reader_pred_ist.GetString(1) },
+                            Header = new TextBlock { Text = str_familia },
                             Tag = new TextBlock { Text = ist_id.ToString() },
                             Content = skroll
 
@@ -305,16 +334,17 @@ namespace SZI
             DynamicGrid.ColumnDefinitions.Add(gridCol2);
             RowDefinition gridRow1 = new RowDefinition();
             DynamicGrid.RowDefinitions.Add(gridRow1);
-
+            string name_pred = reader_pred_ist.GetString(1).Split(' ')[0];
+                //+" "+ reader_pred_ist.GetString(1).Split(' ')[1].Remove(1) +". " + reader_pred_ist.GetString(1).Split(' ')[2].Remove(1)+".";
 
             Label label_info_pred_ist = new Label() {  FontSize = 18, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, Height = 31, Width = 403 };
             if (plaintiff==1)
             {
-                label_info_pred_ist.Content = string.Concat("Представители истца: ", reader_pred_ist.GetString(1));
+                label_info_pred_ist.Content = string.Concat("Представители истца: ", name_pred);
             }
             else
             {
-                label_info_pred_ist.Content = string.Concat("Представители ответчика: ", reader_pred_ist.GetString(1));
+                label_info_pred_ist.Content = string.Concat("Представители ответчика: ", name_pred);
             }
             Image img_add = new Image();
             img_add.Source = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "\\images\\add.png", UriKind.Absolute));
@@ -363,7 +393,7 @@ namespace SZI
             textbox_predist_name.AcceptsReturn = false;
             textbox_predist_name.Foreground = colortext;
             textbox_predist_name.Height = 25;
-            textbox_predist_name.BorderBrush = color_border;
+            //textbox_predist_name.BorderBrush = color_border;
 
             TextBox textbox_predist_name_rp = new TextBox();
             textbox_predist_name_rp.Padding = new Thickness(1, 1, 1, 1);
@@ -372,7 +402,7 @@ namespace SZI
             textbox_predist_name_rp.AcceptsReturn = false;
             textbox_predist_name_rp.Foreground = colortext;
             textbox_predist_name_rp.Height = 25;
-            textbox_predist_name_rp.BorderBrush = color_border;
+         //   textbox_predist_name_rp.BorderBrush = color_border;
 
             Image img_del = new Image();
             img_del.Source = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "\\images\\delete.png", UriKind.Absolute));
@@ -411,6 +441,17 @@ namespace SZI
 
             DatePicker date_order_ot = new DatePicker() { Margin = new Thickness(0, 10, 0, 10), Width = 120 };
 
+            Label label_doc2_1_predist = new Label() { Content = "  № ", FontSize = 16, Margin = new Thickness(0, 10, 0, 10), Foreground = colortext };
+
+            TextBox tex_box_doc2_1_predist = new TextBox();
+            tex_box_doc2_1_predist.Padding = new Thickness(1, 1, 1, 1);
+            tex_box_doc2_1_predist.TextWrapping = TextWrapping.Wrap;
+            tex_box_doc2_1_predist.FontSize = 16;
+            tex_box_doc2_1_predist.AcceptsReturn = true;
+            tex_box_doc2_1_predist.Foreground = colortext;
+            tex_box_doc2_1_predist.Width = 180;
+            tex_box_doc2_1_predist.Height = 25;
+
             Label label_doc3_predist = new Label() { Content = "  - наименование документа, ", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
             TextBox tex_box_predist_doc1 = new TextBox();
@@ -436,7 +477,7 @@ namespace SZI
             tex_box_predist_doc4.Foreground = colortext;
             tex_box_predist_doc4.Width = 280;
             tex_box_predist_doc4.Height = 25;
-            tex_box_predist_doc4.BorderBrush = color_border;
+           // tex_box_predist_doc4.BorderBrush = color_border;
 
             Label label_doc4_2_predist = new Label() { Content = ", удостоверяющего статус и полномочия законного представителя в силу ст.", FontSize = 16, Margin = new Thickness(0, 1, 1, 0), Foreground = colortext };
 
@@ -448,7 +489,7 @@ namespace SZI
             tex_box_predist_doc4_2.Foreground = colortext;
             tex_box_predist_doc4_2.Width = 280;
             tex_box_predist_doc4_2.Height = 25;
-            tex_box_predist_doc4_2.BorderBrush = color_border;
+            //tex_box_predist_doc4_2.BorderBrush = color_border;
             if (reader_pred_ist != null)
             {
                 textbox_predist_name.Text = reader_pred_ist.GetString(2);
@@ -468,13 +509,16 @@ namespace SZI
                         date_order_ot.SelectedDate = DateTime.Parse(str[2]);
                     }
 
-                    if ((str[3].Length != 0) && (str[4].Length != 0))
+                    if (str[3].Length != 0)
+                        tex_box_doc2_1_predist.Text = str[3];
+
+                    if ((str[4].Length != 0) && (str[5].Length != 0))
                     {
-                        tex_box_predist_doc1.Text = str[3];
-                        date_dover_ot_3.SelectedDate = DateTime.Parse(str[4]);
+                        tex_box_predist_doc1.Text = str[4];
+                        date_dover_ot_3.SelectedDate = DateTime.Parse(str[5]);
                     }
-                    tex_box_predist_doc4.Text = str[5];
-                    tex_box_predist_doc4_2.Text = str[6];
+                    tex_box_predist_doc4.Text = str[6];
+                    tex_box_predist_doc4_2.Text = str[7];
                 }
             }
             StackPanel stp_doc1_predist = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Left, Width = 560 };
@@ -486,6 +530,8 @@ namespace SZI
             StackPanel stp_doc2_predist = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Left, Width = 560 };
             stp_doc2_predist.Children.Add(label_doc2_predist);
             stp_doc2_predist.Children.Add(date_order_ot);
+            stp_doc2_predist.Children.Add(label_doc2_1_predist);
+            stp_doc2_predist.Children.Add(tex_box_doc2_1_predist);
 
             StackPanel stp_doc3_predist = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Left, Width = 560 };
             stp_doc3_predist.Children.Add(label_doc3_predist);
@@ -1106,7 +1152,7 @@ namespace SZI
                             if (textbox_name.Text.Length != 0)
                             { 
                                 if (textbox_name.Tag == null)
-                                    connection.WriteData(string.Format("INSERT INTO actors (id_doc,name_actor,name_actor_rp,actor_doc,plaintiff) VALUES ('{0}','{1}','{2}','{3}','{4}')", id, textbox_name.Text, textbox_name_rp.Text, str, 1));
+                                    connection.WriteData(string.Format("INSERT INTO actors (id_doc,name_actor,name_actor_rp,actor_doc,plaintiff) VALUES ('{0}','{1}','{2}','{3}','{4}')", id, textbox_name.Text,textbox_name_rp.Text, str, 1));
                                 else
                                 {
                                     SQLite connection1 = new SQLite();
@@ -1135,34 +1181,41 @@ namespace SZI
                             var id_ag = (TextBlock)tbItem.Tag;
                             ScrollViewer skw= (ScrollViewer)tbItem.Content;
                             StackPanel st = (StackPanel)skw.Content;
-                            Grid grid_2 = (Grid)st.Children[1];
-                            var textbox_name = grid_2.Children[2] as TextBox;
-                            var textbox_name_rp = grid_2.Children[5] as TextBox;
-                            var actor_name = textbox_name.Text;
-                            if (actor_name.Length != 0)
+                        //Grid grid_2 = (Grid)st.Children[1];
+                            foreach (Grid grid_2 in st.Children)
                             {
-                                var stp_doc1 = grid_2.Children[7] as StackPanel;
-                                var str_doc = stp_doc1.Children[1].ToString() + "~" + stp_doc1.Children[3].ToString();
-                                var stp_doc2 = grid_2.Children[8] as StackPanel;
-                                str_doc = str_doc + "~" + stp_doc2.Children[1].ToString();
-                                var stp_doc3 = grid_2.Children[9] as StackPanel;
-                                var tb_doc3 = stp_doc3.Children[1] as TextBox;
-                                str_doc = str_doc + "~" + tb_doc3.Text.ToString();
-                                var stp_doc3_2 = grid_2.Children[10] as StackPanel;
-                                str_doc = str_doc + "~" + stp_doc3_2.Children[1].ToString();
-                                var stp_doc4 = grid_2.Children[11] as StackPanel;
-                                var tb_doc4 = stp_doc4.Children[1] as TextBox;
-                                str_doc = str_doc + "~" + tb_doc4.Text.ToString();
-                                var stp_doc4_2 = grid_2.Children[12] as StackPanel;
-                                var tb_doc4_2 = stp_doc4_2.Children[1] as TextBox;
-                                str_doc = str_doc + "~" + tb_doc4_2.Text.ToString();
-                                if (textbox_name.Tag == null)
-                                    connection.WriteData(string.Format("INSERT INTO AGENT_PLAINTIFF (ID_ACTOR,NAME_AGENT ,NAME_AGENT_rp , AGENT_DOC) VALUES ('{0}','{1}','{2}','{3}')", id_ag.Text, actor_name, textbox_name_rp.Text, str_doc));
-                                else
+                                if (grid_2.Children.Count > 8)
                                 {
-                                    SQLite connection1 = new SQLite();
-                                    connection1.WriteData(string.Format("Update AGENT_PLAINTIFF set NAME_AGENT='{0}', NAME_AGENT_rp='{1}',  AGENT_DOC='{2}' Where ID_PLAINTIFF='{3}'", actor_name, textbox_name_rp.Text, str_doc, textbox_name.Tag));
-                                    connection1.Close();
+                                    var textbox_name = grid_2.Children[2] as TextBox;
+                                    var textbox_name_rp = grid_2.Children[5] as TextBox;
+                                    var actor_name = textbox_name.Text;
+                                    if (actor_name.Length != 0)
+                                    {
+                                        var stp_doc1 = grid_2.Children[7] as StackPanel;
+                                        var str_doc = stp_doc1.Children[1].ToString() + "~" + stp_doc1.Children[3].ToString();
+                                        var stp_doc2 = grid_2.Children[8] as StackPanel;
+                                        var tb_doc2 = stp_doc2.Children[3] as TextBox;
+                                        str_doc = str_doc + "~" + stp_doc2.Children[1].ToString() + "~" + tb_doc2.Text.ToString();
+                                        var stp_doc3 = grid_2.Children[9] as StackPanel;
+                                        var tb_doc3 = stp_doc3.Children[1] as TextBox;
+                                        str_doc = str_doc + "~" + tb_doc3.Text.ToString();
+                                        var stp_doc3_2 = grid_2.Children[10] as StackPanel;
+                                        str_doc = str_doc + "~" + stp_doc3_2.Children[1].ToString();
+                                        var stp_doc4 = grid_2.Children[11] as StackPanel;
+                                        var tb_doc4 = stp_doc4.Children[1] as TextBox;
+                                        str_doc = str_doc + "~" + tb_doc4.Text.ToString();
+                                        var stp_doc4_2 = grid_2.Children[12] as StackPanel;
+                                        var tb_doc4_2 = stp_doc4_2.Children[1] as TextBox;
+                                        str_doc = str_doc + "~" + tb_doc4_2.Text.ToString();
+                                        if (textbox_name.Tag == null)
+                                            connection.WriteData(string.Format("INSERT INTO AGENT_PLAINTIFF (ID_ACTOR,NAME_AGENT ,NAME_AGENT_rp , AGENT_DOC) VALUES ('{0}','{1}','{2}','{3}')", id_ag.Text, actor_name, textbox_name_rp.Text, str_doc));
+                                        else
+                                        {
+                                            SQLite connection1 = new SQLite();
+                                            connection1.WriteData(string.Format("Update AGENT_PLAINTIFF set NAME_AGENT='{0}', NAME_AGENT_rp='{1}',  AGENT_DOC='{2}' Where ID_PLAINTIFF='{3}'", actor_name, textbox_name_rp.Text, str_doc, textbox_name.Tag));
+                                            connection1.Close();
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1181,20 +1234,23 @@ namespace SZI
 
                         foreach (Grid grid in StackPanel_A_2_2.Children)
                         {
-                            var textbox_name = grid.Children[2] as TextBox;
-                            var textbox_doc1 = grid.Children[6] as TextBox;
-                            var textbox_doc2 = grid.Children[8] as TextBox;
+                        var textbox_name = grid.Children[2] as TextBox;
+                        var textbox_name_rp = grid.Children[5] as TextBox;
+                        var textbox_doc1 = grid.Children[8] as TextBox;
+                        var textbox_doc2 = grid.Children[10] as TextBox;
 
-                            str = textbox_doc1.Text + "~" + textbox_doc2.Text;
+                        str = textbox_doc1.Text + "~" + textbox_doc2.Text;
+
+                        str = textbox_doc1.Text + "~" + textbox_doc2.Text;
 
                             if (textbox_name.Text.Length != 0)
                             {
                                 if (textbox_name.Tag == null)
-                                    connection.WriteData(string.Format("INSERT INTO actors (id_doc,name_actor,actor_doc,plaintiff) VALUES ('{0}','{1}','{2}','{3}')", id, textbox_name.Text, str, 2));
+                                    connection.WriteData(string.Format("INSERT INTO actors (id_doc,name_actor,name_actor_rp,actor_doc,plaintiff) VALUES ('{0}','{1}','{2}','{3}','{4}')", id, textbox_name.Text, textbox_name_rp.Text, str, 2));
                                 else
                                 {
                                     SQLite connection1 = new SQLite();
-                                    connection1.WriteData(string.Format("Update actors set id_doc='{0}', name_actor='{1}', actor_doc='{2}' Where id='{3}'", id, textbox_name.Text, str, textbox_name.Tag));
+                                    connection1.WriteData(string.Format("Update actors set id_doc='{0}', name_actor='{1}',name_actor_rp='{2}',actor_doc='{3}' Where id='{4}'", id, textbox_name.Text, textbox_name_rp.Text,str, textbox_name.Tag));
                                     connection1.Close();
                                 }
                             }
@@ -1208,42 +1264,44 @@ namespace SZI
                         foreach (TabItem tbItem in Tab_Presd_ist.Items)
                         {
                             var id_ag = (TextBlock)tbItem.Tag;
-                            StackPanel st = (StackPanel)tbItem.Content;
-                            Grid grid_2 = (Grid)st.Children[1];
-                            var textbox_name = grid_2.Children[2] as TextBox;
-                            var actor_name = textbox_name.Text;
-                            if (actor_name.Length != 0)
-                            {
-                                var stp_doc1 = grid_2.Children[5] as StackPanel;
-                               
-                                var stp_doc2 = grid_2.Children[6] as StackPanel;
-                                if (DateTime.Parse(stp_doc1.Children[1].ToString())> DateTime.Parse(stp_doc1.Children[3].ToString()))                           
+                            ScrollViewer skw = (ScrollViewer)tbItem.Content;
+                            StackPanel st = (StackPanel)skw.Content;
+                            //Grid grid_2 = (Grid)st.Children[1];
+                            foreach (Grid grid_2 in st.Children)
                                 {
-                                    MessageBox.Show("Сроки доверенности указаны не корректно");
-                                    not = false;
-                                    not_ind = Tab_Presd_ist.Items.IndexOf(tbItem);
-                                    break;
-                                }
-                                var str_doc = stp_doc1.Children[1].ToString() + "~" + stp_doc1.Children[3].ToString();
-                                str_doc = str_doc + "~" + stp_doc2.Children[1].ToString();
-                                var stp_doc3 = grid_2.Children[7] as StackPanel;
-                                var tb_doc3 = stp_doc3.Children[1] as TextBox;
-                                str_doc = str_doc + "~" + tb_doc3.Text.ToString();
-                                var stp_doc3_2 = grid_2.Children[8] as StackPanel;
-                                str_doc = str_doc + "~" + stp_doc3_2.Children[1].ToString();
-                                var stp_doc4 = grid_2.Children[9] as StackPanel;
-                                var tb_doc4 = stp_doc4.Children[1] as TextBox;
-                                str_doc = str_doc + "~" + tb_doc4.Text.ToString();
-                                var stp_doc4_2 = grid_2.Children[10] as StackPanel;
-                                var tb_doc4_2 = stp_doc4_2.Children[1] as TextBox;
-                                str_doc = str_doc + "~" + tb_doc4_2.Text.ToString();
-                                if (textbox_name.Tag == null)
-                                    connection.WriteData(string.Format("INSERT INTO AGENT_PLAINTIFF (ID_ACTOR,NAME_AGENT , AGENT_DOC) VALUES ('{0}','{1}','{2}')", id_ag.Text, actor_name, str_doc));
-                                else
-                                {
-                                    SQLite connection1 = new SQLite();
-                                    connection1.WriteData(string.Format("Update AGENT_PLAINTIFF set NAME_AGENT='{0}',  AGENT_DOC='{1}' Where ID_PLAINTIFF='{2}'", actor_name, str_doc, textbox_name.Tag));
-                                    connection1.Close();
+                                    if (grid_2.Children.Count > 8)
+                                    {
+                                        var textbox_name = grid_2.Children[2] as TextBox;
+                                        var textbox_name_rp = grid_2.Children[5] as TextBox;
+                                        var actor_name = textbox_name.Text;
+                                        if (actor_name.Length != 0)
+                                        {
+                                            var stp_doc1 = grid_2.Children[7] as StackPanel;
+                                            var str_doc = stp_doc1.Children[1].ToString() + "~" + stp_doc1.Children[3].ToString();
+                                            var stp_doc2 = grid_2.Children[8] as StackPanel;
+                                            var tb_doc2 = stp_doc2.Children[3] as TextBox;
+                                            str_doc = str_doc + "~" + stp_doc2.Children[1].ToString() + "~" + tb_doc2.Text.ToString();
+                                            var stp_doc3 = grid_2.Children[9] as StackPanel;
+                                            var tb_doc3 = stp_doc3.Children[1] as TextBox;
+                                            str_doc = str_doc + "~" + tb_doc3.Text.ToString();
+                                            var stp_doc3_2 = grid_2.Children[10] as StackPanel;
+                                            str_doc = str_doc + "~" + stp_doc3_2.Children[1].ToString();
+                                            var stp_doc4 = grid_2.Children[11] as StackPanel;
+                                            var tb_doc4 = stp_doc4.Children[1] as TextBox;
+                                            str_doc = str_doc + "~" + tb_doc4.Text.ToString();
+                                            var stp_doc4_2 = grid_2.Children[12] as StackPanel;
+                                            var tb_doc4_2 = stp_doc4_2.Children[1] as TextBox;
+                                            str_doc = str_doc + "~" + tb_doc4_2.Text.ToString();
+
+                                            if (textbox_name.Tag == null)
+                                                connection.WriteData(string.Format("INSERT INTO AGENT_PLAINTIFF (ID_ACTOR,NAME_AGENT ,NAME_AGENT_RP , AGENT_DOC) VALUES ('{0}','{1}','{2}','{3}')", id_ag.Text, actor_name, textbox_name_rp.Text, str_doc));
+                                            else
+                                            {
+                                                SQLite connection1 = new SQLite();
+                                                connection1.WriteData(string.Format("Update AGENT_PLAINTIFF set NAME_AGENT='{0}', NAME_AGENT_RP='{1}',  AGENT_DOC='{2}' Where ID_PLAINTIFF='{3}'", actor_name, textbox_name_rp.Text, str_doc, textbox_name.Tag));
+                                                connection1.Close();
+                                            }
+                                    }
                                 }
                             }
                         }
@@ -1265,18 +1323,18 @@ namespace SZI
                         connection.WriteData(string.Format("Update Document set PROSECUTOR='{0}', PUBLIC_MEETING='{1}' Where id='{2}'", tB_PROKUROR.Text, zass,  id));
                         if (tB_formulirovka.Text==null|| tB_formulirovka.Text.Length == 0)
                         {
-                            connection.WriteData(string.Format("delete from REQUIREMENTS_TMP Where id_req='{0}'", tB_formulirovka.Tag));
+                            connection.WriteData(string.Format("delete from REQUIREMENTS_TMP Where id_req='{0}' and id_doc='{1}' and izmena=0", tB_formulirovka.Tag,id));
                         }
                         else
                         if (tB_formulirovka.Tag==null)
                         {
-                            connection.WriteData(string.Format("INSERT INTO REQUIREMENTS_TMP (ID_doc,id_req,text,iteration) VALUES ('{0}','{1}','{2}',0)", id,id_req, tB_formulirovka.Text));
+                            connection.WriteData(string.Format("INSERT INTO REQUIREMENTS_TMP (ID_doc,id_req,text,iteration,izmena) VALUES ('{0}','{1}','{2}',0,0)", id,id_req, tB_formulirovka.Text));
                             id_req++;
                         //                        connection.WriteData(string.Format("INSERT INTO REQUIREMENTS (ID_doc,text,iteration) VALUES ('{0}','{1}',0)", id, tB_formulirovka.Text));
                         }
                         else
                         {
-                            connection.WriteData(string.Format("Update REQUIREMENTS_TMP set text='{0}' where id_req='{1}' and iteration=0", tB_formulirovka.Text, tB_formulirovka.Tag));
+                            connection.WriteData(string.Format("Update REQUIREMENTS_TMP set text='{0}' where id_req='{1}' and iteration=0 and id_doc='{2}' and izmena=0", tB_formulirovka.Text, tB_formulirovka.Tag,id));
                         }
 
                         foreach (Grid grid in StackPanel_A_4_2.Children)
@@ -1285,18 +1343,18 @@ namespace SZI
                             if (textbox_req.Text == null || textbox_req.Text.Length == 0)
                             {
                                 if (textbox_req.Tag != null)
-                                    connection.WriteData(string.Format("delete from REQUIREMENTS_TMP Where id_req='{0}'", textbox_req.Tag));
+                                    connection.WriteData(string.Format("delete from REQUIREMENTS_TMP Where id_req='{0}' and id_doc='{1}'  and izmena=0", textbox_req.Tag,id));
 
                             }
                             else
                                 if (textbox_req.Tag == null)
                                 {
-                                    connection.WriteData(string.Format("INSERT INTO REQUIREMENTS_TMP (ID_doc,id_req,text,iteration) VALUES ('{0}','{1}','{2}',0)", id, id_req, textbox_req.Text));
+                                    connection.WriteData(string.Format("INSERT INTO REQUIREMENTS_TMP (ID_doc,id_req,text,iteration,izmena) VALUES ('{0}','{1}','{2}',0,0)", id, id_req, textbox_req.Text));
                                     id_req++;
                                 }
                                 else
                                 {
-                                    connection.WriteData(string.Format("Update REQUIREMENTS_TMP set text='{0}' where id_req='{1}' and iteration=0", textbox_req.Text, textbox_req.Tag));
+                                    connection.WriteData(string.Format("Update REQUIREMENTS_TMP set text='{0}' where id_req='{1}' and iteration=0 and id_doc='{2}' and izmena=0", textbox_req.Text, textbox_req.Tag,id));
                                 }
                         }
                         if (delete_str != "")
@@ -1304,10 +1362,56 @@ namespace SZI
                             string[] arr = delete_str.Split(';');
                             for (int i = 0; i < arr.Length - 1; i++)
                             {
-                                connection.WriteData(string.Format("delete from REQUIREMENTS_TMP Where id_req='{0}'", arr[i]));
+                                connection.WriteData(string.Format("delete from REQUIREMENTS_TMP Where id_req='{0}' and id_doc='{1}'  and izmena=0", arr[i],id));
                             }
                         }
-                        WriteIstecOtvet();
+
+                    //if (tB_formulirovka_izm.Text == null || tB_formulirovka_izm.Text.Length == 0)
+                    //{
+                    //    connection.WriteData(string.Format("delete from REQUIREMENTS_TMP Where id_req='{0}' and id_doc='{1}' and izmena=1", tB_formulirovka_izm.Tag, id));
+                    //}
+                    //else
+                    //if (tB_formulirovka_izm.Tag == null)
+                    //{
+                    //    connection.WriteData(string.Format("INSERT INTO REQUIREMENTS_TMP (ID_doc,id_req,text,iteration,izmena) VALUES ('{0}','{1}','{2}',0,1)", id, id_req, tB_formulirovka_izm.Text));
+                    //    id_req++;
+                    //    //                        connection.WriteData(string.Format("INSERT INTO REQUIREMENTS (ID_doc,text,iteration) VALUES ('{0}','{1}',0)", id, tB_formulirovka.Text));
+                    //}
+                    //else
+                    //{
+                    //    connection.WriteData(string.Format("Update REQUIREMENTS_TMP set text='{0}' where id_req='{1}' and iteration=0 and id_doc='{2}'  and izmena=1", tB_formulirovka_izm.Text, tB_formulirovka_izm.Tag, id));
+                    //}
+
+                    //foreach (Grid grid in StackPanel_A_4_3.Children)
+                    //{
+                    //    var textbox_req = grid.Children[0] as TextBox;
+                    //    if (textbox_req.Text == null || textbox_req.Text.Length == 0)
+                    //    {
+                    //        if (textbox_req.Tag != null)
+                    //            connection.WriteData(string.Format("delete from REQUIREMENTS_TMP Where id_req='{0}' and id_doc='{1}'  and izmena=1", textbox_req.Tag, id));
+
+                    //    }
+                    //    else
+                    //        if (textbox_req.Tag == null)
+                    //    {
+                    //        connection.WriteData(string.Format("INSERT INTO REQUIREMENTS_TMP (ID_doc,id_req,text,iteration,izmena) VALUES ('{0}','{1}','{2}',0,1)", id, id_req, textbox_req.Text));
+                    //        id_req++;
+                    //    }
+                    //    else
+                    //    {
+                    //        connection.WriteData(string.Format("Update REQUIREMENTS_TMP set text='{0}' where id_req='{1}' and iteration=0 and id_doc='{2}'  and izmena=1", textbox_req.Text, textbox_req.Tag, id));
+                    //    }
+                    //}
+                    //if (delete_str != "")
+                    //{
+                    //    string[] arr = delete_str.Split(';');
+                    //    for (int i = 0; i < arr.Length - 1; i++)
+                    //    {
+                    //        connection.WriteData(string.Format("delete from REQUIREMENTS_TMP Where id_req='{0}' and id_doc='{1}'  and izmena=1", arr[i], id));
+                    //    }
+                    //}
+
+                    WriteIstecOtvet();
                         break;
                 
             }
@@ -1317,11 +1421,11 @@ namespace SZI
 
         private void AddBtn_Click_FM(object sender, RoutedEventArgs e)
         {
-            Update_formul(null);
+            Update_formul(null,0);
 
         }
 
-        private void Update_formul(SQLiteDataReader req)
+        private void Update_formul(SQLiteDataReader req, int izm)
         {
             Grid grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(461) });
@@ -1331,11 +1435,12 @@ namespace SZI
             TextBox tb_fotmul = new TextBox();
             tb_fotmul.Padding = new Thickness(1, 1, 1, 1);
             tb_fotmul.TextWrapping = TextWrapping.WrapWithOverflow;
-            tb_fotmul.FontSize = 16;
+            tb_fotmul.FontSize = 18.667;
             tb_fotmul.AcceptsReturn = false;
             tb_fotmul.Foreground = colortext;
             tb_fotmul.Height = 30;
             tb_fotmul.Width = 451;
+            tb_fotmul.TextWrapping = TextWrapping.NoWrap;
             tb_fotmul.BorderBrush = color_border;
             tb_fotmul.HorizontalAlignment = HorizontalAlignment.Left;
             grid.Margin = new Thickness(0, 1, 0, 1);
@@ -1356,8 +1461,10 @@ namespace SZI
             btn.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
             btn.BorderBrush = new SolidColorBrush(Color.FromRgb(255, 255, 255));
             btn.Content = img_del;
-            btn.Click += new RoutedEventHandler(DelFormulirovka);
-            //btn.Margin = new Thickness(0, 0, 0, 10);
+         //   if (izm==0)
+                btn.Click += new RoutedEventHandler(DelFormulirovka);
+         //   else                 btn.Click += new RoutedEventHandler(DelFormulirovkaIzm);
+            
             Grid.SetRow(tb_fotmul, 0);
             Grid.SetColumn(tb_fotmul, 0);
             grid.Children.Add(tb_fotmul);
@@ -1366,8 +1473,10 @@ namespace SZI
             Grid.SetColumn(btn, 1);
             grid.Children.Add(btn);
 
-            StackPanel_A_4_2.Children.Add(grid);
-            //Grid_formulirovka.Children.Add(tb_fotmul);
+           // if (izm==0)
+                StackPanel_A_4_2.Children.Add(grid);
+            //else
+              //  StackPanel_A_4_3.Children.Add(grid);
         }
 
         private void DelFormulirovka(object sender, RoutedEventArgs e)
@@ -1379,8 +1488,21 @@ namespace SZI
             var textbox_name = grid.Children[0] as TextBox;
             if (textbox_name.Tag!=null)
                 delete_str += textbox_name.Tag.ToString() + ";";
-           // SQLite connection = new SQLite();
-           // connection.WriteData(string.Format("delete from REQUIREMENTS Where id_req='{0}'", textbox_name.Tag));
+        }
+
+        //private void DelFormulirovkaIzm(object sender, RoutedEventArgs e)
+        //{
+        //    Button btn = sender as Button;
+        //    Grid grid = (Grid)btn.Parent;
+        //    var grids = StackPanel_A_4_3.Children;
+        //    grids.Remove(grid);
+        //    var textbox_name = grid.Children[0] as TextBox;
+        //    if (textbox_name.Tag != null)
+        //        delete_str += textbox_name.Tag.ToString() + ";";
+        //}
+        private void AddBtn_FM_izm_Click(object sender, RoutedEventArgs e)
+        {
+            Update_formul(null, 1);
         }
 
         private void FormaA2_Closing(object sender, System.ComponentModel.CancelEventArgs e)
