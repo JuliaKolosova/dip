@@ -70,7 +70,7 @@
             </StackPanel>
 
             <StackPanel x:Name="StackPanel_A_1_4" Height="279" Visibility="Collapsed">
-                <Label x:Name="label_Copy8" Content="Наименование суда, приневшего решение:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="33" Width="370" FontSize="18.667"/>
+                <Label x:Name="label_Copy8" Content="Наименование суда, принявшего решение:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="33" Width="370" FontSize="18.667"/>
                 <TextBox x:Name="TBName_Copy" HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" VerticalAlignment="Top" Width="428" Foreground="#FF378B1E" BorderBrush="#FFDBFFD0" FontSize="18.667"/>
                 <Label x:Name="label_Copy9" Content="Состав суда (через запятую; ФИО в род. падеже):" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="30" FontSize="18.667"/>
                 <TextBox x:Name="TBSostav_Copy" HorizontalAlignment="Left" Height="113" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" Width="428" Foreground="#FF378B1E" BorderBrush="#FFDBFFD0" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontSize="18.667"/>

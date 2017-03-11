@@ -430,16 +430,16 @@ namespace SZI
 
             Label label_doc1_predist = new Label() { Content = "  - доверенности от ", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
-            DatePicker date_dover_ot = new DatePicker( ) { Width=120 };
+            DatePicker date_dover_ot = new DatePicker( ) { Width=120 , DisplayDateEnd=DateTime.Now.Date };
             //date_dover_ot.SelectedDateChanged += new EventHandler<SelectionChangedEventArgs>(selectdate);
 
             Label label_doc1_2_predist = new Label() { Content = " со сроком действия до ", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
-            DatePicker date_dover_ot_2 = new DatePicker() { Width = 120 };
+            DatePicker date_dover_ot_2 = new DatePicker() { Width = 120};
 
             Label label_doc2_predist = new Label() { Content = "  - ордера адвоката от ", FontSize = 16, Margin = new Thickness(0, 10, 0, 10), Foreground = colortext };
 
-            DatePicker date_order_ot = new DatePicker() { Margin = new Thickness(0, 10, 0, 10), Width = 120 };
+            DatePicker date_order_ot = new DatePicker() { Margin = new Thickness(0, 10, 0, 10), Width = 120, DisplayDateEnd = DateTime.Now.Date };
 
             Label label_doc2_1_predist = new Label() { Content = "  № ", FontSize = 16, Margin = new Thickness(0, 10, 0, 10), Foreground = colortext };
 
@@ -465,7 +465,7 @@ namespace SZI
 
             Label label_doc3_2_predist = new Label() { Content = "удостоверяющего служебное положение их представителей от ", FontSize = 16, Margin = new Thickness(0, 1, 1, 0), Foreground = colortext };
 
-            DatePicker date_dover_ot_3 = new DatePicker() { Width = 120 };
+            DatePicker date_dover_ot_3 = new DatePicker() { Width = 120, DisplayDateEnd = DateTime.Now.Date };
 
             Label label_doc4_predist = new Label() { Content = "  - наименование документа, ", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext };
 
@@ -1079,6 +1079,7 @@ namespace SZI
             
             SQLite connection = new SQLite();
             SQLiteDataReader reader = connection.ReadData(string.Format("Select * from Document Where id='{0}'", id));
+            Date_Copy.DisplayDateEnd = DateTime.Now.Date;
             
             while (reader.Read())
             {
@@ -1131,12 +1132,29 @@ namespace SZI
             SQLiteDataReader reader_ist;
             string str;
 
-                switch (listBox.SelectedIndex)
-                {
-                    case 0:
-                        connection.WriteData(string.Format("Update Document set number='{0}', date='{1}', locate='{2}', NAME_COURT='{3}', CONTENT_COURT='{4}', SECRETARY='{5}'  Where id='{6}'", TBNumber_Copy.Text, Date_Copy.SelectedDate, TBPlace_Copy.Text, TBName_Copy.Text,TBSostav_Copy.Text,TBSecretary_Copy.Text, id));
-                        break;
-                    case 1:
+
+            switch (listBox.SelectedIndex)
+
+            {
+
+                case 0:
+                    //DateTime.Parse(Date_Copy.SelectedDate.ToString())
+                    if (Date_Copy.SelectedDate > DateTime.Now.Date)
+                    {
+                        MessageBox.Show("Некорректная дата проведения суда!");
+                    }
+                    else
+                    if (TBNumber_Copy.Text.Length > 0 && Date_Copy.SelectedDate.ToString().Length > 0 && TBPlace_Copy.Text.Length > 0 && TBName_Copy.Text.Length > 0 && TBSostav_Copy.Text.Length > 0 && TBSecretary_Copy.Text.Length > 0)
+                        connection.WriteData(string.Format("Update Document set number='{0}', date='{1}', locate='{2}', NAME_COURT='{3}', CONTENT_COURT='{4}', SECRETARY='{5}'  Where id='{6}'", TBNumber_Copy.Text, Date_Copy.SelectedDate, TBPlace_Copy.Text, TBName_Copy.Text, TBSostav_Copy.Text, TBSecretary_Copy.Text, id));
+                    else
+                    {
+
+                        MessageBox.Show("Необходимо заполнить все поля!");
+
+                    }
+                     break;
+
+                case 1:
 
                         foreach (Grid grid in StackPanel_A_2_2.Children)
                         {
@@ -1174,48 +1192,105 @@ namespace SZI
                         UpdateA_2(1);
                         break;
 
-                    case 2:
-                        var ind_selected = Tab_Presd_ist.SelectedIndex;
-                        foreach (TabItem tbItem in Tab_Presd_ist.Items )
-                        {
-                            var id_ag = (TextBlock)tbItem.Tag;
-                            ScrollViewer skw= (ScrollViewer)tbItem.Content;
-                            StackPanel st = (StackPanel)skw.Content;
+
+                case 2:
+                    var ind_selected = Tab_Presd_ist.SelectedIndex;
+
+                    foreach (TabItem tbItem in Tab_Presd_ist.Items )
+                    {
+                        var id_ag = (TextBlock)tbItem.Tag;
+                        ScrollViewer skw= (ScrollViewer)tbItem.Content;
+
+                        StackPanel st = (StackPanel)skw.Content;
                         //Grid grid_2 = (Grid)st.Children[1];
-                            foreach (Grid grid_2 in st.Children)
+
+                        foreach (Grid grid_2 in st.Children)
                             {
-                                if (grid_2.Children.Count > 8)
+
+                            if (grid_2.Children.Count > 8)
                                 {
                                     var textbox_name = grid_2.Children[2] as TextBox;
                                     var textbox_name_rp = grid_2.Children[5] as TextBox;
                                     var actor_name = textbox_name.Text;
-                                    if (actor_name.Length != 0)
+                                    string message_error = "";
+
+                                if (actor_name.Length != 0)
                                     {
                                         var stp_doc1 = grid_2.Children[7] as StackPanel;
-                                        var str_doc = stp_doc1.Children[1].ToString() + "~" + stp_doc1.Children[3].ToString();
+                                        string str_doc = null;
+
+                                    if ((stp_doc1.Children[1].ToString().Length > 0 && stp_doc1.Children[3].ToString().Length > 0) || (stp_doc1.Children[1].ToString().Length == 0 && stp_doc1.Children[3].ToString().Length == 0))
+                                            str_doc = stp_doc1.Children[1].ToString() + "~" + stp_doc1.Children[3].ToString();
+                                        else
+                                            message_error += " поле срока действия доверернности,";
+                                    var dt_ot = stp_doc1.Children[1] as DatePicker;
+                                    var dt_do = stp_doc1.Children[3] as DatePicker;
+                                    if (dt_ot.SelectedDate > dt_do.SelectedDate)
+                                    {
+                                        message_error += " поля срока действия доверернности (заполнены некорректно),";
+                                    }
                                         var stp_doc2 = grid_2.Children[8] as StackPanel;
                                         var tb_doc2 = stp_doc2.Children[3] as TextBox;
+                                    if ((stp_doc2.Children[1].ToString().Length > 0 && tb_doc2.Text.ToString().Length > 0) || (stp_doc2.Children[1].ToString().Length == 0 && tb_doc2.Text.ToString().Length == 0))
                                         str_doc = str_doc + "~" + stp_doc2.Children[1].ToString() + "~" + tb_doc2.Text.ToString();
-                                        var stp_doc3 = grid_2.Children[9] as StackPanel;
+                                    else
+                                    {
+                                        if (stp_doc2.Children[1].ToString().Length == 0)
+                                            message_error += " поле даты выдачи ордера адвоката,";
+                                    }
+                                    var stp_doc3 = grid_2.Children[9] as StackPanel;
                                         var tb_doc3 = stp_doc3.Children[1] as TextBox;
-                                        str_doc = str_doc + "~" + tb_doc3.Text.ToString();
-                                        var stp_doc3_2 = grid_2.Children[10] as StackPanel;
-                                        str_doc = str_doc + "~" + stp_doc3_2.Children[1].ToString();
+                                    var stp_doc3_2 = grid_2.Children[10] as StackPanel;
+                                    //str_doc = str_doc + "~" + stp_doc3_2.Children[1].ToString();
+                                    //str_doc = str_doc + "~" + tb_doc3.Text.ToString();
+                                    if ((tb_doc3.Text.ToString().Length > 0 && stp_doc3_2.Children[1].ToString().Length > 0) || (tb_doc3.Text.ToString().Length == 0 && stp_doc3_2.Children[1].ToString().Length == 0))
+                                        str_doc = str_doc + "~" + tb_doc3.Text.ToString() + "~" + stp_doc3_2.Children[1].ToString();
+                                    else
+                                    {
+                                        if (tb_doc3.Text.ToString().Length > 0)
+                                            message_error += " поле даты выдачи документа, удостоверяющего служебные полномочия представителя,";
+                                        else
+                                            message_error += " поле наименование документа, удостоверяющее служебные полномочия представителя,";
+                                    }
+
                                         var stp_doc4 = grid_2.Children[11] as StackPanel;
                                         var tb_doc4 = stp_doc4.Children[1] as TextBox;
                                         str_doc = str_doc + "~" + tb_doc4.Text.ToString();
                                         var stp_doc4_2 = grid_2.Children[12] as StackPanel;
                                         var tb_doc4_2 = stp_doc4_2.Children[1] as TextBox;
                                         str_doc = str_doc + "~" + tb_doc4_2.Text.ToString();
-                                        if (textbox_name.Tag == null)
-                                            connection.WriteData(string.Format("INSERT INTO AGENT_PLAINTIFF (ID_ACTOR,NAME_AGENT ,NAME_AGENT_rp , AGENT_DOC) VALUES ('{0}','{1}','{2}','{3}')", id_ag.Text, actor_name, textbox_name_rp.Text, str_doc));
+                                    if ((tb_doc4.Text.ToString().Length > 0 && tb_doc4_2.Text.ToString().Length > 0) || (tb_doc4.Text.ToString().Length == 0 && tb_doc4_2.Text.ToString().Length == 0))
+                                        str_doc = str_doc + "~" + tb_doc4.Text.ToString() + "~" + tb_doc4_2.Text.ToString();
+                                    else
+                                    {
+                                        if (tb_doc4.Text.ToString().Length > 0)
+                                            message_error += " поле статьи в силу которой, документ удостоверяет статус и полномочия представителя,";
+                                        else
+                                            message_error += " поле наименование документа, удостоверяющее статус и полномочия представителя,";
+                                    }
+                                    if (message_error.Length == 0)
+                                        if (str_doc.Length > 9)
+                                        {
+                                            if (textbox_name.Tag == null)
+                                                connection.WriteData(string.Format("INSERT INTO AGENT_PLAINTIFF (ID_ACTOR,NAME_AGENT ,NAME_AGENT_rp , AGENT_DOC) VALUES ('{0}','{1}','{2}','{3}')", id_ag.Text, actor_name, textbox_name_rp.Text, str_doc));
+                                            else
+                                            {
+                                                SQLite connection1 = new SQLite();
+                                                connection1.WriteData(string.Format("Update AGENT_PLAINTIFF set NAME_AGENT='{0}', NAME_AGENT_rp='{1}',  AGENT_DOC='{2}' Where ID_PLAINTIFF='{3}'", actor_name, textbox_name_rp.Text, str_doc, textbox_name.Tag));
+                                                connection1.Close();
+                                            }
+                                        }
                                         else
                                         {
-                                            SQLite connection1 = new SQLite();
-                                            connection1.WriteData(string.Format("Update AGENT_PLAINTIFF set NAME_AGENT='{0}', NAME_AGENT_rp='{1}',  AGENT_DOC='{2}' Where ID_PLAINTIFF='{3}'", actor_name, textbox_name_rp.Text, str_doc, textbox_name.Tag));
-                                            connection1.Close();
+                                            MessageBox.Show("Заполните хотя бы один документ для представителя " + textbox_name_rp.Text);
                                         }
+                                    else
+                                    {
+                                        message_error = message_error.Remove(message_error.Length - 1) + ".";
+                                        MessageBox.Show("Заполните" + message_error);
                                     }
+                                }
+
                                 }
                             }
                         }
@@ -1508,8 +1583,6 @@ namespace SZI
         private void FormaA2_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = false;
-            //FormaA frm = sender as FormaA;
-            //frm.Close();
             fw.Visibility = Visibility.Visible;
             fw.ForaWindow_Update();
            

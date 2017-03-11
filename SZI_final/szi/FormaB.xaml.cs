@@ -22,10 +22,12 @@ namespace SZI
     {
         private string name;
         int id;
+        private readonly ForaWindow fw;
         private  FormaB fw_B;
-        public FormaB(string name, int id)
+        public FormaB(string name, int id, ForaWindow fw)
         {
             InitializeComponent();
+            this.fw = fw;
             this.fw_B = this;
             this.name = name;
             this.id = id;
@@ -154,5 +156,38 @@ namespace SZI
             }
             connection.Close();
         }
+
+        private void Forma_B_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = false;
+            fw.Visibility = Visibility.Visible;
+            fw.ForaWindow_Update();
+        }
+
+        private void del_edit_isk_Click(object sender, RoutedEventArgs e)
+        {
+            ListBoxItem list_isk = listBox_isk.SelectedItem as ListBoxItem;
+            int id_req = Int16.Parse(list_isk.Tag.ToString());
+            SQLite connection = new SQLite();
+            SQLiteDataReader reader = connection.ReadData(string.Format("select izmena from REQUIREMENTS_TMP where id_req='{0}'", id_req));
+            int izm = 0;
+            while (reader.Read())
+                izm = reader.GetInt16(0);
+            if (izm==0)
+            {
+                MessageBox.Show("Удалить можно только измененные требования!");
+            }
+            else
+            {
+                MessageBoxResult res = MessageBox.Show("Вы уверены что хотите удалить требование " + list_isk.Content.ToString() + "?", "Внимание", MessageBoxButton.YesNo);
+                if (res == MessageBoxResult.Yes)
+                {
+                    connection.WriteData(string.Format("Delete from Norma n where n.id_req in (SELECT r.id FROM REQUIREMENTS_TMP r, (select s.id_req, s.id_doc,s.iteration from REQUIREMENTS_TMP s where s.id='{0}' ) g where r.id_doc = g.id_doc and r.id_req = g.id_req and r.iteration >= g.iteration)", id_req));
+                    connection.WriteData(string.Format("Delete from REQUIREMENTS_TMP r where r.id  in (SELECT r.id FROM REQUIREMENTS_TMP r, (select s.id_req, s.id_doc,s.iteration from REQUIREMENTS_TMP s where s.id='{0}' ) g where r.id_doc = g.id_doc and r.id_req = g.id_req and r.iteration >= g.iteration)", id_req));
+                }
+
+
+                }
+            }
     }
 }

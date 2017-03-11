@@ -5,21 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SZI"
         mc:Ignorable="d"
-        Title="Дело" Height="321.91" Width="414.607" ResizeMode="NoResize" FontFamily="Calibri" FontSize="16" Loaded="ForaWindow1_Load">
+        Title="Дело" Height="321.91" Width="480.607" ResizeMode="NoResize" FontFamily="Calibri" FontSize="16" Loaded="ForaWindow1_Load">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FFCCF9C5" Offset="1"/>
             <GradientStop Color="White"/>
         </LinearGradientBrush>
     </Window.Background>
-    <Grid>
+    <Grid HorizontalAlignment="Center" Margin="0,0,-6,0" Width="481">
         <Button x:Name="FormaA"
         	Width="163" Height="34" HorizontalAlignment="right" VerticalAlignment="Bottom"
-        	Click="FormaA_Click" Margin="0,0,216,86" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Форма А"/>
+        	Click="FormaA_Click" Margin="0,0,251,75" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Форма А"/>
         <Button x:Name="FormaB"
             Width="163" Height="34" HorizontalAlignment="right" VerticalAlignment="Bottom"
-            Margin="0,0,30,86" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Форма Б" Click="FormaB_Click"/>
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="157,68,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
+            Margin="0,0,62,75" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19" Content="Форма Б" Click="FormaB_Click"/>
+        <Button x:Name="export" Content="Экспорт" Width="163" Height="34" HorizontalAlignment="right" VerticalAlignment="Bottom"
+            Margin="0,0,154,23" Background="#FFA6EC9B" BorderBrush="White" Foreground="#FF26AC19"  Click="button_Click"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Center" Foreground="#FF26AC19" Margin="10,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="158" Width="461" TextAlignment="Center"><Run Text="      Форма А: ввод начальной информации о деле (дата проведения суда, состав суда и т.д.). "/><LineBreak/><Run Text="&#xA;"/><Run Text="      "/><Run Text="Форма Б: ввод информации по исковым требованиям. Заполняется после внесения всей информации в форме А."/><LineBreak/><Run Text="&#xA;      Экспорт: вывод решения в Word. Кнопка становится активной после вынесения решения по каждому исковому требованию"/></TextBlock>
 
     </Grid>
 </Window>

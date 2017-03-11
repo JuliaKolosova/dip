@@ -277,6 +277,7 @@ namespace SZI
                                     connection2.WriteData(string.Format("Delete from NORMA where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and iteration > '{1}' and id_doc = '{2}')", id_req, iteration, id_doc));
                                     connection2.WriteData(string.Format("Delete from fact_thing where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and iteration > '{1}' and id_doc = '{2}')", id_req, iteration, id_doc));
                                     connection2.WriteData(string.Format("Delete from REQUIREMENTS_tmp where id_req = '{0}' and iteration > '{1}' and id_doc = '{2}'", id_req, iteration, id_doc));
+                                    connection2.WriteData(string.Format("UPDATE REQUIREMENTS_tmp set defendant_choise=null,prizn_isk=null,explain_tr=null,izm_norma=null where id_req = '{0}' and iteration = '{1}' and id_doc = '{2}'", id_req, iteration, id_doc));
                                 }
                                 connection2.WriteData(string.Format("Update REQUIREMENTS_TMP set choice = '{0}' where id_req='{1}' and iteration='{2}'  and id_doc='{3}'", eForm.variant, id_req, iteration, id_doc));
                                 connection2.Close();
@@ -325,10 +326,19 @@ namespace SZI
                     break;
 
                 case 5:
-                    ST_defendant_choise.Visibility = Visibility.Visible;
-                    ST_fact.Visibility = Visibility.Collapsed;
-                    page = page + 6;
-                    UpdateB_567();
+                    reader = connection.ReadData(string.Format("Select count(*) from fact_thing where id_req = ( select id from REQUIREMENTS_TMP where id_req = '{0}' and iteration='{1}' and id_doc='{2}')", id_req, iteration, id_doc));
+                    int count_fact = 0;
+                    while (reader.Read())
+                        count_fact = reader.GetInt16(0);
+                    if (count_fact > 0)
+                    {
+                        ST_defendant_choise.Visibility = Visibility.Visible;
+                        ST_fact.Visibility = Visibility.Collapsed;
+                        page = page + 6;
+                        UpdateB_567();
+                    }
+                    else
+                        MessageBox.Show("Должно быть хотя бы одно фактическое обстоятельство");
                     break;
 
                 case 6:
@@ -630,7 +640,7 @@ namespace SZI
             connection.Close();
         }
 
-        private string UpgradeNorma(string norma)
+        public string UpgradeNorma(string norma)
         {
             string[] str_arr = norma.Split('~');
             string str_norma = "";
@@ -670,7 +680,7 @@ namespace SZI
                 while (reader_norma.Read())
                 {
                     id_req_iter0 = reader_norma.GetInt16(0);
-                    if (!reader.IsDBNull(1))
+                    if (!reader_norma.IsDBNull(1))
                         ch_err = reader_norma.GetInt16(1);
                 }            
                 if (ch_err != 3)
@@ -1454,7 +1464,7 @@ namespace SZI
                         connection.WriteData(string.Format("Delete from NORMA where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and iteration > '{1}' and id_doc = '{2}')", id_req, iteration, id_doc));
                         connection.WriteData(string.Format("Delete from fact_thing where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and iteration > '{1}' and id_doc = '{2}')", id_req, iteration, id_doc));
                         connection.WriteData(string.Format("Delete from REQUIREMENTS_tmp where id_req = '{0}' and iteration > '{1}' and id_doc = '{2}'", id_req, iteration, id_doc));
-                        connection.WriteData(string.Format("Update REQUIREMENTS_TMP set adresat_norm=NULL,choice=NULL,explain_tr=NULL, defendant_choise=NULL,prizn_isk=NULL  Where id_req='{0}' and iteration = '{1}'  and id_doc='{2}'", id_req, iteration, id_doc));
+                        connection.WriteData(string.Format("Update REQUIREMENTS_TMP set adresat_norm=NULL,choice=NULL,explain_tr=NULL, defendant_choise=NULL,prizn_isk=NULL,izm_norma=NULL  Where id_req='{0}' and iteration = '{1}'  and id_doc='{2}'", id_req, iteration, id_doc));
                     }
                     connection.WriteData(string.Format("Update REQUIREMENTS_TMP set variant='{0}' Where id_req='{1}' and iteration='{2}'  and id_doc='{3}'", variant, id_req, iteration, id_doc));
                     string norm_str = "";
