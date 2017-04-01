@@ -354,6 +354,53 @@ namespace SZI
                     page = 1;
                     UpdateB_2();
                     break;
+                case 11:
+                    SQLite connection3 = new SQLite();
+                    reader = connection3.ReadData(string.Format("Select defendant_choise,prizn_isk from REQUIREMENTS_tmp where id_req='{0}' and iteration='{1}' and id_doc='{2}'", id_req, iteration, id_doc));
+                    int choice_cos = 0;
+                    while (reader.Read())
+                        choice_cos = reader.GetInt16(0)+ reader.GetInt16(1);
+                    if (choice_cos==2)
+                    {
+                        ST_costs.Visibility = Visibility.Visible;
+                        ST_defendant_choise.Visibility = Visibility.Collapsed;
+                        Next_b_2.Content = "Закрыть";
+                        page = page + 3;
+                        UpdateB_141517();
+                    }
+
+                    connection3.Close();
+                    break;
+                case 12:
+                    goto case 11;
+
+                case 13:
+                    goto case 11;
+                case 14:
+                    fw_b2.Close();
+                    break;
+                case 15:
+                    goto case 14;
+
+                case 16:
+                    goto case 14;
+            }
+            connection.Close();
+        }
+
+        private void UpdateB_141517()
+        {
+            SQLite connection = new SQLite();
+            SQLiteDataReader reader;
+            reader = connection.ReadData(string.Format("Select court_costs, distribution_of_costs, court_of_appeal from REQUIREMENTS_TMP where id_doc='{0}' and id_req='{1}' and iteration='{2}'", id_doc, id_req, iteration));
+            while (reader.Read())
+            {
+                if (!reader.IsDBNull(0))
+                    textBox_court_costs.Text = reader.GetString(0);
+                if (!reader.IsDBNull(1))
+                    textBox_distribution_of_costs.Text = reader.GetString(1);
+                if (!reader.IsDBNull(2))
+                    textBox_court_of_appeal.Text = reader.GetString(2);
             }
             connection.Close();
         }
@@ -656,11 +703,11 @@ namespace SZI
                 str_norma += "издан " + str_arr[4] + " ";
             else if (str_arr[5] != "")
                 str_norma += "издан " + str_arr[5] + " ";
-            if (str_arr[6] != "")
-                str_norma += "от " + str_arr[7] + " ";
             if (str_arr[7] != "")
-                str_norma += "№ " + str_arr[8] + " ";
+                str_norma += "от " + str_arr[7] + " ";
             if (str_arr[8] != "")
+                str_norma += "№ " + str_arr[8] + " ";
+            if (str_arr[6] != "")
                 str_norma += '"' + str_arr[6] + '"'+" ";
             str_norma = str_norma.Remove(str_norma.Length - 1);
             str_norma += ';';
@@ -1407,9 +1454,23 @@ namespace SZI
                     goto case 11;
                 case 13:
                     goto case 11;
+                case 14:
+                    ST_defendant_choise.Visibility = Visibility.Visible;
+                    page = page - 3;
+                    ST_costs.Visibility = Visibility.Collapsed;
+                    Next_b_2.Content = "Далее";
+                    UpdateB_567();
+                    break;
+                case 15:
+                    goto case 14;
+                case 16:
+                    goto case 14;
 
             }
         }
+
+
+
 
         // bnthfwbz ,jkmit 0 jghtltktzv ,skj bpvtytybt jcyjdfybz bcrf bkb ghtlvtn
         // проверка формулировки (итерация больше 0) изменение предмета или основание иска
@@ -1696,15 +1757,16 @@ namespace SZI
                     }
                     else
                     {
-                        reader = connection.ReadData(string.Format("Select count(*) from REQUIREMENTS_TMP where id_doc='{0}' and id_req='{1}' and iteration='{2}'", id_doc, id_req, iteration));
+                        SQLite connection10 = new SQLite();
+                        reader = connection10.ReadData(string.Format("Select count(*) from REQUIREMENTS_TMP where id_doc='{0}' and id_req='{1}' and iteration='{2}'", id_doc, id_req, iteration));
                         var count_req = 0;
                         while (reader.Read())
                             count_req = reader.GetInt16(0);
                         if (count_req==0)
-                            connection.WriteData(string.Format("Insert into REQUIREMENTS_TMP (id_doc,id_req,iteration,text,norma,izmena) values ('{0}','{1}','{2}','{3}','{4}',1)", id_doc,id_req, iteration,textBox_edit.Text,false));
+                            connection10.WriteData(string.Format("Insert into REQUIREMENTS_TMP (id_doc,id_req,iteration,text,norma,izmena) values ('{0}','{1}','{2}','{3}','{4}',1)", id_doc,id_req, iteration,textBox_edit.Text,false));
                         else
-                            connection.WriteData(string.Format("Update REQUIREMENTS_TMP set text='{0}' where id_doc='{1}' and id_req='{2}' and iteration='{3}'", textBox_edit.Text,id_doc, id_req, iteration));
-
+                            connection10.WriteData(string.Format("Update REQUIREMENTS_TMP set text='{0}' where id_doc='{1}' and id_req='{2}' and iteration='{3}'", textBox_edit.Text,id_doc, id_req, iteration));
+                        connection10.Close();
                     }
                     break;
                 case 11:
@@ -1717,12 +1779,23 @@ namespace SZI
                         priz_isk = 2;
                     else if ((bool)priz_isk_3.IsChecked)
                         priz_isk = 3;
-                    connection.WriteData(string.Format("Update REQUIREMENTS_TMP set defendant_choise='{0}', prizn_isk='{1}' where id_doc='{2}' and id_req='{3}' and iteration='{4}'", ch_d, priz_isk, id_doc, id_req, iteration));
+                    SQLite connection11 = new SQLite();
+                    connection11.WriteData(string.Format("Update REQUIREMENTS_TMP set defendant_choise='{0}', prizn_isk='{1}' where id_doc='{2}' and id_req='{3}' and iteration='{4}'", ch_d, priz_isk, id_doc, id_req, iteration));
+                    connection11.Close();
                     break;
                 case 12:
                     goto case 11;
                 case 13:
                     goto case 11;
+                case 14:
+                    SQLite connection14 = new SQLite();
+                    connection.WriteData(string.Format("Update REQUIREMENTS_TMP set court_costs='{0}', distribution_of_costs='{1}', court_of_appeal='{2}' where id_doc='{3}' and id_req='{4}' and iteration='{5}'", textBox_court_costs.Text, textBox_distribution_of_costs.Text, textBox_court_of_appeal.Text, id_doc, id_req, iteration));
+                    connection14.Close();
+                    break;
+                case 15:
+                    goto case 14;
+                case 16:
+                    goto case 14;
 
             }
             connection.Close();

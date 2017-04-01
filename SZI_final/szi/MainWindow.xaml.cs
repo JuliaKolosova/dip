@@ -128,7 +128,11 @@ namespace SZI
                     SQLite connection = new SQLite();
                     connection.WriteData(string.Format("delete from AGENT_PLAINTIFF where id_actor in (select ID from Actors Where id_doc ='{0}')", id_doc));
                     connection.WriteData(string.Format("delete from Actors Where id_doc ='{0}'", id_doc));
+                    connection.WriteData(string.Format("delete from NORMA Where id_req in (select ID from REQUIREMENTS_TMP Where id_doc ='{0}')", id_doc));
+                    connection.WriteData(string.Format("delete from fact_thing Where id_req in (select ID from REQUIREMENTS_TMP Where id_doc ='{0}')", id_doc));
+                    connection.WriteData(string.Format("delete from REQUIREMENTS_TMP Where id_doc ='{0}'", id_doc));
                     connection.WriteData(string.Format("delete from document Where id ='{0}'", id_doc));
+
                     FilesListBox.Items.Remove(FilesListBox.SelectedItem);
                     MessageBox.Show("Удалено!");
                 }

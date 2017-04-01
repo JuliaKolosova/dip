@@ -136,5 +136,16 @@
             <RadioButton  x:Name="priz_isk_3" Content="признание иска нарушает права и законные интересы других лиц;" Margin="50,0" VerticalAlignment="Center" Height="23" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="priz_isk" TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center" />
 
         </StackPanel>
+        <StackPanel x:Name="ST_costs" Grid.ColumnSpan="2" Margin="15,0,10,38" Grid.Row="1" Grid.RowSpan="5" Visibility="Collapsed" >
+            <Label x:Name="label_court_costs" Content="Судебные расходы истца:" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="17" Margin="10,10,0,0"   VerticalContentAlignment="Center" TextOptions.TextFormattingMode="Display"/>
+            <TextBox x:Name="textBox_court_costs" Height="112" TextWrapping="Wrap" Margin="32,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="17"  TextOptions.TextFormattingMode="Display" Width="784"/>
+            <Label x:Name="label_distribution_of_costs" Content="Распределение судебных расходов:" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="17" Margin="10,30,0,0"   VerticalContentAlignment="Center" TextOptions.TextFormattingMode="Display"/>
+            <TextBox x:Name="textBox_distribution_of_costs" Height="112" TextWrapping="Wrap" Margin="32,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="17"  TextOptions.TextFormattingMode="Display" Width="784"/>
+
+            <Label x:Name="label_court_of_appeal" Content="Суд, в который может быть обжаловано решение:" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="17" Margin="10,30,0,0"   VerticalContentAlignment="Center" TextOptions.TextFormattingMode="Display"/>
+            <TextBox x:Name="textBox_court_of_appeal" TextWrapping="Wrap" Margin="32,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="17"  TextOptions.TextFormattingMode="Display" Width="784"/>
+
+
+        </StackPanel>
     </Grid>
 </Window>

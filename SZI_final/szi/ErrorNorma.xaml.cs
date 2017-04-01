@@ -53,7 +53,7 @@ namespace SZI
         {
             SQLite connection = new SQLite();
             SQLiteDataReader reader = connection.ReadData(string.Format("Select choice,izmena from REQUIREMENTS_tmp where id_req='{0}' and iteration='{1}' and id_doc='{2}'", id_req, iteration, id_doc));
-            int choise = 0, izm=0;
+            int choise = 0, izm = 0;
             while (reader.Read())
             {
                 if (!reader.IsDBNull(0))
@@ -61,39 +61,48 @@ namespace SZI
                 if (!reader.IsDBNull(1))
                     izm = reader.GetInt16(1);
             }
-            switch (choise)
-            {
-                case 1:
-                    var_1.IsChecked = true;
-                    break;
-                case 2:
-                    var_2.IsChecked = true;
-                    break;
-                case 3:
-                    var_3.IsChecked = true;
-                    break;
-            }
-            if (izm == 0)
-            {
-                reader = connection.ReadData(string.Format("Select choice from REQUIREMENTS_tmp where iteration=0 and id_doc='{0}'", id_doc));
-                while (reader.Read())
-                    if (!reader.IsDBNull(0))
-                        if (reader.GetInt16(0) != 1)
-                            choise = reader.GetInt16(0);
+
+             
                 switch (choise)
                 {
+                    case 1:
+                        var_1.IsChecked = true;
+                        break;
                     case 2:
-                        var_3.IsEnabled = false;
+                        var_2.IsChecked = true;
                         break;
                     case 3:
-                        var_2.IsEnabled = false;
+                        var_3.IsChecked = true;
                         break;
                 }
-            }
-            else
+
+                if (izm == 0)
             {
-                var_2.IsEnabled = false;
-            }
+                if (iteration > 0)
+
+                {
+                    reader = connection.ReadData(string.Format("Select choice from REQUIREMENTS_tmp where iteration=0 and id_doc='{0}'", id_doc));
+                    while (reader.Read())
+                        if (!reader.IsDBNull(0))
+                            if (reader.GetInt16(0) != 1)
+                                choise = reader.GetInt16(0);
+                    switch (choise)
+                    {
+                        case 2:
+                            var_3.IsEnabled = false;
+                            break;
+                        case 3:
+                            var_2.IsEnabled = false;
+                            break;
+                    }
+                }
+                }
+                else
+                {
+                    var_2.IsEnabled = false;
+                }
+                
+            
             connection.Close();
         }
     }

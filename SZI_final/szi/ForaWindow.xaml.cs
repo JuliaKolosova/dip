@@ -80,7 +80,7 @@ namespace SZI
                 FormaB.IsEnabled = true;
             }
             bool exp_enable = true;
-            reader = connection.ReadData(string.Format("Select r.prizn_isk from REQUIREMENTS_tmp r Where r.id_doc='{0}' and r.iteration=(select max(t.iteration) from REQUIREMENTS_tmp t Where r.id_doc=t.id_doc and r.id_req=t.id_req)", id));
+            reader = connection.ReadData(string.Format("Select r.prizn_isk, r.defendant_choise from REQUIREMENTS_tmp r Where r.id_doc='{0}' and r.iteration=(select max(t.iteration) from REQUIREMENTS_tmp t Where r.id_doc=t.id_doc and r.id_req=t.id_req)", id));
             while (reader.Read())
                 if (reader.IsDBNull(0))
                     exp_enable = false;
@@ -508,7 +508,7 @@ namespace SZI
                 }
                 StrToAdd = StrToAdd.Remove(StrToAdd.Length - 1) + ". \n";
                 wrdSelection.TypeText(StrToAdd);
-                reader = connection.ReadData(string.Format("Select count(*) from REQUIREMENTS_TMP where id_doc='{0}' and (izmena=0 or iteration>0)", id));
+                reader = connection.ReadData(string.Format("Select count(*) from REQUIREMENTS_TMP where id_doc='{0}' and izmena=1", id));
                 int izm = 0;
                 while (reader.Read())
                 {
@@ -517,7 +517,7 @@ namespace SZI
                 if (izm > 0)
                 {
                     StrToAdd = "согласно уточненным исковым требованиям:";
-                    reader = connection.ReadData(string.Format("select d.text from REQUIREMENTS_TMP d where d.id_doc='{0}' and (d.iteration = (select max(k.iteration) from REQUIREMENTS_TMP k where k.id_doc='{0}' and k.id_req=d.id_req or izmena=1))", id));
+                    reader = connection.ReadData(string.Format("select d.text from REQUIREMENTS_TMP d where d.id_doc='{0}' and (d.iteration = (select max(k.iteration) from REQUIREMENTS_TMP k where k.id_doc='{0}' and k.id_req=d.id_req and izmena=1))", id));
                     while (reader.Read())
                     {
                         StrToAdd += " " + reader.GetString(0) + ",";
@@ -593,7 +593,7 @@ namespace SZI
                         }
                         reader_actor = connection.ReadData(string.Format("Select text from NORMA where id_req='{0}'", record["id"].ToString()));
                         while (reader_actor.Read())
-                            StrToAdd += UpgradeNorma(reader_actor.GetString(0)) +",";
+                            StrToAdd += UpgradeNorma(reader_actor.GetString(0)) +", ";
                         StrToAdd = StrToAdd.Remove(StrToAdd.Length - 1)+";";
                     }
                 }
