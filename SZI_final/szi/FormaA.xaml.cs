@@ -774,7 +774,7 @@ namespace SZI
             textbox1.Foreground = colortext;
             textbox1.BorderBrush = color_border;
 
-            TextBlock label2 = new TextBlock() { Text = "извещенный надлежайшим образом: документ, подтверждающий извещение:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
+            TextBlock label2 = new TextBlock() { Text = "извещенный надлежащим образом: документ, подтверждающий извещение:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
             TextBox textbox2 = new TextBox();
             textbox2.Padding = new Thickness(1, 1, 1, 1);
             textbox2.TextWrapping = TextWrapping.Wrap;
@@ -920,7 +920,7 @@ namespace SZI
             tex_box_ist_doc1.Foreground = colortext;
             tex_box_ist_doc1.BorderBrush = color_border;
             //tex_box_ist_doc1.Height = 25;
-            TextBlock label_ist2 = new TextBlock() { Text = "извещенный надлежайшим образом: документ, подтверждающий извещение:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
+            TextBlock label_ist2 = new TextBlock() { Text = "извещенный надлежащим образом: документ, подтверждающий извещение:", FontSize = 16, Margin = new Thickness(0, 0, 0, 0), Foreground = colortext, TextWrapping = TextWrapping.Wrap };
             TextBox tex_box_ist_doc2 = new TextBox();
             tex_box_ist_doc2.Padding = new Thickness(1, 1, 1, 1);
             tex_box_ist_doc2.TextWrapping = TextWrapping.Wrap;
@@ -943,7 +943,7 @@ namespace SZI
                     }
                     if (arr[1] != "")
                     {
-                        tex_box_ist_doc1.Text = arr[1];
+                        tex_box_ist_doc2.Text = arr[1];
                     }
                     // str.CopyTo(0, str1, index + 2, str.Length - index + 2);
                     
@@ -1398,6 +1398,8 @@ namespace SZI
                         connection.WriteData(string.Format("Update Document set PROSECUTOR='{0}', PUBLIC_MEETING='{1}' Where id='{2}'", tB_PROKUROR.Text, zass,  id));
                         if (tB_formulirovka.Text==null|| tB_formulirovka.Text.Length == 0)
                         {
+                            connection.WriteData(string.Format("Delete from NORMA where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and id_doc = '{1}')", tB_formulirovka.Tag, id));
+                            connection.WriteData(string.Format("Delete from fact_thing where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and id_doc = '{1}')", tB_formulirovka.Tag, id));
                             connection.WriteData(string.Format("delete from REQUIREMENTS_TMP Where id_req='{0}' and id_doc='{1}' and izmena=0", tB_formulirovka.Tag,id));
                         }
                         else
@@ -1418,8 +1420,11 @@ namespace SZI
                             if (textbox_req.Text == null || textbox_req.Text.Length == 0)
                             {
                                 if (textbox_req.Tag != null)
-                                    connection.WriteData(string.Format("delete from REQUIREMENTS_TMP Where id_req='{0}' and id_doc='{1}'  and izmena=0", textbox_req.Tag,id));
-
+                                {
+                                    connection.WriteData(string.Format("Delete from NORMA where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and id_doc = '{1}')", textbox_req.Tag, id));
+                                    connection.WriteData(string.Format("Delete from fact_thing where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and id_doc = '{1}')", textbox_req.Tag, id));
+                                    connection.WriteData(string.Format("delete from REQUIREMENTS_TMP Where id_req='{0}' and id_doc='{1}'  and izmena=0", textbox_req.Tag, id));
+                                }
                             }
                             else
                                 if (textbox_req.Tag == null)
@@ -1437,6 +1442,9 @@ namespace SZI
                             string[] arr = delete_str.Split(';');
                             for (int i = 0; i < arr.Length - 1; i++)
                             {
+                                connection.WriteData(string.Format("Delete from NORMA where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and id_doc = '{1}')", arr[i], id));
+                                connection.WriteData(string.Format("Delete from fact_thing where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and id_doc = '{1}')", arr[i], id));
+
                                 connection.WriteData(string.Format("delete from REQUIREMENTS_TMP Where id_req='{0}' and id_doc='{1}'  and izmena=0", arr[i],id));
                             }
                         }

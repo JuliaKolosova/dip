@@ -121,7 +121,7 @@ namespace SZI
         {
             SQLite connection = new SQLite();
             bool visible = true;
-            SQLiteDataReader reader = connection.ReadData(string.Format("select case when ((defendant_choise is null) or (prizn_isk is null)) then 0 else 1 end from REQUIREMENTS_TMP where id_doc='{0}'", id));
+            SQLiteDataReader reader = connection.ReadData(string.Format("select case when ((defendant_choise is null) or (prizn_isk is null)) then 0 else 1 end  from REQUIREMENTS_TMP t where t.id_doc='{0}' and t.id = (select r.id from REQUIREMENTS_TMP r where r.id_doc=t.id_doc and t.id_req=r.id_req and t.izmena=r.izmena and r.iteration=(select max(n.iteration) from REQUIREMENTS_TMP n where  r.id_doc=n.id_doc and n.id_req=r.id_req and n.izmena=r.izmena ))", id));
             while (reader.Read() && visible)
             {
                 if (reader.GetInt16(0) == 0)

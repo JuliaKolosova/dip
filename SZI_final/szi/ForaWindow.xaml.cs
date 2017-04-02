@@ -79,6 +79,7 @@ namespace SZI
             {
                 FormaB.IsEnabled = true;
             }
+                // когда активен экспорт?
             bool exp_enable = true;
             reader = connection.ReadData(string.Format("Select r.prizn_isk, r.defendant_choise from REQUIREMENTS_tmp r Where r.id_doc='{0}' and r.iteration=(select max(t.iteration) from REQUIREMENTS_tmp t Where r.id_doc=t.id_doc and r.id_req=t.id_req)", id));
             while (reader.Read())
@@ -208,7 +209,7 @@ namespace SZI
                 wrdApp.Visible = true;
                 wrdSelection.ParagraphFormat.SpaceAfter = 0;
 
-                string procuror = null;
+                string procuror = null, court_name=null;
                 bool curt = true;
                 reader = connection.ReadData(string.Format("Select NAME,NUMBER,DATE,LOCATE,NAME_COURT,CONTENT_COURT,SECRETARY,PROSECUTOR,PUBLIC_MEETING from document Where id='{0}'", id));
                 while (reader.Read())
@@ -270,6 +271,7 @@ namespace SZI
 
                     if (!reader.IsDBNull(4) && reader.GetString(4).Length > 0)
                     {
+                        court_name = reader.GetString(4);
                         StrToAdd = reader.GetString(4) + " в составе:" + "\r\n";
                     }
 
@@ -330,7 +332,7 @@ namespace SZI
                         }
                         if (doc_str[1].Length > 0)
                         {
-                            doc_istec += " извещенный надлежайшим образом: документ, подтверждающий извещение: " + doc_str[1] + ";";
+                            doc_istec += " извещенный надлежащим образом: документ, подтверждающий извещение: " + doc_str[1] + ";";
                         }
                         doc_istec += "\n";
                     }
@@ -417,11 +419,12 @@ namespace SZI
 
                 pred_istec = null;
                 doc_istec = null;
-
+                string str_ist = null;
                 foreach (DbDataRecord record in reader)
                 {
                     // pred_istec = null;
                     StrToAdd += " " + record["NAME_ACTOR_RP"].ToString() + ",";
+                    str_ist +=  record["NAME_ACTOR_RP"].ToString() + ", ";
                     if (record["ACTOR_DOC"].ToString().Length > 1)
                     {
                         doc_istec = "В отсутствие ответчика " + ShortName(record["NAME_ACTOR_RP"].ToString()) + ", просившего рассмотреть дело в его отсутствие:";
@@ -432,7 +435,7 @@ namespace SZI
                         }
                         if (doc_str[1].Length > 0)
                         {
-                            doc_istec += " извещенный надлежайшим образом: документ, подтверждающий извещение: " + doc_str[1] + ";";
+                            doc_istec += " извещенный надлежащим образом: документ, подтверждающий извещение: " + doc_str[1] + ";";
                         }
                         doc_istec += "\n";
                     }
@@ -485,7 +488,7 @@ namespace SZI
 
 
                 }
-                StrToAdd = StrToAdd.Remove(StrToAdd.Length - 1) + ", \n";
+                StrToAdd = StrToAdd.Remove(StrToAdd.Length - 1) + "\n";
                 wrdSelection.TypeText(StrToAdd);
                 wrdSelection.TypeText(doc_istec);
                 wrdSelection.TypeText(pred_istec);
@@ -508,7 +511,7 @@ namespace SZI
                 }
                 StrToAdd = StrToAdd.Remove(StrToAdd.Length - 1) + ". \n";
                 wrdSelection.TypeText(StrToAdd);
-                reader = connection.ReadData(string.Format("Select count(*) from REQUIREMENTS_TMP where id_doc='{0}' and izmena=1", id));
+                reader = connection.ReadData(string.Format("Select count(*) from REQUIREMENTS_TMP where id_doc='{0}' and izmena=1 and iteration=0", id));
                 int izm = 0;
                 while (reader.Read())
                 {
@@ -517,7 +520,7 @@ namespace SZI
                 if (izm > 0)
                 {
                     StrToAdd = "согласно уточненным исковым требованиям:";
-                    reader = connection.ReadData(string.Format("select d.text from REQUIREMENTS_TMP d where d.id_doc='{0}' and (d.iteration = (select max(k.iteration) from REQUIREMENTS_TMP k where k.id_doc='{0}' and k.id_req=d.id_req and izmena=1))", id));
+                    reader = connection.ReadData(string.Format("select d.text from REQUIREMENTS_TMP d where d.id_doc='{0}' and d.iteration = 0 and d.izmena=1", id));
                     while (reader.Read())
                     {
                         StrToAdd += " " + reader.GetString(0) + ",";
@@ -546,7 +549,7 @@ namespace SZI
                 }
                 else
                 {
-                    StrToAdd = "Истецы обратились в суд с иском к ";
+                    StrToAdd = "Истцы обратились в суд с иском к ";
                 }
 
                 if (count_actor_otv == 1)
@@ -563,20 +566,22 @@ namespace SZI
                     index = reader.GetInt16(0);
                 if (index==1)
                 {
-                    StrToAdd += "с требованием ";
+                    StrToAdd += "с требованием:";
                 }
                 else
                 {
-                    StrToAdd += "с требованиями ";
+                    StrToAdd += "с требованиями:";
                 }
 
                 //начальные исковые требования + нормы
-
-                reader = connection.ReadData(string.Format("Select id,norma,text from REQUIREMENTS_tmp Where id_doc='{0}' and iteration=0 and izmena=0", id));
+                wrdSelection.TypeText(StrToAdd);
+                StrToAdd = "\n";
+                reader = connection.ReadData(string.Format("Select id,id_req,norma,text,choice, explain_tr, distribution_of_costs, court_of_appeal from REQUIREMENTS_tmp Where id_doc='{0}' and iteration=0 and izmena=0", id));
                 int count_norm = 0;
                 foreach (DbDataRecord record in reader)
                 {
-                    StrToAdd += record["text"].ToString();
+                    StrToAdd += record["text"].ToString().Substring(0, 1).ToUpper() + record["text"].ToString().Substring(1, record["text"].ToString().Length - 1);
+                    
                     if (Boolean.Parse(record["norma"].ToString()))
                     {
                         StrToAdd += ", ссылаясь на ";
@@ -593,15 +598,191 @@ namespace SZI
                         }
                         reader_actor = connection.ReadData(string.Format("Select text from NORMA where id_req='{0}'", record["id"].ToString()));
                         while (reader_actor.Read())
-                            StrToAdd += UpgradeNorma(reader_actor.GetString(0)) +", ";
-                        StrToAdd = StrToAdd.Remove(StrToAdd.Length - 1)+";";
+                            StrToAdd += UpgradeNorma(reader_actor.GetString(0),true) +", ";
+                        StrToAdd = StrToAdd.Remove(StrToAdd.Length - 2)+";";
                     }
+                    else
+                    {
+                        StrToAdd += ", без ссылки на норму права в обоснование требования;";
+                    }
+                    StrToAdd += "\n";
+
+                    if (record["explain_tr"].ToString().Length != 0 && record["choice"].ToString().Length != 0)
+                    {
+                        StrToAdd += "О несоответствии требования иска адресату и формы реализации нормы права пояснил " + record["explain_tr"].ToString()+".\n";
+                        //rash += record["text"].ToString().Substring(0, 1).ToUpper() + record["text"].ToString().Substring(1, record["text"].ToString().Length - 1);
+                        //rash += " " + record["distribution_of_costs"].ToString();
+                        //rash += "\nРешение может быть обжаловано в течение месяца со дня принятия решения суда в окончательной форме в " + record["court_of_appeal"].ToString() + " через " + court_name + ".\n";
+
+                    }
+                    else if ((record["choice"].ToString().Length != 0))
+                    {
+                        reader_actor = connection.ReadData(string.Format("Select t.choice from REQUIREMENTS_tmp t Where t.id_doc='{0}' and t.iteration=(select max(r.iteration) from REQUIREMENTS_tmp r where r.izmena=0 and t.id_req=r.id_req and t.id_doc=r.id_doc)-1 and t.izmena=0 and t.id_req='{1}'", id, record["id_req"].ToString()));
+                        while (reader_actor.Read())
+                            count_norm = reader_actor.GetInt16(0);
+                        switch (count_norm)
+                        {
+                            //case 1:
+                            //    StrToAdd += "" + record["explain_tr"].ToString();
+                            //    rash += record["text"].ToString().Substring(0, 1).ToUpper() + record["text"].ToString().Substring(1, record["text"].ToString().Length - 1);
+                            //    rash += " " + record["distribution_of_costs"].ToString();
+                            //    rash += "\nРешение может быть обжаловано в течение месяца со дня принятия решения суда в окончательной форме в " + record["court_of_appeal"].ToString() + " через " + court_name + ".\n";
+                            //    break;
+
+                            case 2:
+                                StrToAdd += "В порядке ст.39 ГПК РФ истец изменил основание иска, ссылаясь на положения ";
+                                reader_actor = connection.ReadData(string.Format("Select text from NORMA where id_req=(Select t.id from REQUIREMENTS_tmp t Where t.id_doc='{0}' and t.iteration=(select max(r.iteration) from REQUIREMENTS_tmp r where r.izmena=0 and t.id_req=r.id_req and t.id_doc=r.id_doc) and t.izmena=0 and t.id_req='{1}')",id, record["id_req"].ToString()));
+                                while (reader_actor.Read())
+                                    StrToAdd += UpgradeNorma(reader_actor.GetString(0),true) +", ";
+                                StrToAdd = StrToAdd.Remove(StrToAdd.Length - 2)+".\n";
+                                break;
+
+                            case 3:
+                                StrToAdd += "В порядке ст.39 ГПК РФ истец изменил предмет иска, просил ";
+                                reader_actor = connection.ReadData(string.Format("Select t.text from REQUIREMENTS_tmp t Where t.id_doc='{0}' and t.iteration=(select max(r.iteration) from REQUIREMENTS_tmp r where r.izmena=0 and t.id_req=r.id_req and t.id_doc=r.id_doc) and t.izmena=0 and t.id_req='{1}'", id,record["id_req"].ToString()));
+                                while (reader_actor.Read())
+                                    StrToAdd += reader_actor.GetString(0);
+
+                                StrToAdd += ", ссылаясь на ";
+                                reader_actor = connection.ReadData(string.Format("Select count(*) from NORMA where id_req='{0}'", record["id"].ToString()));
+                                while (reader_actor.Read())
+                                    count_norm = reader_actor.GetInt16(0);
+                                if (count_norm == 1)
+                                {
+                                    StrToAdd += "положение ";
+                                }
+                                else
+                                {
+                                    StrToAdd += "положения ";
+                                }
+
+                                reader_actor = connection.ReadData(string.Format("Select text from NORMA where id_req='{0}'", record["id"].ToString()));
+                                while (reader_actor.Read())
+                                    StrToAdd += UpgradeNorma(reader_actor.GetString(0), false) + ", ";
+                                StrToAdd = StrToAdd.Remove(StrToAdd.Length - 2) + ".\n";
+                                break;
+
+                        }
+                        count_norm = 0;
+                        string explain_tr = "";
+                        reader_actor = connection.ReadData(string.Format("Select t.explain_tr from REQUIREMENTS_tmp t Where t.id_doc='{0}' and t.iteration=(select max(r.iteration) from REQUIREMENTS_tmp r where r.izmena=0 and t.id_req=r.id_req and t.id_doc=r.id_doc) and t.izmena=0 and t.id_req='{1}'", id, record["id_req"].ToString()));
+                        while (reader_actor.Read())
+                            if (!reader_actor.IsDBNull(0))
+                                explain_tr = reader_actor.GetString(0);
+                        if (explain_tr.Length>0)
+                        {
+                            StrToAdd += "О несоответствии требования иска адресату и формы реализации нормы права пояснил " + explain_tr + ".\n";
+                        }
+                    }
+
+                    
                 }
-                StrToAdd += "\n";
+
                 wrdSelection.TypeText(StrToAdd);
 
-                //хдесь нужно вставлять изменные требования и основания
+                StrToAdd = "";
+                //хдесь нужно вставлять изменные требования 
+                int count_izm = 0;
+                reader = connection.ReadData(string.Format("Select id_req,text,norma, izm_norma,choice,explain_tr from REQUIREMENTS_tmp r Where r.id_doc='{0}' and r.iteration=0 and r.izmena=1", id));
+                foreach(DbDataRecord record_izm in reader)
+                {
+                    StrToAdd += record_izm["text"].ToString().Substring(0, 1).ToUpper() + record_izm["text"].ToString().Substring(1, record_izm["text"].ToString().Length - 1);
+                    if (Boolean.Parse(record_izm["norma"].ToString())&& record_izm["izm_norma"].ToString().Length!=0)
+                    {
+                        StrToAdd += ", ссылаясь на ";
+                        string[] arr_izm = record_izm["izm_norma"].ToString().Split(';');
+                        if (arr_izm.Length==1)
+                        {
+                            StrToAdd += "положение ";
+                        }
+                        else
+                        {
+                            StrToAdd += "положения ";
+                        }
+                        for (int i = 0; i < arr_izm.Length; i++)
+                        {
+                            reader_actor = connection.ReadData(string.Format("Select text from NORMA where id_norma='{0}'", arr_izm[i]));
+                            while (reader_actor.Read())
+                                StrToAdd += UpgradeNorma(reader_actor.GetString(0), true) + ", ";
+                        }
+                        StrToAdd = StrToAdd.Remove(StrToAdd.Length - 2) + ";";
+                    }
+                    else
+                    {
+                        StrToAdd += ", без ссылки на норму права в обоснование требования;";
+                    }
+                    StrToAdd += "\n";
 
+
+                    if (record_izm["explain_tr"].ToString().Length != 0 && record_izm["choice"].ToString().Length != 0)
+                    {
+                        StrToAdd += "О несоответствии требования иска адресату и формы реализации нормы права пояснил " + record_izm["explain_tr"].ToString()+".\n";
+                        //rash += record["text"].ToString().Substring(0, 1).ToUpper() + record["text"].ToString().Substring(1, record["text"].ToString().Length - 1);
+                        //rash += " " + record["distribution_of_costs"].ToString();
+                        //rash += "\nРешение может быть обжаловано в течение месяца со дня принятия решения суда в окончательной форме в " + record["court_of_appeal"].ToString() + " через " + court_name + ".\n";
+
+                    }
+                    else if ((record_izm["choice"].ToString().Length != 0))
+                    {
+                        reader_actor = connection.ReadData(string.Format("Select t.choice from REQUIREMENTS_tmp t Where t.id_doc='{0}' and t.iteration=(select max(r.iteration) from REQUIREMENTS_tmp r where r.izmena=1 and t.id_req=r.id_req and t.id_doc=r.id_doc)-1 and t.izmena=1 and t.id_req='{1}'", id, record_izm["id_req"].ToString()));
+                        while (reader_actor.Read())
+                            count_norm = reader_actor.GetInt16(0);
+                        switch (count_norm)
+                        {
+                            //case 1:
+                            //    StrToAdd += "" + record["explain_tr"].ToString();
+                            //    rash += record["text"].ToString().Substring(0, 1).ToUpper() + record["text"].ToString().Substring(1, record["text"].ToString().Length - 1);
+                            //    rash += " " + record["distribution_of_costs"].ToString();
+                            //    rash += "\nРешение может быть обжаловано в течение месяца со дня принятия решения суда в окончательной форме в " + record["court_of_appeal"].ToString() + " через " + court_name + ".\n";
+                            //    break;
+
+                            case 2:
+                                StrToAdd += "В порядке ст.39 ГПК РФ истец изменил основание иска, ссылаясь на положения ";
+                                reader_actor = connection.ReadData(string.Format("Select text from NORMA where id_req=(Select t.id from REQUIREMENTS_tmp t Where t.id_doc='{0}' and t.iteration=(select max(r.iteration) from REQUIREMENTS_tmp r where r.izmena=1 and t.id_req=r.id_req and t.id_doc=r.id_doc) and t.izmena=1 and t.id_req='{1}')", id, record_izm["id_req"].ToString()));
+                                while (reader_actor.Read())
+                                    StrToAdd += UpgradeNorma(reader_actor.GetString(0), true) + ", ";
+                                StrToAdd = StrToAdd.Remove(StrToAdd.Length - 2) + ".\n";
+                                break;
+
+                            case 3:
+                                StrToAdd += "В порядке ст.39 ГПК РФ истец изменил предмет иска, просил ";
+                                reader_actor = connection.ReadData(string.Format("Select t.text from REQUIREMENTS_tmp t Where t.id_doc='{0}' and t.iteration=(select max(r.iteration) from REQUIREMENTS_tmp r where r.izmena=1 and t.id_req=r.id_req and t.id_doc=r.id_doc) and t.izmena=1 and t.id_req='{1}'", id, record_izm["id_req"].ToString()));
+                                while (reader_actor.Read())
+                                    StrToAdd += reader_actor.GetString(0);
+
+                                StrToAdd += ", ссылаясь на ";
+                                string[] arr_izm = record_izm["izm_norma"].ToString().Split(';');
+                                if (arr_izm.Length == 1)
+                                {
+                                    StrToAdd += "положение ";
+                                }
+                                else
+                                {
+                                    StrToAdd += "положения ";
+                                }
+                                for (int i = 0; i < arr_izm.Length; i++)
+                                {
+                                    reader_actor = connection.ReadData(string.Format("Select text from NORMA where id_norma='{0}'", arr_izm[i]));
+                                    while (reader_actor.Read())
+                                        StrToAdd += UpgradeNorma(reader_actor.GetString(0), true) + ", ";
+                                }
+                                StrToAdd = StrToAdd.Remove(StrToAdd.Length - 2) + ";\n";
+                                break;
+
+                        }
+                        count_norm = 0;
+                        string explain_tr = "";
+                        reader_actor = connection.ReadData(string.Format("Select t.explain_tr from REQUIREMENTS_tmp t Where t.id_doc='{0}' and t.iteration=(select max(r.iteration) from REQUIREMENTS_tmp r where r.izmena=1 and t.id_req=r.id_req and t.id_doc=r.id_doc) and t.izmena=1 and t.id_req='{1}'", id, record_izm["id_req"].ToString()));
+                        while (reader_actor.Read())
+                            if (!reader_actor.IsDBNull(0))
+                                explain_tr = reader_actor.GetString(0);
+                        if (explain_tr.Length > 0)
+                        {
+                            StrToAdd += "О несоответствии требования иска адресату и формы реализации нормы права пояснил " + explain_tr + ".\n";
+                        }
+                    }
+                }
+                wrdSelection.TypeText(StrToAdd);
 
 
 
@@ -643,17 +824,17 @@ namespace SZI
                             {
                                 reader_fact_norm = connection.ReadData(string.Format("Select text from Norma where id_norma = '{0}'",arr[i]));
                                 while (reader_fact_norm.Read())
-                                    StrToAdd += UpgradeNorma(reader_fact_norm.GetString(0));
+                                    StrToAdd += UpgradeNorma(reader_fact_norm.GetString(0),true);
                             }
-                            StrToAdd += ")\n";
+                            StrToAdd += ").\n";
                         }
                         else if (record_fact["choise"].ToString() == "2")
                         {
-                            StrToAdd += " (по мнению истца имеет место пробел в праве)\n";
+                            StrToAdd += " (по мнению истца имеет место пробел в праве).\n";
                         }
                         else
                         {
-                            StrToAdd += " (без юридического обоснования)\n";
+                            StrToAdd += " (без юридического обоснования).\n";
                         }
                     }
                      
@@ -662,7 +843,7 @@ namespace SZI
 
                 //признание иска
                 StrToAdd = "";
-                string StrToAdd2 = "\n";
+                string StrToAdd2 = "";
                 reader = connection.ReadData(string.Format("Select r.id,r.text,r.defendant_choise,r.prizn_isk from REQUIREMENTS_tmp r Where r.id_doc='{0}' and r.iteration=(Select max(q.iteration) from REQUIREMENTS_tmp q Where r.id_doc=q.id_doc and r.id_req=q.id_req and r.izmena=q.izmena)", id));
                 while(reader.Read())
                 {
@@ -682,8 +863,53 @@ namespace SZI
                     else
                         StrToAdd2 += " нарушает права и законные интересы других лиц. ";
                 }
+                StrToAdd += "\n";
                 wrdSelection.TypeText(StrToAdd);
+                wrdSelection.ParagraphFormat.LineSpacing = 15;
+                wrdSelection.ParagraphFormat.LineUnitBefore = 0;
+                wrdSelection.ParagraphFormat.FirstLineIndent = 30;
+                wrdSelection.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphJustify;
                 wrdSelection.TypeText(StrToAdd2);
+
+                //расходы
+                StrToAdd = "\n\nРуководствуясь ст.194–198 Гражданского процессуального кодекса Российской Федерации, суд\n";
+                wrdSelection.TypeText(StrToAdd);
+
+                StrToAdd = "Р Е Ш И Л:" + "\r\n";
+                wrdSelection.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                wrdSelection.Font.Bold = 0;
+                wrdSelection.Font.Size = 14;
+                wrdSelection.Font.Name = "Times New Roman";
+                wrdSelection.ParagraphFormat.LineSpacing = 11;
+                wrdSelection.ParagraphFormat.FirstLineIndent = 0;
+                wrdSelection.ParagraphFormat.LineUnitBefore = 0;
+                wrdSelection.TypeText(StrToAdd);
+                wrdSelection.ParagraphFormat.LineSpacing = 15;
+                wrdSelection.ParagraphFormat.LineUnitBefore = 0;
+                wrdSelection.ParagraphFormat.FirstLineIndent = 30;
+                wrdSelection.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphJustify;
+
+                if (index == 1)
+                {
+                    StrToAdd = "Исковое требование ";
+                }
+                else
+                {
+                    StrToAdd = "Исковые требования ";
+                }
+                StrToAdd += str_ist.Remove(str_ist.Length-2) + " удовлетворить полностью.\n";
+                wrdSelection.TypeText(StrToAdd);
+
+                StrToAdd = "";
+                reader = connection.ReadData(string.Format("Select r.text, distribution_of_costs, court_of_appeal from REQUIREMENTS_tmp r Where r.id_doc='{0}' and r.iteration=(Select max(q.iteration) from REQUIREMENTS_tmp q Where r.id_doc=q.id_doc and r.id_req=q.id_req and r.izmena=q.izmena)", id));
+                foreach (DbDataRecord record_rash in reader)
+                {
+                    StrToAdd += record_rash["text"].ToString().Substring(0, 1).ToUpper() + record_rash["text"].ToString().Substring(1, record_rash["text"].ToString().Length - 1) + " " + record_rash["distribution_of_costs"].ToString();
+                    StrToAdd += "\n";
+                    StrToAdd += "Решение может быть обжаловано в течение месяца со дня принятия решения суда в окончательной форме в " + record_rash["court_of_appeal"].ToString() + " через " +court_name+".";
+                    StrToAdd += "\n";
+                }
+                wrdSelection.TypeText(StrToAdd);
             }
             connection.Close();
 
@@ -706,7 +932,7 @@ namespace SZI
             //}
         }
 
-        public string UpgradeNorma(string norma)
+        public string UpgradeNorma(string norma,bool full)
         {
             string[] str_arr = norma.Split('~');
             string str_norma = "";
@@ -728,7 +954,8 @@ namespace SZI
                 str_norma += "№ " + str_arr[8] + " ";
             if (str_arr[6] != "")
                 str_norma += '"' + str_arr[6] + '"' + " ";
-            if (str_arr[9] != "")
+
+            if ((str_arr[9] != "")&&full)
                 str_norma += '(' + str_arr[9] + ')' + " ";
             str_norma = str_norma.Remove(str_norma.Length - 1);
             return str_norma;
