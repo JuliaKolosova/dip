@@ -191,8 +191,11 @@ namespace SZI
                 wrdDoc = wrdApp.Documents.Add(ref oMissing, ref oMissing,
                     ref oMissing, ref oMissing);
                 wrdDoc.Select();
-
+                wrdDoc.LockTheme = false;
+               // wrdDoc.Protect = Microsoft.Office.Interop.Word.
                 wrdSelection = wrdApp.Selection;
+                
+                wrdDoc.ReadOnlyRecommended = false;
                 wrdMailMerge = wrdDoc.MailMerge;
 
                 // Create a string and insert it into the document.    
@@ -930,6 +933,20 @@ namespace SZI
             //{
 
             //}
+            object missing = System.Reflection.Missing.Value;
+            object readOnly = false;
+            object visible = false;
+            object _Password = "Password";
+            object fileToOpen = name;
+            object enforceStyleLock = false;
+            wrdDoc.Password = "Password";
+            wrdDoc.Protect(Microsoft.Office.Interop.Word.WdProtectionType.wdAllowOnlyReading,
+                            ref missing,
+                            ref _Password,
+                            ref missing,
+                            ref enforceStyleLock);
+            wrdDoc.ReadOnlyRecommended = false;
+
         }
 
         public string UpgradeNorma(string norma,bool full)
