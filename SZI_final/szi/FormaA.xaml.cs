@@ -1592,8 +1592,7 @@ namespace SZI
         {
             e.Cancel = false;
             fw.Visibility = Visibility.Visible;
-            fw.ForaWindow_Update();
-           
+            fw.ForaWindow_Update();           
         }
     }
 }

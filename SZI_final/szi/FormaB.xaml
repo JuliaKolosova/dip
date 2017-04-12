@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SZI"
         mc:Ignorable="d"
-        Title="Форма Б." Height="426.167" Width="644" ResizeMode="NoResize" Closing="Forma_B_Closing" >
+        Title="Форма Б." Height="426.167" Width="644" ResizeMode="NoResize" Closing="Forma_B_Closing" Icon="logo.png" >
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FFCCF9C5" Offset="1"/>
@@ -41,8 +41,8 @@
         <Button x:Name="OpenB_Copy" Height="30" Width="80" HorizontalAlignment="right" VerticalAlignment="Bottom"
             Click="OpenBtn_Click" Background="#FFA6EC9B" Foreground="#FF26AC19" BorderBrush="White" Margin="0,0,10,8" Grid.Row="2" FontFamily="Calibri" FontSize="16" Content="Открыть"/>
         <Button x:Name="edit_isk"
-          Background="#FFA6EC9B" Foreground="#FF26AC19" BorderBrush="White" Margin="10,5,0,8" Grid.Row="2" FontFamily="Calibri" FontSize="16" Content="Изменить предмет иска" ToolTip="С начала заполните всю информацию по формулировкам!" HorizontalAlignment="Left" Width="200" Click="edit_isk_Click" Height="30"/>
+          Background="#FFA6EC9B" Foreground="#FF26AC19" BorderBrush="White" Margin="10,5,0,8" Grid.Row="2" FontFamily="Calibri" FontSize="16" Content="Изменить предмет иска" HorizontalAlignment="Left" Width="200" Click="edit_isk_Click" Height="30"/>
         <Button x:Name="del_edit_isk"
-            Background="#FFA6EC9B" Foreground="#FF26AC19" BorderBrush="White" Margin="219,5,0,7" Grid.Row="2" FontFamily="Calibri" FontSize="16" Content="Удалить изм. требование" ToolTip="С начала заполните всю информацию по формулировкам!" HorizontalAlignment="Left" Width="200" Click="del_edit_isk_Click" Height="30"/>
+            Background="#FFA6EC9B" Foreground="#FF26AC19" BorderBrush="White" Margin="219,5,0,7" Grid.Row="2" FontFamily="Calibri" FontSize="16" Content="Удалить изм. требование" HorizontalAlignment="Left" Width="200" Click="del_edit_isk_Click" Height="30"/>
     </Grid>
 </Window>

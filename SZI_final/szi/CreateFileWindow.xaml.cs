@@ -40,5 +40,11 @@ namespace SZI
             connection.Close();
             Close();
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = false;
+            mainWindow.Visibility = Visibility.Visible;
+        }
     }
 }

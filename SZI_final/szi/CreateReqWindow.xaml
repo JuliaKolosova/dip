@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SZI"
         mc:Ignorable="d"
        Height="116.292" Width="450" MaxHeight="120" MaxWidth="450" MinHeight="120" MinWidth="450"
-        BorderThickness="0" FontFamily="Calibri" FontSize="16" Title="Добавление предмета иска">
+        BorderThickness="0" FontFamily="Calibri" FontSize="16" Title="Добавление предмета иска" Icon="logo.png">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FFCCF9C5" Offset="1"/>

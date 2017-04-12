@@ -102,6 +102,7 @@ namespace SZI
 
         private void FormaB_Click(object sender, RoutedEventArgs e)
         {
+            fw.Visibility = Visibility.Hidden;
             FormaB BForm = new FormaB(name, id, fw);
             BForm.Owner = this;
             BForm.WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -342,7 +343,7 @@ namespace SZI
                     reader_actor = connection.ReadData(string.Format("Select count(*) from AGENT_PLAINTIFF Where ID_ACTOR='{0}'", record["ID"].ToString()));
                     while (reader_actor.Read())
                     {
-                        count_actor = reader.GetInt16(0);
+                        count_actor = reader_actor.GetInt16(0);
                     }
 
                     if (count_actor == 0)
@@ -445,7 +446,7 @@ namespace SZI
                     reader_actor = connection.ReadData(string.Format("Select count(*) from AGENT_PLAINTIFF Where ID_ACTOR='{0}'", record["ID"].ToString()));
                     while (reader_actor.Read())
                     {
-                        count_actor = reader.GetInt16(0);
+                        count_actor = reader_actor.GetInt16(0);
                     }
 
                     if (count_actor == 0)
@@ -933,20 +934,36 @@ namespace SZI
             //{
 
             //}
-            object missing = System.Reflection.Missing.Value;
-            object readOnly = false;
-            object visible = false;
-            object _Password = "Password";
-            object fileToOpen = name;
-            object enforceStyleLock = false;
-            wrdDoc.Password = "Password";
-            wrdDoc.Protect(Microsoft.Office.Interop.Word.WdProtectionType.wdAllowOnlyReading,
-                            ref missing,
-                            ref _Password,
-                            ref missing,
-                            ref enforceStyleLock);
-            wrdDoc.ReadOnlyRecommended = false;
-
+            //wrdDoc..Name = name;
+           // object missing = System.Reflection.Missing.Value;
+           // object readOnly = false;
+           // object visible = false;
+           // //object _Password = "Password";
+           // object fileToOpen = name;
+           // object enforceStyleLock = false;
+           //// wrdDoc.Password = "Password";
+           // wrdDoc.Protect(Microsoft.Office.Interop.Word.WdProtectionType.wdAllowOnlyReading,
+           //                 ref missing,
+           //                // ref _Password,
+           //                 ref missing,
+           //                 ref enforceStyleLock);
+           // wrdDoc.ReadOnlyRecommended = false;
+           // wrdDoc.SaveAs(ref fileToOpen,
+           //                 ref missing,
+           //                 ref missing,
+           //                // ref _Password,
+           //                 ref missing,
+           //               //  ref _Password,
+           //                 ref enforceStyleLock,
+           //                 ref missing,
+           //                 ref missing,
+           //                 ref missing,
+           //                 ref missing,
+           //                 ref missing,
+           //                 ref missing,
+           //                 ref missing,
+           //                 ref missing,
+           //                 ref missing);
         }
 
         public string UpgradeNorma(string norma,bool full)
@@ -1019,6 +1036,12 @@ namespace SZI
                     
             }
             return "0";
+        }
+
+        private void ForaWindow1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = false;
+            startForm.Visibility = Visibility.Visible;
         }
     }
 }

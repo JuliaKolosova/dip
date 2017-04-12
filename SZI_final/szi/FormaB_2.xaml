@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SZI"
         mc:Ignorable="d"
-        Title="Предмет и основание иска" Height="572.848" Width="864.303" Closing="FormaB_1_Closing" ResizeMode="NoResize" Loaded="FormaB_1_Loaded_1">
+        Title="Предмет и основание иска" Height="572.848" Width="864.303" Closing="FormaB_1_Closing" ResizeMode="NoResize" Loaded="FormaB_1_Loaded_1" Icon="logo.png">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FFCCF9C5" Offset="1"/>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SZI"
         mc:Ignorable="d"
-        Title="Дело " Height="690.5" Width="894.5" FontFamily="Calibri" FontSize="16" Loaded="FormaA2_Loaded" ResizeMode="NoResize" Closing="FormaA2_Closing">
+        Title="Дело " Height="690.5" Width="894.5" FontFamily="Calibri" FontSize="16" Loaded="FormaA2_Loaded" ResizeMode="NoResize" Closing="FormaA2_Closing" Icon="logo.png">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FFCCF9C5" Offset="1"/>
@@ -120,7 +120,7 @@
             </StackPanel>
             <StackPanel x:Name="StackPanel_A_4" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Vertical" Height="610" Width="612">
                 <Label x:Name="label_А_4" Content="     Информация о заседании:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="490" FontSize="18.667"/>
-                <Label x:Name="label_prokuror" Content="С участием прокурора (ФИО в именительном падеже):" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="490" FontSize="18.667"/>
+                <Label x:Name="label_prokuror" Content="С участием прокурора (ФИО в родительном падеже):" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="490" FontSize="18.667"/>
                 <TextBox x:Name="tB_PROKUROR" HorizontalAlignment="Left" Height="30"  TextWrapping="Wrap" VerticalAlignment="Top" Width="500" Foreground="#FF378B1E" BorderBrush="#FFDBFFD0" FontSize="18.667" />
                 <Label x:Name="label_rassm" Content="Рассмотрев в" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF378B1E" Height="31" Width="490" FontSize="18.667"/>
                 <RadioButton x:Name="rb_otcr" Foreground="#FF378B1E" Content="открытом" Width="440" FontSize="18.667" GroupName="zased" VerticalContentAlignment="Center" Margin="0,0,0,3" IsChecked="True"/>

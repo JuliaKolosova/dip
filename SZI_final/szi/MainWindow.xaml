@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Программа"
         Width="443" Height="112" MinWidth="400" MinHeight="300" MaxWidth="650" MaxHeight="450"
-        WindowStartupLocation="CenterScreen" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Calibri" FontSize="16" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+        WindowStartupLocation="CenterScreen" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Calibri" FontSize="16" ResizeMode="NoResize" SizeToContent="WidthAndHeight" Icon="logo.png">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FFCCF9C5" Offset="1"/>

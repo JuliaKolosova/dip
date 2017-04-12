@@ -113,6 +113,7 @@ namespace SZI
             fw_B.Visibility = Visibility.Hidden;
             FormaB_2 eForm = new FormaB_2(fw_B, id_req,id);
             eForm.Owner = this;
+            fw_B.Visibility = Visibility.Hidden;
             eForm.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             eForm.ShowDialog();
         }
@@ -145,6 +146,7 @@ namespace SZI
                     //CreateRequestWindow FW_CreateReq = new CreateRequestWindow();
                     CreateReqWindow fw_createReq = new CreateReqWindow(id, fw_B);
                     fw_createReq.Owner = this;
+                   // fw_B.Visibility = Visibility.Hidden;
                     fw_createReq.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     fw_createReq.ShowDialog();
 
@@ -166,28 +168,35 @@ namespace SZI
 
         private void del_edit_isk_Click(object sender, RoutedEventArgs e)
         {
-            ListBoxItem list_isk = listBox_isk.SelectedItem as ListBoxItem;
-            int id_req = Int16.Parse(list_isk.Tag.ToString());
-            SQLite connection = new SQLite();
-            SQLiteDataReader reader = connection.ReadData(string.Format("select izmena from REQUIREMENTS_TMP where id_req='{0}'", id_req));
-            int izm = 0;
-            while (reader.Read())
-                izm = reader.GetInt16(0);
-            if (izm==0)
+            if (listBox_isk.SelectedIndex != -1)
             {
-                MessageBox.Show("Удалить можно только измененные требования!");
+                ListBoxItem list_isk = listBox_isk.SelectedItem as ListBoxItem;
+                int id_req = Int16.Parse(list_isk.Tag.ToString());
+                SQLite connection = new SQLite();
+                SQLiteDataReader reader = connection.ReadData(string.Format("select izmena from REQUIREMENTS_TMP where id_req='{0}'", id_req));
+                int izm = 0;
+                while (reader.Read())
+                    izm = reader.GetInt16(0);
+                if (izm == 0)
+                {
+                    MessageBox.Show("Удалить можно только измененные требования!");
+                }
+                else
+                {
+                    MessageBoxResult res = MessageBox.Show("Вы уверены что хотите удалить требование " + list_isk.Content.ToString() + "?", "Внимание", MessageBoxButton.YesNo);
+                    if (res == MessageBoxResult.Yes)
+                    {
+                        connection.WriteData(string.Format("Delete from Norma n where n.id_req in (SELECT r.id FROM REQUIREMENTS_TMP r, (select s.id_req, s.id_doc,s.iteration from REQUIREMENTS_TMP s where s.id='{0}' ) g where r.id_doc = g.id_doc and r.id_req = g.id_req and r.iteration >= g.iteration)", id_req));
+                        connection.WriteData(string.Format("Delete from REQUIREMENTS_TMP r where r.id  in (SELECT r.id FROM REQUIREMENTS_TMP r, (select s.id_req, s.id_doc,s.iteration from REQUIREMENTS_TMP s where s.id='{0}' ) g where r.id_doc = g.id_doc and r.id_req = g.id_req and r.iteration >= g.iteration)", id_req));
+                    }
+
+
+                }
             }
             else
             {
-                MessageBoxResult res = MessageBox.Show("Вы уверены что хотите удалить требование " + list_isk.Content.ToString() + "?", "Внимание", MessageBoxButton.YesNo);
-                if (res == MessageBoxResult.Yes)
-                {
-                    connection.WriteData(string.Format("Delete from Norma n where n.id_req in (SELECT r.id FROM REQUIREMENTS_TMP r, (select s.id_req, s.id_doc,s.iteration from REQUIREMENTS_TMP s where s.id='{0}' ) g where r.id_doc = g.id_doc and r.id_req = g.id_req and r.iteration >= g.iteration)", id_req));
-                    connection.WriteData(string.Format("Delete from REQUIREMENTS_TMP r where r.id  in (SELECT r.id FROM REQUIREMENTS_TMP r, (select s.id_req, s.id_doc,s.iteration from REQUIREMENTS_TMP s where s.id='{0}' ) g where r.id_doc = g.id_doc and r.id_req = g.id_req and r.iteration >= g.iteration)", id_req));
-                }
-
-
-                }
+                MessageBox.Show("Исковое требование не выбрано!");
             }
+        }
     }
 }

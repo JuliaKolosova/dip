@@ -46,8 +46,10 @@ namespace SZI
         {
             CreateFileWindow cForm = new CreateFileWindow(startForm);
             cForm.Owner = this;
+            startForm.Visibility = Visibility.Hidden;
             cForm.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             cForm.ShowDialog();
+            
             SQLite connection = new SQLite();
             SQLiteDataReader reader;
             reader = connection.ReadData(string.Format("SELECT ID, NAME FROM document order by name"));
@@ -73,8 +75,10 @@ namespace SZI
                 int id_doc = Int16.Parse(list_isk.Tag.ToString());
                 ForaWindow eForm = new ForaWindow(list_isk.Content.ToString(), startForm, id_doc);
                 eForm.Owner = this;
+                startForm.Visibility = Visibility.Collapsed;
                 eForm.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 eForm.ShowDialog();
+                
             }
             else
             {
@@ -90,9 +94,11 @@ namespace SZI
                 ListBoxItem list_isk = FilesListBox.SelectedItem as ListBoxItem;
                 int id_doc = Int16.Parse(list_isk.Tag.ToString());
                 ForaWindow eForm = new ForaWindow(list_isk.Content.ToString(), startForm, id_doc);
+                startForm.Visibility = Visibility.Hidden;
                 eForm.Owner = this;
                 eForm.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 eForm.ShowDialog();
+                
             }
         }
 
