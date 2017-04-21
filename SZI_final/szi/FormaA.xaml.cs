@@ -28,8 +28,8 @@ namespace SZI
         int id;
         int ind, id_req;
         string delete_str;
-        private SolidColorBrush colortext = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF378B1E"));
-        private SolidColorBrush color_border = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFDBFFD0"));
+        private SolidColorBrush colortext = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("DimGray"));
+        private SolidColorBrush color_border = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("DimGray"));
 
         public FormaA(string name, ForaWindow fw, int id)
         {
@@ -713,7 +713,7 @@ namespace SZI
         private void AddStPanelIstec(SQLiteDataReader reader_ist)
         {
             i++;
-            SolidColorBrush colortext = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF378B1E"));
+            SolidColorBrush colortext = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("DimGray"));
             Grid grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(20) });
             grid.ColumnDefinitions.Add(new ColumnDefinition());
@@ -844,7 +844,7 @@ namespace SZI
         private void AddStPanelIstec1(SQLiteDataReader reader_ist, int plaintiff)
         {
             //i++;
-            SolidColorBrush colortext = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF378B1E"));
+            SolidColorBrush colortext = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("DimGray"));
             SolidColorBrush colortext2 = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEA2727"));
             Grid grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition());

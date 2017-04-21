@@ -499,14 +499,14 @@ namespace SZI
                 wrdSelection.TypeText(procuror);
                 if (str_istec.Contains(','))
                     if (curt)
-                        StrToAdd = "рассмотрев в открытом судебном заседании гражданское дело по иску " + str_istec + ", которые просили";
+                        StrToAdd = "рассмотрев в открытом судебном заседании гражданское дело " + str_istec + ", которые просили";
                     else
-                        StrToAdd = "рассмотрев в закрытом судебном заседании гражданское дело по иску " + str_istec + ", которые просили";
+                        StrToAdd = "рассмотрев в закрытом судебном заседании гражданское дело " + str_istec + ", которые просили";
                 else
                     if (curt)
-                    StrToAdd = "рассмотрев в открытом судебном заседании гражданское дело по иску " + str_istec + ", который просил";
+                    StrToAdd = "рассмотрев в открытом судебном заседании гражданское дело " + str_istec + ", который просил";
                 else
-                    StrToAdd = "рассмотрев в закрытом судебном заседании гражданское дело по иску " + str_istec + ", который просил";
+                    StrToAdd = "рассмотрев в закрытом судебном заседании гражданское дело " + str_istec + ", который просил";
 
                 reader = connection.ReadData(string.Format("Select text from REQUIREMENTS_TMP where id_doc='{0}' and izmena=0 and iteration=0", id));
                 while (reader.Read())
@@ -707,7 +707,7 @@ namespace SZI
                         {
                             reader_actor = connection.ReadData(string.Format("Select text from NORMA where id_norma='{0}'", arr_izm[i]));
                             while (reader_actor.Read())
-                                StrToAdd += UpgradeNorma(reader_actor.GetString(0), true) + ", ";
+                                StrToAdd += UpgradeNorma(reader_actor.GetString(0), false) + ", ";
                         }
                         StrToAdd = StrToAdd.Remove(StrToAdd.Length - 2) + ";";
                     }
@@ -971,17 +971,17 @@ namespace SZI
             string[] str_arr = norma.Split('~');
             string str_norma = "";
             if (str_arr[0] != "")
-                str_norma += "пункт " + str_arr[0] + " ";
+                str_norma += "п. " + str_arr[0] + " ";
             if (str_arr[1] != "")
-                str_norma += "часть " + str_arr[1] + " ";
+                str_norma += "ч. " + str_arr[1] + " ";
             if (str_arr[2] != "")
-                str_norma += "статьи " + str_arr[2] + " ";
+                str_norma += "ст. " + str_arr[2] + " ";
             if (str_arr[3] != "")
                 str_norma += str_arr[3] + " ";
             if (str_arr[4] != "")
-                str_norma += "издан " + str_arr[4] + " ";
+                str_norma += str_arr[4] + " ";
             else if (str_arr[5] != "")
-                str_norma += "издан " + str_arr[5] + " ";
+                str_norma += str_arr[5] + " ";
             if (str_arr[7] != "")
                 str_norma += "от " + str_arr[7] + " ";
             if (str_arr[8] != "")

@@ -5,22 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SZI"
         mc:Ignorable="d"
-        Title="Ошибка" Height="207.769" Width="525.56" ResizeMode="NoResize" Loaded="ErrorNorma1_Loaded" Icon="logo.png">
+        Title="Lazer. Ошибка" Height="207.769" Width="525.56" ResizeMode="NoResize" Loaded="ErrorNorma1_Loaded" Icon="logo.png">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-            <GradientStop Color="#FFCCF9C5" Offset="1"/>
-            <GradientStop Color="White"/>
+            <GradientStop Color="#FFFFFFFF" />
+            <GradientStop Color="WhiteSmoke"/>
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
         <StackPanel HorizontalAlignment="Left" Width="520" Margin="0,8,0,0">
-            <TextBlock  x:Name="label" Text="Несовпадение выбора адресата нормы и нормы." VerticalAlignment="Top" RenderTransformOrigin="0.441,0.509"  TextDecorations="Underline" Foreground="#FF378B1E" FontSize="16.667" Padding="3,2,3,0" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Right" TextOptions.TextHintingMode="Animated" Margin="0,0,56,0"/>
-            <Label x:Name="label2" Content="Выберите один из вариантов:" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.441,0.509" HorizontalContentAlignment="Left" Foreground="#FF378B1E" FontSize="16.667" Padding="3,2,3,0" TextOptions.TextFormattingMode="Display"/>
-            <RadioButton x:Name="var_1" Content="не изменять предмет и юридическое основание иска;" VerticalAlignment="Center" Height="23" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant_N" IsChecked="True" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Left" VerticalContentAlignment="Center" Width="458" Margin="31,0,0,0"  />
-            <RadioButton x:Name="var_2" Content="изменить юридическое основание иска;" VerticalAlignment="Center" Height="23" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant_N" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Left" VerticalContentAlignment="Center" Width="373" Margin="31,0,0,0"  />
-            <RadioButton x:Name="var_3" Content="изменить предмет иска;" VerticalAlignment="Center" Height="23" Foreground="#FF378B1E" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant_N" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Left" VerticalContentAlignment="Center" Width="373" Margin="31,0,0,0"  />
+            <TextBlock  x:Name="label" Text="Несовпадение выбора адресата нормы и нормы." VerticalAlignment="Top" RenderTransformOrigin="0.441,0.509"  TextDecorations="Underline" Foreground="DimGray" FontSize="16.667" Padding="3,2,3,0" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Right" TextOptions.TextHintingMode="Animated" Margin="0,0,56,0"/>
+            <Label x:Name="label2" Content="Выберите один из вариантов:" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.441,0.509" HorizontalContentAlignment="Left" Foreground="DimGray" FontSize="16.667" Padding="3,2,3,0" TextOptions.TextFormattingMode="Display"/>
+            <RadioButton x:Name="var_1" Content="не изменять предмет и юридическое основание иска;" VerticalAlignment="Center" Height="23" Foreground="DimGray" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant_N" IsChecked="True" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Left" VerticalContentAlignment="Center" Width="458" Margin="31,0,0,0"  />
+            <RadioButton x:Name="var_2" Content="изменить юридическое основание иска;" VerticalAlignment="Center" Height="23" Foreground="DimGray" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant_N" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Left" VerticalContentAlignment="Center" Width="373" Margin="31,0,0,0"  />
+            <RadioButton x:Name="var_3" Content="изменить предмет иска;" VerticalAlignment="Center" Height="23" Foreground="DimGray" FontSize="16.667" TextOptions.TextHintingMode="Animated" Padding="9,-1,0,0" GroupName="Variant_N" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Left" VerticalContentAlignment="Center" Width="373" Margin="31,0,0,0"  />
             <Button x:Name="button" Content="Дальше" HorizontalAlignment="Center" VerticalAlignment="Center"  Height="25" Width="93" 
-            Background="#FFA6EC9B" Foreground="#FF26AC19" BorderBrush="White" Margin="0,15,0,0" Grid.Row="5" FontFamily="Calibri" FontSize="16" Click="button_Click"/>
+            Background="WhiteSmoke" Foreground="DimGray" BorderBrush="DimGray" Margin="0,15,0,0" Grid.Row="5" FontFamily="Calibri" FontSize="16" Click="button_Click"/>
         </StackPanel>
 
     </Grid>

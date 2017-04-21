@@ -25,9 +25,9 @@ namespace SZI
         private int id_req,id_doc,id;
         //id - уникальный ключ в таблице формулировок
         private bool first;
-        private SolidColorBrush colortext = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF378B1E"));
+        private SolidColorBrush colortext = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("DimGray"));
         private SolidColorBrush colortext2 = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEA2727"));
-        private SolidColorBrush color_border = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFDBFFD0"));
+        private SolidColorBrush color_border = new System.Windows.Media.SolidColorBrush((Color)ColorConverter.ConvertFromString("DimGray"));
         string delete_str;
         int page=1;
         int iteration = 0;
@@ -204,7 +204,7 @@ namespace SZI
                                 //Next_b_2.Visibility = Visibility.Collapsed;
                                 //Save.Visibility = Visibility.Collapsed;
                                 ST_fact.Visibility = Visibility.Visible;
-                                //Scroll_st_fact.Visibility = Visibility.Visible;
+                                Scroll_st_fact.Visibility = Visibility.Visible;
                                 textBlock_isk.Visibility = Visibility.Collapsed;
                                 rect2.Visibility = Visibility.Collapsed;
                                 rect3.Visibility = Visibility.Collapsed;
@@ -251,7 +251,7 @@ namespace SZI
                             //Next_b_2.Visibility = Visibility.Collapsed;
                             //Save.Visibility = Visibility.Collapsed;
                             ST_fact.Visibility = Visibility.Visible;
-                            ////Scroll_st_fact.Visibility = Visibility.Visible;
+                            Scroll_st_fact.Visibility = Visibility.Visible;
                             textBlock_isk.Visibility = Visibility.Collapsed;
                             rect2.Visibility = Visibility.Collapsed;
                             rect3.Visibility = Visibility.Collapsed;
@@ -275,9 +275,9 @@ namespace SZI
                                 if (choise != eForm.variant)
                                 {
                                     connection2.WriteData(string.Format("Delete from NORMA where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and iteration > '{1}' and id_doc = '{2}')", id_req, iteration, id_doc));
-                                    connection2.WriteData(string.Format("Delete from fact_thing where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and iteration > '{1}' and id_doc = '{2}')", id_req, iteration, id_doc));
+                                    connection2.WriteData(string.Format("Delete from fact_thing where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and iteration >= '{1}' and id_doc = '{2}')", id_req, iteration, id_doc));
                                     connection2.WriteData(string.Format("Delete from REQUIREMENTS_tmp where id_req = '{0}' and iteration > '{1}' and id_doc = '{2}'", id_req, iteration, id_doc));
-                                    connection2.WriteData(string.Format("UPDATE REQUIREMENTS_tmp set defendant_choise=null,prizn_isk=null,explain_tr=null,izm_norma=null,court_costs=null, distribution_of_costs=null, court_of_appeal=null where id_req = '{0}' and iteration = '{1}' and id_doc = '{2}'", id_req, iteration, id_doc));
+                                    connection2.WriteData(string.Format("UPDATE REQUIREMENTS_tmp set defendant_choise=null,prizn_isk=null,explain_tr=null,izm_norma=null where id_req = '{0}' and iteration = '{1}' and id_doc = '{2}'", id_req, iteration, id_doc));
                                 }
                                 connection2.WriteData(string.Format("Update REQUIREMENTS_TMP set choice = '{0}' where id_req='{1}' and iteration='{2}'  and id_doc='{3}'", eForm.variant, id_req, iteration, id_doc));
                                 connection2.Close();
@@ -317,7 +317,7 @@ namespace SZI
                     //Next_b_2.Visibility = Visibility.Collapsed;
                     // Save.Visibility = Visibility.Collapsed;
                     ST_fact.Visibility = Visibility.Visible;
-                    //Scroll_st_fact.Visibility = Visibility.Visible;
+                    Scroll_st_fact.Visibility = Visibility.Visible;
                     textBlock_isk.Visibility = Visibility.Collapsed;
                     rect2.Visibility = Visibility.Collapsed;
                     rect3.Visibility = Visibility.Collapsed;
@@ -334,8 +334,10 @@ namespace SZI
                     {
                         ST_defendant_choise.Visibility = Visibility.Visible;
                         ST_fact.Visibility = Visibility.Collapsed;
-                        page = page + 6;
+                        Scroll_st_fact.Visibility = Visibility.Collapsed;
+                       page = page + 6;
                         UpdateB_567();
+                        Next_b_2.Content = "Закрыть";
                     }
                     else
                         MessageBox.Show("Должно быть хотя бы одно фактическое обстоятельство");
@@ -355,21 +357,22 @@ namespace SZI
                     UpdateB_2();
                     break;
                 case 11:
-                    SQLite connection3 = new SQLite();
-                    reader = connection3.ReadData(string.Format("Select defendant_choise,prizn_isk from REQUIREMENTS_tmp where id_req='{0}' and iteration='{1}' and id_doc='{2}'", id_req, iteration, id_doc));
-                    int choice_cos = 0;
-                    while (reader.Read())
-                        choice_cos = reader.GetInt16(0)+ reader.GetInt16(1);
-                    if (choice_cos==2)
-                    {
-                        ST_costs.Visibility = Visibility.Visible;
-                        ST_defendant_choise.Visibility = Visibility.Collapsed;
-                        Next_b_2.Content = "Закрыть";
-                        page = page + 3;
-                        UpdateB_141517();
-                    }
+                    fw_b2.Close();
+                    //SQLite connection3 = new SQLite();
+                    //reader = connection3.ReadData(string.Format("Select defendant_choise,prizn_isk from REQUIREMENTS_tmp where id_req='{0}' and iteration='{1}' and id_doc='{2}'", id_req, iteration, id_doc));
+                    //int choice_cos = 0;
+                    //while (reader.Read())
+                    //    choice_cos = reader.GetInt16(0)+ reader.GetInt16(1);
+                    //if (choice_cos==2)
+                    //{
+                    //    ST_costs.Visibility = Visibility.Visible;
+                    //    ST_defendant_choise.Visibility = Visibility.Collapsed;
+                    //    Next_b_2.Content = "Закрыть";
+                    //    page = page + 3;
+                    //    UpdateB_141517();
+                    //}
 
-                    connection3.Close();
+                    //connection3.Close();
                     break;
                 case 12:
                     goto case 11;
@@ -388,22 +391,22 @@ namespace SZI
             connection.Close();
         }
 
-        private void UpdateB_141517()
-        {
-            SQLite connection = new SQLite();
-            SQLiteDataReader reader;
-            reader = connection.ReadData(string.Format("Select court_costs, distribution_of_costs, court_of_appeal from REQUIREMENTS_TMP where id_doc='{0}' and id_req='{1}' and iteration='{2}'", id_doc, id_req, iteration));
-            while (reader.Read())
-            {
-                if (!reader.IsDBNull(0))
-                    textBox_court_costs.Text = reader.GetString(0);
-                if (!reader.IsDBNull(1))
-                    textBox_distribution_of_costs.Text = reader.GetString(1);
-                if (!reader.IsDBNull(2))
-                    textBox_court_of_appeal.Text = reader.GetString(2);
-            }
-            connection.Close();
-        }
+        //private void UpdateB_141517()
+        //{
+        //    SQLite connection = new SQLite();
+        //    SQLiteDataReader reader;
+        //    reader = connection.ReadData(string.Format("Select court_costs, distribution_of_costs, court_of_appeal from REQUIREMENTS_TMP where id_doc='{0}' and id_req='{1}' and iteration='{2}'", id_doc, id_req, iteration));
+        //    while (reader.Read())
+        //    {
+        //        if (!reader.IsDBNull(0))
+        //            textBox_court_costs.Text = reader.GetString(0);
+        //        if (!reader.IsDBNull(1))
+        //            textBox_distribution_of_costs.Text = reader.GetString(1);
+        //        if (!reader.IsDBNull(2))
+        //            textBox_court_of_appeal.Text = reader.GetString(2);
+        //    }
+        //    connection.Close();
+        //}
 
         private void UpdateB_2_2_izm()
         {
@@ -826,7 +829,7 @@ namespace SZI
             rb_otkaz.VerticalContentAlignment = VerticalAlignment.Center;
             rb_otkaz.FontSize = 16;
             rb_otkaz.Foreground = colortext;
-            rb_otkaz.Width = 780;
+            rb_otkaz.Width = 770;
             rb_otkaz.HorizontalAlignment = HorizontalAlignment.Left;
             rb_otkaz.Margin = new Thickness(0, 5, 0, 5);
 
@@ -931,6 +934,7 @@ namespace SZI
             if (!(bool)rb_norma.IsChecked)
             {
                 st_fact_norma.Visibility = Visibility.Collapsed;
+                Scroll_st_fact.Visibility = Visibility.Collapsed;
             }
 
             if (!is_norma)
@@ -1425,7 +1429,7 @@ namespace SZI
                     page--;
                     ST_explanat.Visibility = Visibility.Visible;
                     ST_fact.Visibility = Visibility.Collapsed;
-                    //Scroll_st_fact.Visibility = Visibility.Collapsed;
+                    Scroll_st_fact.Visibility = Visibility.Collapsed;
                     textBlock_isk.Visibility = Visibility.Visible;
                     rect2.Visibility = Visibility.Visible;
                     rect3.Visibility = Visibility.Visible;
@@ -1439,7 +1443,7 @@ namespace SZI
                     /// Next_b_2.Visibility = Visibility.Visible;
                     // Save.Visibility = Visibility.Visible;
                     ST_fact.Visibility = Visibility.Collapsed;
-                    //Scroll_st_fact.Visibility = Visibility.Collapsed;
+                    Scroll_st_fact.Visibility = Visibility.Collapsed;
                     textBlock_isk.Visibility = Visibility.Visible;
                     rect2.Visibility = Visibility.Visible;
                     rect3.Visibility = Visibility.Visible;
@@ -1456,7 +1460,7 @@ namespace SZI
                     // Next_b_2.Visibility = Visibility.Visible;
                     //Save.Visibility = Visibility.Visible;
                     ST_fact.Visibility = Visibility.Collapsed;
-                    //Scroll_st_fact.Visibility = Visibility.Collapsed;
+                    Scroll_st_fact.Visibility = Visibility.Collapsed;
                     textBlock_isk.Visibility = Visibility.Visible;
                     rect2.Visibility = Visibility.Visible;
                     rect3.Visibility = Visibility.Visible;
@@ -1474,23 +1478,25 @@ namespace SZI
                     ST_defendant_choise.Visibility = Visibility.Collapsed;
                     page = page - 6;
                     ST_fact.Visibility = Visibility.Visible;
+                    Scroll_st_fact.Visibility = Visibility.Visible;
+                    Next_b_2.Content = "Далее";
                     UpdateB_2_5();
                     break;
                 case 12:
                     goto case 11;
                 case 13:
                     goto case 11;
-                case 14:
-                    ST_defendant_choise.Visibility = Visibility.Visible;
-                    page = page - 3;
-                    ST_costs.Visibility = Visibility.Collapsed;
-                    Next_b_2.Content = "Далее";
-                    UpdateB_567();
-                    break;
-                case 15:
-                    goto case 14;
-                case 16:
-                    goto case 14;
+                //case 14:
+                //    ST_defendant_choise.Visibility = Visibility.Visible;
+                //    page = page - 3;
+                //    ST_costs.Visibility = Visibility.Collapsed;
+                //    Next_b_2.Content = "Далее";
+                //    UpdateB_567();
+                //    break;
+                //case 15:
+                //    goto case 14;
+                //case 16:
+                //    goto case 14;
 
             }
         }
@@ -1549,9 +1555,9 @@ namespace SZI
                     if (choise != variant)
                     {
                         connection.WriteData(string.Format("Delete from NORMA where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and iteration > '{1}' and id_doc = '{2}')", id_req, iteration, id_doc));
-                        connection.WriteData(string.Format("Delete from fact_thing where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and iteration > '{1}' and id_doc = '{2}')", id_req, iteration, id_doc));
+                        connection.WriteData(string.Format("Delete from fact_thing where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and iteration >= '{1}' and id_doc = '{2}')", id_req, iteration, id_doc));
                         connection.WriteData(string.Format("Delete from REQUIREMENTS_tmp where id_req = '{0}' and iteration > '{1}' and id_doc = '{2}'", id_req, iteration, id_doc));
-                        connection.WriteData(string.Format("Update REQUIREMENTS_TMP set adresat_norm=NULL,choice=NULL,explain_tr=NULL, defendant_choise=NULL,prizn_isk=NULL,izm_norma=NULL,court_costs=null, distribution_of_costs=null, court_of_appeal=null  Where id_req='{0}' and iteration = '{1}'  and id_doc='{2}'", id_req, iteration, id_doc));
+                        connection.WriteData(string.Format("Update REQUIREMENTS_TMP set adresat_norm=NULL,choice=NULL,explain_tr=NULL, defendant_choise=NULL,prizn_isk=NULL,izm_norma=NULL  Where id_req='{0}' and iteration = '{1}'  and id_doc='{2}'", id_req, iteration, id_doc));
                     }
                     connection.WriteData(string.Format("Update REQUIREMENTS_TMP set variant='{0}' Where id_req='{1}' and iteration='{2}'  and id_doc='{3}'", variant, id_req, iteration, id_doc));
                     string norm_str = "";
@@ -1563,7 +1569,7 @@ namespace SZI
                     {
                         if (norm_str == "False")
                         {
-                            connection.WriteData(string.Format("Update REQUIREMENTS_TMP set adresat_norm=NULL,choice=NULL,explain_tr=NULL, defendant_choise=NULL,prizn_isk=NULL,court_costs=null, distribution_of_costs=null, court_of_appeal=null  Where id_req='{0}' and iteration = '{1}'  and id_doc='{2}'", id_req, iteration, id_doc));
+                            connection.WriteData(string.Format("Update REQUIREMENTS_TMP set adresat_norm=NULL,choice=NULL,explain_tr=NULL, defendant_choise=NULL,prizn_isk=NULL Where id_req='{0}' and iteration = '{1}'  and id_doc='{2}'", id_req, iteration, id_doc));
                             connection.WriteData(string.Format("Delete from fact_thing where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and iteration >= '{1}' and id_doc = '{2}')", id_req, iteration, id_doc));
                         }
                         connection.WriteData(string.Format("Update REQUIREMENTS_TMP set norma='{0}' Where id_req='{1}' and iteration = '{2}'  and id_doc='{3}'", true, id_req, iteration, id_doc));
@@ -1691,7 +1697,9 @@ namespace SZI
                             adr_norm = reader.GetInt16(0);
                     if (adr_norm!= adres * 10 + norm)
                     {
+                        connection.WriteData(string.Format("Update REQUIREMENTS_TMP set explain_tr=NULL,defendant_choise=NULL,prizn_isk=NULL,choice=NULL Where id_req='{0}' and iteration='{1}' and id_doc='{2}'", id_req, iteration, id_doc));
                         connection.WriteData(string.Format(" delete from NORMA where id_req in ( select id from REQUIREMENTS_TMP Where id_req='{0}' and iteration>'{1}' and id_doc='{2}')", id_req, iteration, id_doc));
+                        connection.WriteData(string.Format("Delete from fact_thing where id_req in (select id from REQUIREMENTS_tmp where id_req = '{0}' and iteration >= '{1}' and id_doc = '{2}')", id_req, iteration, id_doc));
                         connection.WriteData(string.Format(" Delete from REQUIREMENTS_TMP Where id_req='{0}' and iteration>'{1}' and id_doc='{2}'",  id_req, iteration, id_doc));
                     }
                     connection.WriteData(string.Format("Update REQUIREMENTS_TMP set adresat_norm='{0}' Where id_req='{1}' and iteration='{2}' and id_doc='{3}'", adres*10+norm, id_req, iteration,id_doc));
@@ -1813,15 +1821,15 @@ namespace SZI
                     goto case 11;
                 case 13:
                     goto case 11;
-                case 14:
-                    SQLite connection14 = new SQLite();
-                    connection.WriteData(string.Format("Update REQUIREMENTS_TMP set court_costs='{0}', distribution_of_costs='{1}', court_of_appeal='{2}' where id_doc='{3}' and id_req='{4}' and iteration='{5}'", textBox_court_costs.Text, textBox_distribution_of_costs.Text, textBox_court_of_appeal.Text, id_doc, id_req, iteration));
-                    connection14.Close();
-                    break;
-                case 15:
-                    goto case 14;
-                case 16:
-                    goto case 14;
+                //case 14:
+                //    SQLite connection14 = new SQLite();
+                //    connection.WriteData(string.Format("Update REQUIREMENTS_TMP set court_costs='{0}', distribution_of_costs='{1}', court_of_appeal='{2}' where id_doc='{3}' and id_req='{4}' and iteration='{5}'", textBox_court_costs.Text, textBox_distribution_of_costs.Text, textBox_court_of_appeal.Text, id_doc, id_req, iteration));
+                //    connection14.Close();
+                //    break;
+                //case 15:
+                //    goto case 14;
+                //case 16:
+                //    goto case 14;
 
             }
             connection.Close();

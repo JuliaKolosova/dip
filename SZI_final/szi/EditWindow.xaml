@@ -43,7 +43,7 @@
         <!-- add button -->
         <Button x:Name="AddBtn" Grid.Column="4" Grid.Row="2"
                 Height="30" Width="30"  HorizontalAlignment="right" VerticalAlignment="Bottom"
-                Click="AddBtn_Click" Background="White" BorderBrush="White">
+                Click="AddBtn_Click" Background="White" BorderBrush="DimGray">
             <Image x:Name="addImg" Width="20"/>
         </Button>
 
