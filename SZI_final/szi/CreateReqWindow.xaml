@@ -1,9 +1,9 @@
-﻿<Window x:Class="SZI.CreateReqWindow"
+﻿<Window x:Class="Lazer.CreateReqWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SZI"
+        xmlns:local="clr-namespace:Lazer"
         mc:Ignorable="d"
        Height="116.292" Width="450" MaxHeight="120" MaxWidth="450" MinHeight="120" MinWidth="450"
         BorderThickness="0" FontFamily="Calibri" FontSize="16" Title="Lazer. Добавление предмета иска" Icon="logo.png">

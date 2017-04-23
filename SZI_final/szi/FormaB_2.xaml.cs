@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace SZI
+namespace Lazer
 {
     /// <summary>
     /// Логика взаимодействия для FormaB_2.xaml
@@ -203,7 +203,6 @@ namespace SZI
                                 STP_radioButton2.Visibility = Visibility.Collapsed;
                                 //Next_b_2.Visibility = Visibility.Collapsed;
                                 //Save.Visibility = Visibility.Collapsed;
-                                ST_fact.Visibility = Visibility.Visible;
                                 Scroll_st_fact.Visibility = Visibility.Visible;
                                 textBlock_isk.Visibility = Visibility.Collapsed;
                                 rect2.Visibility = Visibility.Collapsed;
@@ -240,17 +239,16 @@ namespace SZI
                            
                     }
                     if (adresat!=-1)
-                        if ((var == 1) && ((adresat == 12) || (adresat == 13) || (adresat == 21) || (adresat == 22) || (adresat == 23))
-                            || (var == 2) && ((adresat == 11) || (adresat == 12) || (adresat == 13) || (adresat == 21) || (adresat == 23))
-                            || (var == 3) && ((adresat == 11) || (adresat == 12) || (adresat == 13) || (adresat == 21) || (adresat == 23))
-                            || (var == 4) && ((adresat == 11) || (adresat == 12) || (adresat == 13) || (adresat == 21) || (adresat == 22))
-                            || (var == 5) && ((adresat == 11) || (adresat == 13) || (adresat == 21) || (adresat == 22) || (adresat == 23))
-                            || (var == 6) && ((adresat == 11) || (adresat == 12) || (adresat == 13) || (adresat == 21) || (adresat == 22)))
+                        if ((var == 1) && ((adresat == 11) || (adresat == 23))
+                            || (var == 2) && ((adresat == 11) || (adresat == 22))
+                            || (var == 3) && ((adresat == 11) || (adresat == 22))
+                            || (var == 4) && ((adresat == 11) || (adresat == 23))
+                            || (var == 5) && ((adresat == 11) || (adresat == 12) || (adresat == 22) || (adresat == 23))
+                            || (var == 6) && ((adresat == 11) || (adresat == 23)))
                         {
                             ST_adres.Visibility = Visibility.Collapsed;
                             //Next_b_2.Visibility = Visibility.Collapsed;
                             //Save.Visibility = Visibility.Collapsed;
-                            ST_fact.Visibility = Visibility.Visible;
                             Scroll_st_fact.Visibility = Visibility.Visible;
                             textBlock_isk.Visibility = Visibility.Collapsed;
                             rect2.Visibility = Visibility.Collapsed;
@@ -316,7 +314,6 @@ namespace SZI
                     ST_explanat.Visibility = Visibility.Collapsed;
                     //Next_b_2.Visibility = Visibility.Collapsed;
                     // Save.Visibility = Visibility.Collapsed;
-                    ST_fact.Visibility = Visibility.Visible;
                     Scroll_st_fact.Visibility = Visibility.Visible;
                     textBlock_isk.Visibility = Visibility.Collapsed;
                     rect2.Visibility = Visibility.Collapsed;
@@ -333,7 +330,6 @@ namespace SZI
                     if (count_fact > 0)
                     {
                         ST_defendant_choise.Visibility = Visibility.Visible;
-                        ST_fact.Visibility = Visibility.Collapsed;
                         Scroll_st_fact.Visibility = Visibility.Collapsed;
                        page = page + 6;
                         UpdateB_567();
@@ -934,7 +930,7 @@ namespace SZI
             if (!(bool)rb_norma.IsChecked)
             {
                 st_fact_norma.Visibility = Visibility.Collapsed;
-                Scroll_st_fact.Visibility = Visibility.Collapsed;
+               // Scroll_st_fact.Visibility = Visibility.Collapsed;
             }
 
             if (!is_norma)
@@ -1428,7 +1424,6 @@ namespace SZI
                 case 5:
                     page--;
                     ST_explanat.Visibility = Visibility.Visible;
-                    ST_fact.Visibility = Visibility.Collapsed;
                     Scroll_st_fact.Visibility = Visibility.Collapsed;
                     textBlock_isk.Visibility = Visibility.Visible;
                     rect2.Visibility = Visibility.Visible;
@@ -1442,7 +1437,6 @@ namespace SZI
                     ST_adres.Visibility = Visibility.Visible;
                     /// Next_b_2.Visibility = Visibility.Visible;
                     // Save.Visibility = Visibility.Visible;
-                    ST_fact.Visibility = Visibility.Collapsed;
                     Scroll_st_fact.Visibility = Visibility.Collapsed;
                     textBlock_isk.Visibility = Visibility.Visible;
                     rect2.Visibility = Visibility.Visible;
@@ -1459,7 +1453,6 @@ namespace SZI
                     STP_radioButton2.Visibility = Visibility.Visible;
                     // Next_b_2.Visibility = Visibility.Visible;
                     //Save.Visibility = Visibility.Visible;
-                    ST_fact.Visibility = Visibility.Collapsed;
                     Scroll_st_fact.Visibility = Visibility.Collapsed;
                     textBlock_isk.Visibility = Visibility.Visible;
                     rect2.Visibility = Visibility.Visible;
@@ -1477,7 +1470,6 @@ namespace SZI
                 case 11:
                     ST_defendant_choise.Visibility = Visibility.Collapsed;
                     page = page - 6;
-                    ST_fact.Visibility = Visibility.Visible;
                     Scroll_st_fact.Visibility = Visibility.Visible;
                     Next_b_2.Content = "Далее";
                     UpdateB_2_5();

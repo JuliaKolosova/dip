@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace SZI
+namespace Lazer
 {
     class SQLite
     {

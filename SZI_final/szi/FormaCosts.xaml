@@ -1,0 +1,33 @@
+﻿<Window x:Class="Lazer.FormaCosts"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lazer"
+        mc:Ignorable="d"
+        Title="Lazer. Резолютивная форма" Height="512.848" Width="864.303" ResizeMode="NoResize" Icon="logo.png" Closing="Window_Closing" Loaded="Window_Loaded">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FFFFFFFF" />
+            <GradientStop Color="WhiteSmoke"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Grid Margin="0,0,0,6">
+        <StackPanel x:Name="ST_costs" Margin="15,0,10,41" Visibility="Visible" >
+            <Label x:Name="label_court_costs" Content="Судебные расходы истца:" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="DimGray" FontSize="17" Margin="10,10,0,0"   VerticalContentAlignment="Center" TextOptions.TextFormattingMode="Display"/>
+            <TextBox x:Name="textBox_court_costs" Height="112" TextWrapping="Wrap" Margin="32,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="DimGray" FontSize="17"  TextOptions.TextFormattingMode="Display" Width="784"/>
+            <Label x:Name="label_distribution_of_costs" Content="Распределение судебных расходов:" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="DimGray" FontSize="17" Margin="10,30,0,0"   VerticalContentAlignment="Center" TextOptions.TextFormattingMode="Display"/>
+            <TextBox x:Name="textBox_distribution_of_costs" Height="112" TextWrapping="Wrap" Margin="32,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="DimGray" FontSize="17"  TextOptions.TextFormattingMode="Display" Width="784"/>
+
+            <Label x:Name="label_court_of_appeal" Content="Суд, в котором может быть обжаловано решение:" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="DimGray" FontSize="17" Margin="10,30,0,0"   VerticalContentAlignment="Center" TextOptions.TextFormattingMode="Display"/>
+            <TextBox x:Name="textBox_court_of_appeal" TextWrapping="Wrap" Margin="32,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Foreground="DimGray" FontSize="17"  TextOptions.TextFormattingMode="Display" Width="784"/>
+
+
+        </StackPanel>
+        <Button x:Name="Save" Height="25" Width="93" HorizontalAlignment="right" VerticalAlignment="Bottom"
+            Background="WhiteSmoke" Foreground="DimGray" BorderBrush="DimGray" Margin="0,0,133,10" FontFamily="Calibri" FontSize="16" Content="Сохранить" Click="Save_Click" />
+        <Button x:Name="Close" Height="25" Width="93" HorizontalAlignment="right" VerticalAlignment="Bottom"
+            Background="WhiteSmoke" Foreground="DimGray" BorderBrush="DimGray" Margin="0,0,16,10" FontFamily="Calibri" FontSize="16" Content="Закрыть" Click="Close_Click"/>
+
+    </Grid>
+</Window>

@@ -15,7 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 
-namespace SZI
+namespace Lazer
 {
     /// <summary>
     /// Логика взаимодействия для CreateFilePage.xaml

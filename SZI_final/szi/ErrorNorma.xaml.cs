@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data.SQLite;
 
-namespace SZI
+namespace Lazer
 {
     /// <summary>
     /// Логика взаимодействия для Window1.xaml

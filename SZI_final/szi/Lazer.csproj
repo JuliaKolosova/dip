@@ -134,6 +134,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="FormaCosts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -150,6 +154,9 @@
     </Compile>
     <Compile Include="FormaB_2.xaml.cs">
       <DependentUpon>FormaB_2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FormaCosts.xaml.cs">
+      <DependentUpon>FormaCosts.xaml</DependentUpon>
     </Compile>
     <Compile Include="SQLite.cs" />
     <Compile Include="EditWindow.xaml.cs">

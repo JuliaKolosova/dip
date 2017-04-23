@@ -1,9 +1,9 @@
-﻿<Window x:Name="FormaA2" x:Class="SZI.FormaA"
+﻿<Window x:Name="FormaA2" x:Class="Lazer.FormaA"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SZI"
+        xmlns:local="clr-namespace:Lazer"
         mc:Ignorable="d"
         Title="Lazer. Дело " Height="690.5" Width="894.5" FontFamily="Calibri" FontSize="16" Loaded="FormaA2_Loaded" ResizeMode="NoResize" Closing="FormaA2_Closing" Icon="logo.png">
     <Window.Background>

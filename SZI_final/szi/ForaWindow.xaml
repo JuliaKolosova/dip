@@ -1,9 +1,9 @@
-﻿<Window x:Name="ForaWindow1" x:Class="SZI.ForaWindow"
+﻿<Window x:Name="ForaWindow1" x:Class="Lazer.ForaWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SZI"
+        xmlns:local="clr-namespace:Lazer"
         mc:Ignorable="d"
         Title="Lazer. Дело" Height="321.91" Width="480.607" ResizeMode="NoResize" FontFamily="Calibri" FontSize="16" Loaded="ForaWindow1_Load" Closing="ForaWindow1_Closing" Icon="logo.png">
     <Window.Background>
@@ -20,8 +20,10 @@
             Width="163" Height="34" HorizontalAlignment="right" VerticalAlignment="Bottom"
             Margin="0,0,62,75" Background="WhiteSmoke" BorderBrush="DimGray" Foreground="DimGray" Content="Форма Б" Click="FormaB_Click"/>
         <Button x:Name="export" Content="Экспорт" Width="163" Height="34" HorizontalAlignment="right" VerticalAlignment="Bottom"
-            Margin="0,0,154,23" Background="WhiteSmoke" BorderBrush="DimGray" Foreground="DimGray"  Click="button_Click"/>
+            Margin="0,0,62,23" Background="WhiteSmoke" BorderBrush="DimGray" Foreground="DimGray"  Click="button_Click"/>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Center" Foreground="DimGray" Margin="10,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="158" Width="461" TextAlignment="Center"><Run Text="      Форма А: ввод начальной информации о деле (дата проведения суда, состав суда и т.д.). "/><LineBreak/><Run Text="&#xA;"/><Run Text="      "/><Run Text="Форма Б: ввод информации по исковым требованиям. Заполняется после внесения всей информации в форме А."/><LineBreak/><Run Text="&#xA;      Экспорт: вывод решения в Word. Кнопка становится активной после вынесения решения по каждому исковому требованию"/></TextBlock>
+        <Button x:Name="costs" Content="Форма З" Width="163" Height="34" HorizontalAlignment="right" VerticalAlignment="Bottom"
+            Margin="0,0,251,23" Background="WhiteSmoke" BorderBrush="DimGray" Foreground="DimGray" Click="costs_Click"/>
 
     </Grid>
 </Window>

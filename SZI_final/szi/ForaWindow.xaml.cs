@@ -15,7 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace SZI
+namespace Lazer
 {
     /// <summary>
     /// Логика взаимодействия для ForaWindow.xaml
@@ -80,19 +80,35 @@ namespace SZI
                 FormaB.IsEnabled = true;
             }
                 // когда активен экспорт?
-            bool exp_enable = true;
+            bool costs_enable = true;
             reader = connection.ReadData(string.Format("Select r.prizn_isk, r.defendant_choise from REQUIREMENTS_tmp r Where r.id_doc='{0}' and r.iteration=(select max(t.iteration) from REQUIREMENTS_tmp t Where r.id_doc=t.id_doc and r.id_req=t.id_req)", id));
             while (reader.Read())
                 if (reader.IsDBNull(0))
+                    costs_enable = false;
+            
+            if (costs_enable && index != 0)
+                costs.IsEnabled = true;
+            else
+            {
+                costs.IsEnabled = false;                
+            }
+
+            // когда активен экспорт?
+
+            bool exp_enable = true;
+            reader = connection.ReadData(string.Format("Select court_of_appeal from document where id='{0}'", id));
+            while(reader.Read())
+            {
+                if (reader.IsDBNull(0))
                     exp_enable = false;
-            connection.Close();
-            if (exp_enable && index != 0)
+            }
+            if (exp_enable)
                 export.IsEnabled = true;
             else
             {
-                export.IsEnabled = false;                
+                export.IsEnabled = false;
             }
-           
+            connection.Close();
         }
 
         private void ForaWindow1_Load(object sender, RoutedEventArgs e)
@@ -523,7 +539,7 @@ namespace SZI
                 }
                 if (izm > 0)
                 {
-                    StrToAdd = "согласно уточненным исковым требованиям:";
+                    StrToAdd = "согласно уточненным исковым требованиям также:";
                     reader = connection.ReadData(string.Format("select d.text from REQUIREMENTS_TMP d where d.id_doc='{0}' and d.iteration = 0 and d.izmena=1", id));
                     while (reader.Read())
                     {
@@ -580,7 +596,7 @@ namespace SZI
                 //начальные исковые требования + нормы
                 wrdSelection.TypeText(StrToAdd);
                 StrToAdd = "\n";
-                reader = connection.ReadData(string.Format("Select id,id_req,norma,text,choice, explain_tr, distribution_of_costs, court_of_appeal from REQUIREMENTS_tmp Where id_doc='{0}' and iteration=0 and izmena=0", id));
+                reader = connection.ReadData(string.Format("Select id,id_req,norma,text,choice, explain_tr from REQUIREMENTS_tmp Where id_doc='{0}' and iteration=0 and izmena=0", id));
                 int count_norm = 0;
                 foreach (DbDataRecord record in reader)
                 {
@@ -828,7 +844,7 @@ namespace SZI
                             {
                                 reader_fact_norm = connection.ReadData(string.Format("Select text from Norma where id_norma = '{0}'",arr[i]));
                                 while (reader_fact_norm.Read())
-                                    StrToAdd += UpgradeNorma(reader_fact_norm.GetString(0),true);
+                                    StrToAdd += UpgradeNorma(reader_fact_norm.GetString(0),false);
                             }
                             StrToAdd += ").\n";
                         }
@@ -905,10 +921,10 @@ namespace SZI
                 wrdSelection.TypeText(StrToAdd);
 
                 StrToAdd = "";
-                reader = connection.ReadData(string.Format("Select r.text, distribution_of_costs, court_of_appeal from REQUIREMENTS_tmp r Where r.id_doc='{0}' and r.iteration=(Select max(q.iteration) from REQUIREMENTS_tmp q Where r.id_doc=q.id_doc and r.id_req=q.id_req and r.izmena=q.izmena)", id));
+                reader = connection.ReadData(string.Format("Select distribution_of_costs, court_of_appeal from document Where id='{0}'", id));
                 foreach (DbDataRecord record_rash in reader)
                 {
-                    StrToAdd += record_rash["text"].ToString().Substring(0, 1).ToUpper() + record_rash["text"].ToString().Substring(1, record_rash["text"].ToString().Length - 1) + " " + record_rash["distribution_of_costs"].ToString();
+                    StrToAdd += record_rash["distribution_of_costs"].ToString();
                     StrToAdd += "\n";
                     StrToAdd += "Решение может быть обжаловано в течение месяца со дня принятия решения суда в окончательной форме в " + record_rash["court_of_appeal"].ToString() + " через " +court_name+".";
                     StrToAdd += "\n";
@@ -1042,6 +1058,15 @@ namespace SZI
         {
             e.Cancel = false;
             startForm.Visibility = Visibility.Visible;
+        }
+
+        private void costs_Click(object sender, RoutedEventArgs e)
+        {
+            fw.Visibility = Visibility.Hidden;
+            FormaCosts CForm = new FormaCosts(name, fw, id);
+            CForm.Owner = this;
+            CForm.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            CForm.ShowDialog();
         }
     }
 }

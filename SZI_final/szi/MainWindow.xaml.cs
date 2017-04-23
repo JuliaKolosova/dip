@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SZI
+namespace Lazer
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
@@ -46,7 +46,7 @@ namespace SZI
         {
             CreateFileWindow cForm = new CreateFileWindow(startForm);
             cForm.Owner = this;
-            startForm.Visibility = Visibility.Hidden;
+            //startForm.Visibility = Visibility.Hidden;
             cForm.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             cForm.ShowDialog();
             

@@ -1,7 +1,7 @@
-﻿<Application x:Class="SZI.App"
+﻿<Application x:Class="Lazer.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:SZI"
+             xmlns:local="clr-namespace:Lazer"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          
