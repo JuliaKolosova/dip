@@ -5,25 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lazer"
         mc:Ignorable="d"
-        Title="Lazer. Дело" Height="321.91" Width="480.607" ResizeMode="NoResize" FontFamily="Calibri" FontSize="16" Loaded="ForaWindow1_Load" Closing="ForaWindow1_Closing" Icon="logo.png">
+        Title="Lazer. Дело" Height="375.91" Width="631.607" ResizeMode="NoResize" FontFamily="Calibri" FontSize="16" Loaded="ForaWindow1_Load" Closing="ForaWindow1_Closing" Icon="logo.png">
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FFFFFFFF" />
             <GradientStop Color="WhiteSmoke"/>
         </LinearGradientBrush>
     </Window.Background>
-    <Grid HorizontalAlignment="Center" Margin="0,0,-6,0" Width="481">
-        <Button x:Name="FormaA"
-        	Width="163" Height="34" HorizontalAlignment="right" VerticalAlignment="Bottom"
-        	Click="FormaA_Click" Margin="0,0,251,75" Background="WhiteSmoke" BorderBrush="DimGray" Foreground="DimGray" Content="Форма А"/>
+    <Grid HorizontalAlignment="Center" Margin="0,0,4,0" Width="622">
+        <Button x:Name="FormaA" Height="34" VerticalAlignment="Bottom"
+        	Click="FormaA_Click" Margin="40,0,419,63" Background="WhiteSmoke" BorderBrush="DimGray" Foreground="DimGray" Content="Форма А"/>
         <Button x:Name="FormaB"
             Width="163" Height="34" HorizontalAlignment="right" VerticalAlignment="Bottom"
-            Margin="0,0,62,75" Background="WhiteSmoke" BorderBrush="DimGray" Foreground="DimGray" Content="Форма Б" Click="FormaB_Click"/>
+            Margin="0,0,228,63" Background="WhiteSmoke" BorderBrush="DimGray" Foreground="DimGray" Content="Форма Б" Click="FormaB_Click"/>
         <Button x:Name="export" Content="Экспорт" Width="163" Height="34" HorizontalAlignment="right" VerticalAlignment="Bottom"
-            Margin="0,0,62,23" Background="WhiteSmoke" BorderBrush="DimGray" Foreground="DimGray"  Click="button_Click"/>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Center" Foreground="DimGray" Margin="10,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="158" Width="461" TextAlignment="Center"><Run Text="      Форма А: ввод начальной информации о деле (дата проведения суда, состав суда и т.д.). "/><LineBreak/><Run Text="&#xA;"/><Run Text="      "/><Run Text="Форма Б: ввод информации по исковым требованиям. Заполняется после внесения всей информации в форме А."/><LineBreak/><Run Text="&#xA;      Экспорт: вывод решения в Word. Кнопка становится активной после вынесения решения по каждому исковому требованию"/></TextBlock>
+            Margin="0,0,228,14" Background="WhiteSmoke" BorderBrush="DimGray" Foreground="DimGray"  Click="button_Click"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Center" Foreground="DimGray" Margin="0,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="221" Width="622" TextAlignment="Center"><Run Text="Форма А: ввод начальной информации о деле (дата проведения суда, состав суда и т.д.)&#xD;&#xA;"/><LineBreak/><Run Text="Форма Б: ввод информации по исковым требованиям. &#xD;&#xA;Заполняется после внесения всей информации в форме А.&#xD;&#xA;&#xD;&#xA;Форма З: ввод информации о распределении судебных расходов и о порядке обжалования судебного акта. &#xD;&#xA;Заполняется после вынесения решения по каждому исковому требованию.&#xD;&#xA; &#xA;Экспорт: вывод решения в Word. Кнопка становится активной после "/><Run Text="заполнения информации в форме З."/></TextBlock>
         <Button x:Name="costs" Content="Форма З" Width="163" Height="34" HorizontalAlignment="right" VerticalAlignment="Bottom"
-            Margin="0,0,251,23" Background="WhiteSmoke" BorderBrush="DimGray" Foreground="DimGray" Click="costs_Click"/>
+            Margin="0,0,40,63" Background="WhiteSmoke" BorderBrush="DimGray" Foreground="DimGray" Click="costs_Click"/>
 
     </Grid>
 </Window>

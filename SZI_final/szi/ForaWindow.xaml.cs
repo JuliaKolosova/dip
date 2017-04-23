@@ -338,10 +338,12 @@ namespace Lazer
                 string pred_istec = null;
                 string doc_istec = null;
                 string str_istec = null;
+                string str_ist = null;
                 foreach (DbDataRecord record in reader)
                 {
                     // pred_istec = null;
                     StrToAdd += " " + record["NAME_ACTOR_RP"].ToString() + ",";
+                    str_ist += record["NAME_ACTOR_RP"].ToString() + ", ";
                     if (record["ACTOR_DOC"].ToString().Length > 1)
                     {
                         doc_istec = "В отсутствие истца " + ShortName(record["NAME_ACTOR_RP"].ToString()) + ", просившего рассмотреть дело в его отсутствие:";
@@ -439,12 +441,12 @@ namespace Lazer
 
                 pred_istec = null;
                 doc_istec = null;
-                string str_ist = null;
+                
                 foreach (DbDataRecord record in reader)
                 {
                     // pred_istec = null;
                     StrToAdd += " " + record["NAME_ACTOR_RP"].ToString() + ",";
-                    str_ist +=  record["NAME_ACTOR_RP"].ToString() + ", ";
+                    
                     if (record["ACTOR_DOC"].ToString().Length > 1)
                     {
                         doc_istec = "В отсутствие ответчика " + ShortName(record["NAME_ACTOR_RP"].ToString()) + ", просившего рассмотреть дело в его отсутствие:";
@@ -844,9 +846,9 @@ namespace Lazer
                             {
                                 reader_fact_norm = connection.ReadData(string.Format("Select text from Norma where id_norma = '{0}'",arr[i]));
                                 while (reader_fact_norm.Read())
-                                    StrToAdd += UpgradeNorma(reader_fact_norm.GetString(0),false);
+                                    StrToAdd += UpgradeNorma(reader_fact_norm.GetString(0),false)+", ";
                             }
-                            StrToAdd += ").\n";
+                            StrToAdd = StrToAdd.Remove(StrToAdd.Length-2) + ").\n";
                         }
                         else if (record_fact["choise"].ToString() == "2")
                         {
@@ -864,10 +866,12 @@ namespace Lazer
                 //признание иска
                 StrToAdd = "";
                 string StrToAdd2 = "";
+                string form = "";
                 reader = connection.ReadData(string.Format("Select r.id,r.text,r.defendant_choise,r.prizn_isk from REQUIREMENTS_tmp r Where r.id_doc='{0}' and r.iteration=(Select max(q.iteration) from REQUIREMENTS_tmp q Where r.id_doc=q.id_doc and r.id_req=q.id_req and r.izmena=q.izmena)", id));
                 while(reader.Read())
                 {
                     StrToAdd += "Требование " + reader["text"].ToString() + " ответчик ";
+                    form += reader["text"].ToString() + ", ";
                     if (reader.GetInt16(2) == 1)
                         StrToAdd += "признал. ";
                     else if (reader.GetInt16(2) == 2)
@@ -917,9 +921,10 @@ namespace Lazer
                 {
                     StrToAdd = "Исковые требования ";
                 }
-                StrToAdd += str_ist.Remove(str_ist.Length-2) + " удовлетворить полностью.\n";
+                StrToAdd += str_ist.Remove(str_ist.Length-2) + " удовлетворить полностью: ";
                 wrdSelection.TypeText(StrToAdd);
-
+                form = form.Remove(form.Length - 2) + "\n";
+                wrdSelection.TypeText(form);
                 StrToAdd = "";
                 reader = connection.ReadData(string.Format("Select distribution_of_costs, court_of_appeal from document Where id='{0}'", id));
                 foreach (DbDataRecord record_rash in reader)
